@@ -1,0 +1,51 @@
+﻿@model MeuProjetoAgora.Models.ViewModelElemento
+
+<h4>Link</h4>
+<hr />
+
+@*asp-items="ViewBag.texto_*@
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="form-group">
+    <label asp-for="Nome" class="control-label"></label>
+    <input asp-for="Nome" class="form-control" />
+    <span asp-validation-for="Nome" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <input asp-for="elemento" type="hidden" value="link" />
+</div>
+
+<div class="form-group">
+    <div class="checkbox">
+        <label>
+            <input asp-for="UrlLink" />
+            @Html.DisplayNameFor(model => model.UrlLink)
+        </label>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="textoLink_" class="control-label"></label>
+    <select asp-for="textoLink_" class="form-control texto"></select>
+</div>
+<div class="form-group">
+    <label asp-for="imagemLink_" class="control-label"></label>
+    <select asp-for="imagemLink_" class="form-control imagem"></select>
+</div>
+<div class="form-group">
+    <label asp-for="paginaDestinoLink_" class="control-label"></label>
+    <select asp-for="paginaDestinoLink_" class="form-control pagina"></select>
+</div>
+
+<div class="form-group">
+    <label asp-for="TextoLink" class="control-label"></label>
+    <input asp-for="TextoLink" class="form-control" />
+    <span asp-validation-for="TextoLink" class="text-danger"></span>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

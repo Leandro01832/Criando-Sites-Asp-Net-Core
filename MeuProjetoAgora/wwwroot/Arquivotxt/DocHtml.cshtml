@@ -1,0 +1,487 @@
+﻿
+
+
+
+<meta charset='UTF-8'>
+
+
+<div id='conteudo$model.Pagina.IdPagina' class='Conteudo'>
+
+    <div id='corpo' data-value='$model.background.IdBackground' class='Corpo'>
+
+    </div>
+
+    <div id='topo$model.background_topo.IdBackground' class='Topo' data-value='$model.background_topo.IdBackground'>
+        <h1>$model.titulo</h1>
+    </div>
+
+    <div id='menu$model.background_menu.IdBackground' class='Menu' data-value='$model.background_menu.IdBackground'>
+        <p>menu</p>
+        <br />
+        #if ($model.facebook != 'vazio' && $model.facebook != '')
+        <a href='$model.facebook' target='_blank'>
+            <img class='img-responsive' src='/imagem/facebook.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+        #if ($model.twiter != 'vazio' && $model.twiter != '')
+        <a href='$model.twiter' target='_blank'>
+            <img class='img-responsive' src='/imagem/twitter.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+        #if ($model.instagram != 'vazio' && $model.instagram != '')
+        <a href='$model.instagram' target='_blank'>
+            <img class='img-responsive' src='/imagem/instagram.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+
+
+
+
+        #if($model.Pedidos)
+
+        <a href='/Requisicao/IndexPedido' target='_blank'>
+            Pedidos
+        </a>
+
+        #end
+
+
+    </div>
+
+    <div id='blocos$model.background_bloco.IdBackground' class='bloco' data-value='$model.background_bloco.IdBackground'>
+
+        #foreach($nunber in $model.Rows)
+
+
+
+        #set ($condicao = 0)
+        #set ($espacamento = 0)
+        <div class='row linha' id='line$nunber'>
+
+
+            #foreach($bloco in $divs)
+
+            #if ($bloco.Divisao == 'col-md-12' && $bloco.Desenhado == 0 || $bloco.Divisao == 'col-sm-12' && $bloco.Desenhado == 0)
+            #set($espacamento = $espacamento + 12)
+            #end
+
+            #if ($bloco.Divisao == 'col-md-6' && $bloco.Desenhado == 0 || $bloco.Divisao == 'col-sm-6' && $bloco.Desenhado == 0)
+            #set($espacamento = $espacamento + 6)
+            #end
+
+            #if ($bloco.Divisao == 'col-md-4' && $bloco.Desenhado == 0 || $bloco.Divisao == 'col-sm-4' && $bloco.Desenhado == 0)
+            #set($espacamento = $espacamento + 4)
+            #end
+
+            #if ($bloco.Divisao == 'col-md-3' && $bloco.Desenhado == 0 || $bloco.Divisao == 'col-sm-3' && $bloco.Desenhado == 0)
+            #set($espacamento = $espacamento + 3)
+            #end
+
+            #if ($bloco.Divisao == 'col-md-2' && $bloco.Desenhado == 0 || $bloco.Divisao == 'col-sm-2' && $bloco.Desenhado == 0)
+            #set($espacamento = $espacamento + 2)
+            #end
+
+            #if ($espacamento > 12)
+            #set($condicao = 1)
+
+            #end
+
+            #if ($condicao == 0 && $bloco.Desenhado == 0)
+
+            <div id='DIV$bloco.IdDiv' class='ClassDiv $bloco.Divisao grid-container' data-value='$bloco.IdDiv'>
+
+
+
+                #foreach($element in $bloco.Elemento)
+                <div id='elemento$element.IdElemento' class='Elemento grid-item' data-value='$element.IdElemento'>
+
+
+
+                    #if ($element.texto_ > 0)
+
+                    <div id='texto$element.texto.IdTexto' class='Textos grid-item' data-value='$element.texto.IdTexto' data-id='$element.IdElemento'>
+                        <p>$element.texto.palavras</p>
+                    </div>
+
+                    #end
+
+                    #if ($element.carousel_ > 0)
+                    <div id='carousel$element.carousel.IdCarousel' class='Carrosel grid-item' style='height:auto' data-value='$element.carousel.IdCarousel' data-id='$element.IdElemento'>
+                        <div id='carouselsite$element.carousel.IdCarousel' class='carousel' data-ride='carousel'>
+
+                            <div class='carousel-inner' role='listbox'>
+
+                                #foreach($imagem in $element.carousel.imagens )
+
+                                <div class='item'>
+                                    <img class='img-responsive minhaimg' src='$imagem.Imagem.Arquivo' alt='imagem' style='width:100%;' />
+                                    <!-- <div class='carousel-caption'>
+                                    </div>   -->
+                                </div>
+                                #end
+
+
+
+                            </div>
+
+                        </div>
+
+
+
+
+                    </div>
+
+                    #end
+
+                    #if ($element.video_ > 0)
+
+                    <div id='Video$element.video.IdVideo' class='video grid-item' data-value='$element.video.IdVideo' data-id='$element.IdElemento'>
+
+                        <video style='width:100%; height:100%' controls>
+                            <source src='$element.video.ArquivoVideo' type='video/mp4' />
+                        </video>
+
+                    </div>
+
+                    #end
+
+                    #if ($element.imagem_ > 0)
+
+                    <div id='Imagem$element.imagem.IdImagem' class='Imagem grid-item' data-value='$element.imagem.IdImagem' data-id='$element.IdElemento'>
+                        <img class='img-responsive' src='$element.imagem.Arquivo' alt='imagem' style='width:100%;' />
+                    </div>
+
+                    #end
+
+
+                    #if($element.link_ > 0)
+
+                    #if($element.link.Url == false)
+
+                    <div id='Link$element.link.IdLink' class='Link grid-item' data-value='$element.link.IdLink' data-id='$element.IdElemento'>
+                        <a href='/site/$element.link.Destino.Pedido.DominioTemporario/$element.link.Destino.Titulo.Replace(' ', ' ')'>
+                            $element.link.texto.Palavras
+                            #if($element.link.imagem_ > 0)
+                            <img class='img-responsive' src='$element.link.imagem.Arquivo' alt='imagem' style='width:100%;' />
+                            #end
+                        </a>
+                    </div>
+
+                    #else
+
+                    <div id='Link$element.link.IdLink' class='Link grid-item' data-value='$element.link.IdLink' data-id='$element.IdElemento'>
+                        <a href='$element.link.TextoLink'>
+                            $element.link.texto.Palavras
+                            #if($element.link.imagem_ > 0)
+                            <img class='img-responsive' src='$element.link.imagem.Arquivo' alt='imagem' style='width:100%;' />
+                            #end
+                        </a>
+                    </div>
+
+                    #end
+                    #end
+
+                    #if($element.form_ > 0)
+
+                    <div id='Form$element.form.IdForm' class='Form grid-item' data-value='$element.form.IdForm' data-id='$element.IdElemento'>
+                        <a class='Linkform' data-value='$element.form.IdForm' href='#'>
+                            $element.form.Link.texto.Palavras
+                            #if($element.form.link.imagem_ > 0)
+                            <img class='img-responsive' src='$element.form.link.imagem.Arquivo' alt='imagem' style='width:100%;' />
+                            #end
+                        </a>
+
+                    </div>
+
+                    #end
+
+                    #if($element.table_ > 0)
+
+                    <div id='Table$element.table.IdTable' class='Table grid-item' data-value='$element.table.IdTable' data-id='$element.IdElemento'>
+
+                        <table class='$element.table.Estilo'>
+
+                            <tr>
+                                <th>
+                                    <label>Nome</label>
+                                </th>
+                                <th>
+                                    <label>Imagem</label>
+                                </th>
+                                <th></th>
+
+                            </tr>
+
+                            #foreach($prod in $element.table.Produtos)
+
+                            <tr class='linhaProduto' id='Produto$prod.IdProduto' data-value='$prod.IdProduto'>
+                                <th>
+                                    <label>$prod.Nome</label>
+                                </th>
+                                <th>
+                                    #set($imgIndice = 0)
+                                    #foreach($img in $prod.Imagens)
+                                    #set($imgIndice = $imgIndice + 1)
+                                    #if($imgIndice == 1)
+                                    <img src='$img.Arquivo' width='100' />
+                                    #end
+                                    #end
+                                </th>
+
+
+                                <th>
+                                    <a href='#' data-value='$prod.IdProduto' class='btn btn-danger botaoDetalhes'>  Detalhes </a>
+                                    <a href='#' data-value='$prod.IdProduto' class='btn btn-success botaoAdicionarCarrinho'> Adicionar ao carrinho </a>
+                                </th>
+                            </tr>
+
+
+                            #end
+
+                        </table>
+
+                    </div>
+
+                    #end
+
+                </div>
+
+                #end
+
+            </div>
+
+
+            <br />
+            #set ($bloco.Desenhado = 1)
+
+            #end
+
+            #end
+
+
+        </div>
+
+        #end
+
+        <br />
+        <br />
+
+    </div>
+
+
+</div>
+
+<div id='bordaEsquerda$model.background_borda_esquerda.IdBackground' class='bordaEsquerda' data-value='$model.background_borda_esquerda.IdBackground'>
+
+</div>
+
+<div id='bordaDireita$model.background_borda_direita.IdBackground' class='bordaDireita' data-value='$model.background_borda_direita.IdBackground'>
+
+</div>
+
+<script type='text/javascript'>
+
+        $(document).ready(function () {
+
+            jQuery(function () {
+
+                $('.item:first-child').addClass('active').show();
+            });
+
+        });
+
+</script>
+
+
+
+#if($model.Pagina.Margem)
+
+
+
+<style>
+
+    #bordaDireita$model.background_borda_direita.IdBackground {
+        display: block;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.IdBackground {
+        display: block;
+    }
+
+    #conteudo$model.Pagina.IdPagina {
+        width: 60%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+</style>
+
+
+
+
+
+
+
+#else
+
+
+
+
+
+
+
+
+
+<style type='text/css'>
+
+
+    h1 {
+        text-align: center;
+    }
+
+
+
+    #menu a {
+        display: inline-block;
+    }
+
+    #conteudo$model.Pagina.IdPagina {
+        width: 100%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+
+    #bordaDireita$model.background_borda_direita.IdBackground {
+        display: none;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.IdBackground {
+        display: none;
+    }
+</style>
+
+
+#if($model.background.backgroundImage)
+
+<style>
+    .content {
+        background-image: url($model.background.imagem.Arquivo);
+    }
+
+    #pagina$model.Pagina.IdPagina {
+        background-image: url($model.background.imagem.Arquivo);
+    }
+</style>
+
+#else
+
+<style>
+    .content {
+        background-color: $model.background.Cor;
+    }
+
+    #pagina$model.Pagina.IdPagina {
+        background-color: $model.background.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_topo.backgroundImage)
+
+<style>
+    #topo$model.background_topo.IdBackground {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-size: contain;
+        background-image: url($model.background_topo.imagem.Arquivo);
+        background-repeat: $model.background_topo.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #topo$model.background_topo.IdBackground {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-color: $model.background_topo.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_menu.backgroundImage)
+
+<style>
+    #menu$model.background_menu.IdBackground {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-image: url($model.background_menu.imagem.Arquivo);
+        background-repeat: $model.background_menu.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #menu$model.background_menu.IdBackground {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-color: $model.background_menu.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_bloco.backgroundImage)
+
+<style>
+    #blocos$model.background_bloco.IdBackground {
+        background-image: url($model.background_bloco.imagem.Arquivo);
+        background-repeat: $model.background_bloco.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #blocos$model.background_bloco.IdBackground {
+        background-color: $model.background_bloco.Cor;
+    }
+</style>
+
+#end
+
+
+
+
+#end

@@ -1,0 +1,78 @@
+﻿@model MeuProjetoAgora.Models.business.Div
+
+<h4>Div</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="EditDiv">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="IdDiv" />
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Padding" class="control-label"></label>
+                <input asp-for="Padding" class="form-control" />
+                <span asp-validation-for="Padding" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Height" class="control-label"></label>
+                <input asp-for="Height" class="form-control" />
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Colunas" class="control-label"></label>
+                <input asp-for="Colunas" class="form-control" />
+                <span asp-validation-for="Colunas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Desenhado" class="control-label"></label>
+                <input asp-for="Desenhado" class="form-control" />
+                <span asp-validation-for="Desenhado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Divisao" class="control-label"></label>
+                <input asp-for="Divisao" class="form-control" />
+                <span asp-validation-for="Divisao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorderRadius" class="control-label"></label>
+                <input asp-for="BorderRadius" class="form-control" />
+                <span asp-validation-for="BorderRadius" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ordem" class="control-label"></label>
+                <input asp-for="Ordem" class="form-control" />
+                <span asp-validation-for="Ordem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="background_" class="control-label"></label>
+                <select asp-for="background_" class="form-control" asp-items="ViewBag.background_"></select>
+                <span asp-validation-for="background_" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PaginaId" class="control-label"></label>
+                <select asp-for="PaginaId" class="form-control" asp-items="ViewBag.PaginaId"></select>
+                <span asp-validation-for="PaginaId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Salvar" onclick="div.Update()"  class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<div>
+    <script src="~/js/Div.js"></script>
+
+    <script src="~/js/AjaxGet.js"></script>
+</div>
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+}

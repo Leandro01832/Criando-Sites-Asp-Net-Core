@@ -1,0 +1,218 @@
+﻿@model MeuProjetoAgora.Models.business.Pagina
+
+@{
+    Layout = "~/Views/Shared/_Render.cshtml";
+}
+
+
+@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
+@*<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/jquery-ui.min.js"></script>
+
+<style>
+    #sites {
+        margin-left: 50px;
+    }
+
+    #paginas {
+        margin-left: 50px;
+    }
+
+    #acesso {
+        margin-left: 50px;
+    }
+</style>
+
+<br />  <br />    <br />
+
+@if (Model == null)
+{
+    <label class="control-label" style="margin-left:50px;">Escolha um site:</label>
+    @Html.DropDownList("sites", null, htmlAttributes: new { @class = "form-control site" })
+
+    @Html.DropDownList("paginas", null, htmlAttributes: new { @class = "form-control pagina" })
+
+    <a href="#" id="acesso" class="btn btn-primary">Acessar</a>
+}
+else
+{
+
+    ViewBag.Title = Model.Titulo + " - " + Model.Pedido.Nome;
+    string valor = ViewBag.html;
+
+    <style media="screen and (max-width: 450px)">
+        .content {
+            width: 100%;
+        }
+    </style>
+
+    <link rel="stylesheet" href="~/css/RenderizarDinamico.css" />
+
+
+    <div id="estrutura">
+
+        <div class="row" id="LinhaImaginaria">
+
+
+
+            <div id="Chat" class="col-md-4" style="background-color: white;">
+
+                <partial name="Chat" />
+
+                <a href="#" id="CriaTexto" class="btn-warning">Criar textos</a>
+
+                <a href="#" id="CriaVideo" class="btn btn-warning">Criar videos</a>
+
+                <a href="#" id="CriaCarousel" class="btn btn-warning">Criar Carrosseis</a>
+
+                <a href="#" id="CriaImagem" class="btn btn-warning">Criar imagens</a>
+
+                <a href="#" id="CriaLink" class="btn btn-warning">Criar links</a>
+
+                <a href="#" id="CriaTable" class="btn btn-warning">Criar tabelas de produtos</a>
+
+                <a href="#" id="CriaBloco" class="btn btn-warning">Criar blocos</a>
+
+                <a href="#" class="btn btn-warning CoresBack">Criar cores</a>
+
+                <a href="#" class="btn btn-warning CriarPlano">Criar Background</a>
+
+                <a href="#" id="EscolherMusica" class="btn btn-warning">Escolher musica</a>
+
+                <a href="#" id="CreatePath" class="btn btn-warning">Criar pasta de imagens</a>
+
+                <a href="#" id="CriaElemento" class="btn btn-danger">Renderizar elementos</a>
+
+                <a href="/Criar-Pagina/" class="btn btn-warning">Criar nova pagina</a>
+                <a href="/Criar-Site/" class="btn btn-warning">Criar novo site</a>
+
+
+
+                <div id="ApagarElementosComId" style="background-color: brown;">
+
+                    <input id="IdApagar" type="number" />
+                    <input type="button" id="ApagarComId" value="Apagar Elemento" />
+
+
+                </div>
+
+                <div id="conteudomodal" style="background-color: white; min-height:200px;">
+                    <h4>Formulário</h4>
+
+                </div>
+
+                <div id="conteudoImagem" style="background-color: greenyellow; min-height:200px;">
+                    <h4>Imagem</h4>
+                </div>
+
+                <div id="conteudoMusica" style="background-color: yellow; min-height:200px;">
+                    <h4>Música</h4>
+                </div>
+
+                <div id="conteudoVideo" style="background-color: cadetblue; min-height:200px;">
+                    <h4>Vídeo</h4>
+                </div>
+
+            </div>
+
+            <div class="content col-md-8" id="ConteudoPagina" data-id="">
+
+                @Html.Raw(ViewBag.Html)
+
+
+            </div>
+
+            <script type="text/javascript">
+                $('.linha').sortable({
+                    connectWith: '.linha'
+                });
+
+                $('.ClassDiv').sortable();
+
+                var axis = $('.linha').sortable('option', 'connectWith');
+                let condicaoBloco = false;
+                let condicaoElemento = false;
+
+                // Setter
+                $('.linha').sortable('option', 'connectWith', '.linha');
+
+                $('.linha').sortable({
+                    update: function (event, ui) {
+                        condicaoBloco = true;
+                    }
+                });
+
+                $('.ClassDiv').sortable({
+                    update: function (event, ui) {
+                        condicaoElemento = true;
+                    }
+                });
+            </script>
+
+        </div>
+
+    </div>
+
+    <div id="FormTexto" style="display:none;">
+
+    </div>
+
+    <div id="Permissao" style="display:none;">
+
+    </div>
+
+}
+
+
+
+@section scripts{ 
+
+    <script src="~/js/FullScreen.js"></script>
+    <script src="~/js/AjaxDelete.js"></script>
+    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+    <script src="~/js/Chat.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $(".site").click(function () {
+
+                $(".pagina").empty();
+                $(".pagina").append('<option value="0">[Selecione  uma pagina..]</option>');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/AjaxGet/GetPaginas',
+                    dataType: 'json',
+                    data: { PedidoId: $(this).val() },
+                    success: function (data) {
+                        $.each(data, function (i, data) {
+                            $(".pagina").append('<option value="'
+                                + data.idPagina + '">'
+                                + data.titulo + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Falha ao buscar paginas.' + ex);
+                    }
+                });
+                return false;
+            });
+            $("#paginas").change(function () {
+                document.getElementById("acesso").href = "/pagina/" + $(this).val();
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript" src="~/js/Variaveis.js"></script>
+
+    <script src="~/js/AlterarPosicaoBloco.js"></script>
+
+    <script type="text/javascript" src="~/js/funcaoClickRenderizarDinamico.js"></script>
+
+    <script type="text/javascript" src="~/js/ContentUmDoisClick.js"></script>
+}
+
+

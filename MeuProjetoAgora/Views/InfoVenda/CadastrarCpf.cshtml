@@ -1,0 +1,61 @@
+﻿@model MeuProjetoAgora.Models.business.InfoVenda
+
+<h4>InfoVenda</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="CadastrarCpf">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Cpf" class="control-label"></label>
+                <input asp-for="Cpf" class="form-control" />
+                <span asp-validation-for="Cpf" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input asp-for="ClienteId" type="hidden" class="form-control" />
+            </div>
+            <div class="form-group">
+                <input type="button" value="Proximo" id="InfomarVenda" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#InfomarVenda").click(function () {
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/InfoVenda/CadastrarCpf',
+                    dataType: 'json',
+                    data:
+                    {
+                        Cpf: $("#Cpf").val()
+                    },
+                    headers: headers,
+                    success: function (data) {
+
+                        if (data !== "") {
+                            alert(data);
+                        }
+                        else { alert('Erro: Preencha o formulario corretamente'); }
+
+
+                    },
+                    error: function (ex) {
+                        alert('Falha na alteração.' + ex);
+                    }
+                });
+                return false;
+            });
+
+        });
+        
+
+    </script>
+</div>
+

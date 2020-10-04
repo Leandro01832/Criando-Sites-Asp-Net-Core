@@ -1,0 +1,45 @@
+﻿
+#CriaTexto {
+    font-size: 22px;
+}
+
+
+#Chat {
+    border: ridge;
+    border-width: 20px;
+    border-color: bisque;
+    height: auto;
+}
+
+.content {
+    border: ridge;
+    border-width: 15px;
+    border-color: bisque;
+    height: auto;
+}
+
+#conteudomodal {
+    height: auto;
+}
+
+#conteudoImagem {
+    height: auto;
+}
+
+#conteudoMusica {
+    height: auto;
+}
+
+#conteudoVideo {
+    height: auto;
+}
+
+#Chat {
+    height: 625px;
+    overflow: auto;
+}
+
+.content {
+    height: 625px;
+    overflow: auto;
+}

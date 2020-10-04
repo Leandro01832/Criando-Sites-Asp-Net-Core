@@ -1,0 +1,27 @@
+/**{
+	margin: 0px;
+	padding: 0px;
+
+}*/
+
+/*.carousel-item {
+    
+    width: 100%;
+    overflow: hidden;
+    height: 90%;
+    margin: 50px auto;
+    box-shadow: 0 0 30px #000;
+    position: relative;
+}*/
+
+.carousel-inner {
+    height: 100%;
+    
+}
+
+/*.carousel {
+    height: 100%;
+}*/
+
+
+

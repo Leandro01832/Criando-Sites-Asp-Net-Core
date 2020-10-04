@@ -1,0 +1,53 @@
+﻿@model MeuProjetoAgora.Models.business.ContaBancaria
+
+<h4>ContaBancaria</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CadastrarContaBancaria">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CodigoBanco" class="control-label"></label>
+                <input asp-for="CodigoBanco" class="form-control" />
+                <span asp-validation-for="CodigoBanco" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoConta" class="control-label"></label>
+                <input asp-for="TipoConta" class="form-control" />
+                <span asp-validation-for="TipoConta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Agencia" class="control-label"></label>
+                <input asp-for="Agencia" class="form-control" />
+                <span asp-validation-for="Agencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DVAgencia" class="control-label"></label>
+                <input asp-for="DVAgencia" class="form-control" />
+                <span asp-validation-for="DVAgencia" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Conta" class="control-label"></label>
+                <input asp-for="Conta" class="form-control" />
+                <span asp-validation-for="Conta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DVConta" class="control-label"></label>
+                <input asp-for="DVConta" class="form-control" />
+                <span asp-validation-for="DVConta" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ClienteId" class="control-label"></label>
+                <input asp-for="ClienteId" class="form-control" />
+                <span asp-validation-for="ClienteId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="button" value="Cadastrar" id="InfomarConta" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <script src="~/wwwroot/js/AjaxCreate.js"></script>
+</div>

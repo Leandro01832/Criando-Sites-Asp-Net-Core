@@ -1,0 +1,157 @@
+﻿@model MeuProjetoAgora.Models.business.Pedido
+
+@{
+    ViewBag.Title = "Criar";
+}
+
+<h2>Criar</h2>
+<h4>Site</h4>
+
+<style>
+    #extensao {
+        width: 25%;
+    }
+
+    #dominio {
+        width: 55%;
+    }
+    #textowww {
+        left: 6%;
+    }
+    #www{
+        font-size: 20px;
+    }
+</style>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="row">
+        <label id="textowww" class="control-label col-md-3">Pesquisar dominio: <span id="www">www.</span></label>
+        <div class="col-md-4">
+            <input id="dominio" class="col-md-3" name="dominio" type="text" />
+            @Html.DropDownList("extensao", new List<SelectListItem>
+       {
+           new SelectListItem{ Text=".com", Value=".com" },
+           new SelectListItem{ Text=".net", Value=".net" },
+           new SelectListItem{ Text=".gov", Value=".gov" },
+           new SelectListItem{ Text=".com.br", Value=".com.br" }
+
+       }, new { @class = "form-control col-md-3" })
+        </div>
+        <a id="acesso" class="btn btn-primary col-md-3" href="#">Pesquisar</a>
+    </div>
+
+    <p class="text-danger">@ViewBag.erro</p>
+    <p class="text-danger">@ViewBag.negativo</p>
+    <p class="text-primary">@ViewBag.positivo</p> 
+    <br />
+
+    <hr />
+
+    <div class="form-horizontal">
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Nome, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-12">
+                @Html.EditorFor(model => model.Nome, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.Nome, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DominioTemporario, htmlAttributes: new { @class = "control-label col-md-4" })
+            <div class="col-md-8">
+                @Html.EditorFor(model => model.DominioTemporario, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.ValidationMessageFor(model => model.DominioTemporario, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <input type="hidden" value="sdfvsdf" asp-for="ClienteId" />
+
+        <div class="form-horizontal">
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Servico.Descricao, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.Servico.Descricao, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Servico.Descricao, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+
+
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-12">
+                <input type="submit" value="Criar" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    <hr />
+}
+
+<div>
+    @Html.ActionLink("voltar para a lista", "Galeria")
+</div>
+
+
+@section Scripts {
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            function retira_acentos(palavra) {
+                com_acento = 'áàãâäéèêëíìîïóòõôöúùûüçÁÀÃÂÄÉÈÊËÍÌÎÏÓÒÕÖÔÚÙÛÜÇ';
+                sem_acento = 'aaaaaeeeeiiiiooooouuuucAAAAAEEEEIIIIOOOOOUUUUC';
+                nova = '';
+                for (i = 0; i < palavra.length; i++) {
+                    if (com_acento.search(palavra.substr(i, 1)) >= 0) {
+                        nova += sem_acento.substr(com_acento.search(palavra.substr(i, 1)), 1);
+                    }
+                    else {
+                        nova += palavra.substr(i, 1);
+                    }
+                }
+                return nova;
+            }
+
+
+            $("#DominioTemporario").change(function () {
+
+                var texto = $(this).val();
+                texto = texto.replace(/\s/g, "");
+                $(this).val(texto);
+
+                var dominio = retira_acentos($("#DominioTemporario").val());
+
+                $(this).val(dominio);
+
+                $(this).val($("#DominioTemporario").val().trim().toLowerCase());
+
+            });
+
+            $("#dominio").focusout(function () {
+
+                document.getElementById("acesso").href = "/Buscar/" + $(this).val() + "/" + $("#extensao").val();
+
+            });
+
+
+
+
+
+
+        });
+    </script>
+
+
+}

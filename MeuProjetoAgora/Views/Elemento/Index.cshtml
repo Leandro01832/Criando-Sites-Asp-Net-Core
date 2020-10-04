@@ -1,0 +1,83 @@
+﻿@model IEnumerable<MeuProjetoAgora.Models.business.Elemento>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.texto)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.carousel)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.imagem)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.video)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.link)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.form)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.table)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.div)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Ordem)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.texto.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.carousel.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.imagem.IdImagem)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.video.IdVideo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.link.IdLink)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.form.IdForm)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.table.IdTable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.div.Nome)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Ordem)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdElemento">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdElemento">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdElemento">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

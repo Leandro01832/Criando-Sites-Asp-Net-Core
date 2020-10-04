@@ -1,0 +1,63 @@
+﻿
+@{
+    ViewData["Title"] = "ViewCreate";
+}
+
+<h2>Criar</h2>
+
+<div class="form-group">
+    <label class="control-label col-md-2">Selecione o que você quer?</label>
+
+    <div class="col-md-10">
+        @Html.DropDownList("select", new List<SelectListItem>
+   {
+       new SelectListItem{ Text="Criar Sites", Value="Site" },
+       new SelectListItem{ Text="Criar Paginas", Value="Pagina" },
+       new SelectListItem{ Text="Criar Videos", Value="Videos" },
+       new SelectListItem{ Text="Criar Textos", Value="Textos" },
+       new SelectListItem{ Text="Criar Musicas", Value="Musicas" },
+       new SelectListItem{ Text="Criar Blocos", Value="Blocos" },
+       new SelectListItem{ Text="Criar Produtos", Value="Produtos" },
+       new SelectListItem{ Text="Criar Tabelas", Value="Tabelas" },
+       new SelectListItem{ Text="Criar Planos de Fundo", Value="Planos de Fundo" },
+       new SelectListItem{ Text="Criar Carrosseis", Value="Carrosseis" },
+       new SelectListItem{ Text="Criar Imagens", Value="Imagens" },
+       new SelectListItem{ Text="Criar Links", Value="Links" },
+       new SelectListItem{ Text="Criar Elementos", Value="Elementos" }
+
+   }, new { @class = "form-control" })
+
+    </div>
+
+    <div id="info" class="jumbotron"></div>
+
+    <a href="#" id="acesso" class="btn btn-primary">Criar</a>
+</div>
+
+@section scripts{
+
+    <script>
+        $(document).ready(function () { 
+
+            $("#select").click(function () { 
+
+                if ($(this).val() == "Pagina") {
+                    document.getElementById("info").innerHTML = "Para criar uma pagina deverá criar um site primeiro.";
+
+                    document.getElementById("acesso").href = "/Criar-Pagina/";
+                }
+
+                else if ($(this).val() == "Site") {
+                    document.getElementById("acesso").href = "/Criar-Site/";
+                }
+
+                else {
+                    document.getElementById("info").innerHTML = "<p> Para criar " + $(this).val() +
+                        " deverá primeiro escolher qual é o site e qual é a pagina  </p>";
+                    document.getElementById("acesso").href = "/Pagina/";
+                }
+            });
+        });
+    </script>
+
+}

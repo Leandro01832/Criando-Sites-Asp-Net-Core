@@ -1,0 +1,12 @@
+ 
+
+#if($model.Musicbool)
+<audio controls autoplay loop>
+    <source src='$model.arquivoMusic.Replace('~', '../..' )' type='audio/mp3' />
+
+</audio>
+
+#end
+
+
+

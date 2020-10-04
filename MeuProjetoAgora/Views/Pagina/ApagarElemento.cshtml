@@ -1,0 +1,152 @@
+﻿@model MeuProjetoAgora.Models.business.Elemento
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Deseja realmente apagar este elemento?</h3>
+<div>
+    <h4>Elemento</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayName("Nome do bloco")
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.div.Nome)
+        </dd>
+
+        @{
+            if (Model.carousel_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.carousel.Nome)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.carousel.Nome)
+                </dd>
+            }
+
+
+            if (Model.imagem_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.imagem.Arquivo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.imagem.Arquivo)
+                </dd>
+            }
+
+
+            if (Model.texto_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.texto.Nome)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.texto.Nome)
+                </dd>
+            }
+
+            if (Model.video_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.video.IdVideo)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.video.IdVideo)
+                </dd>
+            }
+
+            if (Model.form_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.form.Nome)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.form.Nome)
+                </dd>
+            }
+
+            if (Model.table_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.form.Nome)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.form.Nome)
+                </dd>
+            }
+
+            if (Model.link_ > 0)
+            {
+                <dt>
+                    @Html.DisplayNameFor(model => model.link.IdLink)
+                </dt>
+
+                <dd>
+                    @Html.DisplayFor(model => model.link.IdLink)
+                </dd>
+            }
+
+        }
+
+
+    </dl>
+
+    @using (Html.BeginForm("", "", FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="button" value="Deletar" id="ApagarElemento" />
+        </div>
+    }
+</div>
+
+<div>
+    
+    <script type="text/javascript">   
+
+        let token = $('[name=__RequestVerificationToken]').val();
+        let headers = {};
+        headers['RequestVerificationToken'] = token;
+             
+            jQuery("#ApagarElemento").click(function () { 
+                $.ajax({
+                    type: 'POST',
+                    url: '/AjaxDelete/ApagarElemento',
+                    dataType: 'json',
+                    data: { id: @Model.IdElemento },
+                    headers: headers,
+                    success: function (data) {
+                        if (data != "")
+                        {
+                            var numero = $(".Topo")[0].baseURI.replace(/[^0-9]/g, '');
+                            numero = numero.replace('5001', '');
+                            $("#Hidden1").val(true);
+                            $(".content").load("/Pagina/getview", { id: numero });
+                            alert("Elemento apagado com sucesso");
+                        }
+                        else { alert('Erro: Preencha o formulario corretamente'); }
+                    },
+                    error: function (ex) {
+                        alert('Falha ao alterar elemento.' + ex);
+                    }
+                });
+                return false;
+            });
+    </script>
+</div>
+
+

@@ -1,0 +1,118 @@
+#set($valor = 0)
+#foreach($bloco in $divs)
+
+
+#if($bloco.Background.backgroundImage)
+<style>
+    #DIV$bloco.IdDiv {
+        display: grid;
+        grid-template-columns: ${bloco.Colunas};
+
+    padding: ${bloco.Padding}%;
+    background-image: url($bloco.Background.imagem.Arquivo);
+
+    border-radius: ${bloco.BorderRadius}px;
+
+    min-height: ${bloco.Height}px;
+    height: auto;
+
+    position: relative;
+
+    bottom: ${valor}px;
+    }
+</style>
+
+#elseif($bloco.Background.Gradiente)
+
+  <style>
+    #DIV$bloco.IdDiv {
+
+        #set($um = 1)
+         #foreach($Cores in $bloco.Background.BackgroundGradiente.Cores)
+         #if($um == 1)
+        #set($back = $Cores.HexToColor($Cores.CorBackground))
+        background: rgb($back); 
+        #end
+        #set($um = $um + 1)        
+         #end
+
+
+         #set($quantidade = $bloco.Background.BackgroundGradiente.Cores.Count())
+        background: -moz-linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+         #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+            #if($velocityCount == $quantidade)
+             );
+        #else
+            ,
+            #end
+
+        #end  
+
+        background: -webkit-linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+        #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+        #if($velocityCount == $quantidade)
+             );
+        #else
+            ,
+            #end
+
+        #end  
+
+        background: linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+        #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+            #if($velocityCount == $quantidade)
+             );
+        #else
+             ,
+            #end
+
+        #end  
+
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#09e718',endColorstr='#1c8ea5',GradientType=1);
+
+
+        display: grid;
+        grid-template-columns: ${bloco.Colunas};
+
+    padding: ${bloco.Padding}%;    
+    border-radius: ${bloco.BorderRadius}px; 
+    min-height: ${bloco.Height}px;
+    height: auto;
+    position: relative; 
+    bottom: ${valor}px;
+    }
+</style>
+
+#else
+
+<style>
+    #DIV$bloco.IdDiv {
+        display: grid;
+        grid-template-columns: ${bloco.Colunas};
+
+    padding: ${bloco.Padding}%;
+    background-color: $bloco.Background.Cor;
+
+    border-radius: ${bloco.BorderRadius}px;
+
+    min-height: ${bloco.Height}px;
+    height: auto;
+
+    position: relative;
+
+    bottom: ${valor}px;
+    }
+</style>
+#end
+#set($valor = $valor + 20)
+#end
+

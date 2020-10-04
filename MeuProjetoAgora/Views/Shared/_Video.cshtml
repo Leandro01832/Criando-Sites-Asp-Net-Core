@@ -1,0 +1,24 @@
+﻿@model MeuProjetoAgora.Models.ViewModelElemento
+
+<h4>Video</h4>
+<hr />
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<div class="form-group">
+    <input asp-for="elemento" type="hidden" value="video" />
+</div>
+
+<div class="form-group">
+    <label asp-for="Nome" class="control-label"></label>
+    <input asp-for="Nome" class="form-control" />
+    <span asp-validation-for="Nome" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <input asp-for="ArquivoVideo" type="hidden" />
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

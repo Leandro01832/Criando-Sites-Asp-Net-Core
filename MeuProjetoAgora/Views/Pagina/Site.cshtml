@@ -1,0 +1,16 @@
+﻿@model MeuProjetoAgora.Models.business.Pagina
+
+@{
+    ViewData["Title"] = Model.Titulo + " - " + Model.Pedido.Nome;
+    Layout = "~/Views/Shared/_Pagina.cshtml";
+}
+
+<script src="~/js/Jquery2.2.3.js"></script>
+
+<div class="content">
+
+    @Html.Raw(ViewBag.html)
+</div>
+
+
+

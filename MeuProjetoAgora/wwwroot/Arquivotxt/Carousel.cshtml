@@ -1,0 +1,33 @@
+#foreach($bloco in $divs)
+
+#foreach($element in $bloco.Elemento)
+
+#if ($element.carousel_ > 0)
+
+<script type='text/javascript'>
+    jQuery(function () {
+        $('.item:first-child').addClass('active$element.carousel.IdCarousel').show();
+
+        setInterval(slide, 5000);
+
+        function slide() {
+            if ($('.active$element.carousel.IdCarousel').next().size()) {
+                $('.active$element.carousel.IdCarousel').fadeOut().removeClass('active$element.carousel.IdCarousel').next().addClass('active$element.carousel.IdCarousel');
+                $('.active$element.carousel.IdCarousel').delay(500).fadeIn();
+            } else {
+                $('.active$element.carousel.IdCarousel').fadeOut().removeClass('active$element.carousel.IdCarousel');
+
+                $('.item:first-child').delay(500).fadeIn().addClass('active$element.carousel.IdCarousel');
+            }
+        }
+    });
+</script>
+
+#end
+
+
+
+#end
+
+
+#end
