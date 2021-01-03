@@ -2,6 +2,7 @@
 using MeuProjetoAgora.Models.business;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -18,6 +19,10 @@ namespace MeuProjetoAgora.Models.Repository
          Task CheckSuperUserAsync();
         Task CreateUserASPAsync(string email, string roleName);
         Task CreateUserASPAsync(string email, string roleName, string password);
+        Task<bool> VerificarPermissao(int? site, string roles, string elemento);
+        Task<bool> VerificarPermissao2(int? site, string email, string condicao, string elemento);
+        Task<bool> VerificarPermissaoSite(int id);
+        Task<bool> VerificarPermissaoDiv(int? id);
     }
 
     public class UserHelper : IUserHelper
@@ -38,8 +43,7 @@ namespace MeuProjetoAgora.Models.Repository
         }
 
         public async Task<bool> DeleteUserAsync(string username)
-        {
-            
+        {            
             var userASP = await UserManager.FindByEmailAsync(username);
             if (userASP != null)
             {
@@ -52,7 +56,6 @@ namespace MeuProjetoAgora.Models.Repository
 
         public async Task<bool> UpdateUserAsync(string currentusername, string newUserName)
         {
-
             var userASP = await UserManager.FindByEmailAsync(currentusername);
             if (userASP != null)
             {
@@ -61,7 +64,6 @@ namespace MeuProjetoAgora.Models.Repository
                 var response = await UserManager.UpdateAsync(userASP);
                 return response.Succeeded;
             }
-
             return false;
         }
 
@@ -75,8 +77,7 @@ namespace MeuProjetoAgora.Models.Repository
         }
 
         public async Task CheckSuperUserAsync()
-        {
-            
+        {            
             var email = "leandroleanleo@gmail.com";
             var password = "M@nequim1991";
             var userASP = await UserManager.FindByNameAsync(email);
@@ -98,8 +99,6 @@ namespace MeuProjetoAgora.Models.Repository
 
         public async Task CreateUserASPAsync(string email, string roleName, string password)
         {
-            
-
             var userASP = new IdentityUser
             {
                 Email = email,
@@ -110,9 +109,94 @@ namespace MeuProjetoAgora.Models.Repository
           await  UserManager.AddToRoleAsync(userASP, roleName);
         }
 
-        
+        public async Task<bool> VerificarPermissao(int? site, string roles, string elemento)
+        {
+            var pedido = await userContext.Pedido.FirstAsync(p => p.IdPedido == site);
 
-        
+            if (!roles.Contains("Video") && elemento == "Video"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Carousel") && elemento == "Carousel"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Carousel") && elemento == "CarouselPagina"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Imagem") && elemento == "Imagem"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Texto") && elemento == "Texto"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Ecommerce") && elemento == "Table" 
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Ecommerce") && elemento == "Produto" 
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Link") && elemento == "Link"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Music") && elemento == "musica"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Video") && elemento == "Video"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Formulario") && elemento == "Formulario" 
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Formulario") && elemento == "Campo" 
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+
+            return true;
+        }
+
+        public async Task<bool> VerificarPermissao2(int? site, string email, string condicao, string elemento)
+        {
+            if (elemento == "Table" || elemento == "Produto")
+            {
+                condicao = "Ecommerce";
+            }
+            else if (elemento == "Campo")
+            {
+                condicao = "Formulario";
+            }
+            else if (elemento == "CarouselPagina")
+            {
+                condicao = "Carousel";
+            }
+            else if (elemento == "Dropdown")
+            {
+                condicao = "Link";
+            }
+            else
+            {
+                condicao = elemento;
+            }
+
+            if (await userContext.Permissao.FirstOrDefaultAsync(p => p.Site == site
+            && p.UserName == email && p.NomePermissao == condicao) == null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        public async Task<bool> VerificarPermissaoSite(int id)
+        {
+            var pagina = await userContext.Pagina
+            .Include(p => p.Pedido)
+            .FirstAsync(p => p.IdPagina == id);
+
+            if (DateTime.Now > pagina.Pedido.Datapedido.AddDays(pagina.Pedido.DiasLiberados)) return false;
+
+            return true;
+        }
+
+        public async Task<bool> VerificarPermissaoDiv(int? id)
+        {
+            var div = await userContext.Div
+                .FirstAsync(d => d.IdDiv == id);
+
+            var pagina = await userContext.Pagina
+                .Include(p => p.Pedido)
+                .FirstAsync(d => d.IdPagina == div.Pagina_);
+
+            if (DateTime.Now > pagina.Pedido.Datapedido.AddDays(pagina.Pedido.DiasLiberados)) return false;
+
+            return true;
+        }
     }
 
 }

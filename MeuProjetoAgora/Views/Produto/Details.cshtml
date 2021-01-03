@@ -1,0 +1,291 @@
+﻿@model IEnumerable<MeuProjetoAgora.Models.Join.ElementoDependenteElemento>
+
+
+@foreach (var item in Model)
+{
+    if (item.ElementoDependente.Dependente.GetType().Name == "Imagem")
+    {
+        var imagem = (MeuProjetoAgora.Models.business.Elemento.Imagem)item.ElementoDependente.Dependente;
+        <div id="Imagem">
+            <img class='img-responsive' src='@imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+        </div>
+    }
+
+    <br />
+
+    if (item.ElementoDependente.Dependente.GetType().Name == "Link")
+    {
+        var link = (MeuProjetoAgora.Models.business.Elemento.Link)item.ElementoDependente.Dependente;
+        <div id="Link">
+            @if (link.UrlLink == false)
+            {
+                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                    <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
+
+                    @if (link.Despendentes.Count > 1)
+                    {
+                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                    }
+
+                    <p class="text-center text-primary">@link.IdElemento</p>
+                    <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                </div>
+
+            }
+            else if (link.UrlLink == true)
+            {
+                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                    <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
+                    @if (link.Despendentes.Count > 1)
+                    {
+                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                    }
+
+                </div>
+
+            }
+        </div>
+    }
+
+    <br />
+
+    if (item.ElementoDependente.Dependente.GetType().Name == "Texto")
+    {
+        var texto = (MeuProjetoAgora.Models.business.Elemento.Texto)item.ElementoDependente.Dependente;
+        <div id="Texto">
+            @Html.Raw(texto.PalavrasTexto)
+        </div>
+    }
+
+    <br />
+
+    if (item.ElementoDependente.Dependente.GetType().Name == "Video")
+    {
+        var video = (MeuProjetoAgora.Models.business.Elemento.Video)item.ElementoDependente.Dependente;
+        <div id="Video">
+            <video style='width:100%; height:100%' controls>
+                <source src='@video.ArquivoVideo' type='video/mp4' />
+            </video>
+
+        </div>
+    }
+
+    <br />
+
+    if (item.ElementoDependente.Dependente.GetType().Name == "Carousel")
+    {
+        var carousel = (MeuProjetoAgora.Models.business.Elemento.Carousel)item.ElementoDependente.Dependente;
+        <div id="Carousel">
+            <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
+
+                <div class='carousel-inner' role='listbox'>
+                    @foreach (var dependente in carousel.Despendentes)
+                    {
+                        var ele = (MeuProjetoAgora.Models.business.Elemento.Imagem)dependente.ElementoDependente.Dependente;
+                        <div class='item'>
+                            <img class='img-responsive minhaimg' src='@ele.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div>
+                <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            $('.item:first-child').addClass('active@(carousel.IdElemento)').show();
+
+                            setInterval(slide, 5000);
+
+                            function slide() {
+                                if ($('.active@(carousel.IdElemento)').next().size()) {
+                                    $('.active@(carousel.IdElemento)').fadeOut()
+                                    .removeClass('active@(carousel.IdElemento)').next().addClass('active@(carousel.IdElemento)');
+                                    $('.active@(carousel.IdElemento)').delay(500).fadeIn();
+                                } else {
+                                    $('.active@(carousel.IdElemento)').fadeOut().removeClass('active@(carousel.IdElemento)');
+
+                                    $('.item:first-child').delay(500).fadeIn().addClass('active@(carousel.IdElemento)');
+                                }
+                            }
+
+                        });
+                </script>
+            </div>
+        </div>
+    }
+
+    <br />
+
+    if (item.ElementoDependente.Dependente.GetType().Name == "CarouselPagina")
+    {
+        var carousel = (MeuProjetoAgora.Models.business.Elemento.CarouselPagina)item.ElementoDependente.Dependente;
+        <div id="CarouselPagina">
+            <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
+
+                <div class='carousel-inner' role='listbox'>
+                    @foreach (var dependente in carousel.Paginas)
+                    {
+
+                        <div id="Page@(dependente.Pagina.IdPagina)" class='item'>
+
+                            @foreach (var div in dependente.Pagina.Div)
+                            {
+                                <div id="BlocoCarouselPagina@(div.Div.IdDiv)" class="BlocoCarouselPagina @(div.Div.Divisao)">
+
+                                    @foreach (var el in div.Div.Elemento)
+                                    {
+                                        if (el.Elemento.GetType().Name == "Video")
+                                        {
+                                            <div id='VideoCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+
+                                                <video style='width:100%; height:100%' controls>
+                                                    <source src='$el.Elemento.ArquivoVideo' type='video/mp4' />
+                                                </video>
+
+                                            </div>
+                                        }
+
+                                        if (el.Elemento.GetType().Name == "Texto")
+                                        {
+                                            var texto = (MeuProjetoAgora.Models.business.Elemento.Texto)el.Elemento;
+                                            <div id='textoCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+
+                                                <p>@(Html.Raw(texto.PalavrasTexto))</p>
+                                            </div>
+                                        }
+
+                                        if (el.Elemento.GetType().Name == "Link")
+                                        {
+                                            var link = (MeuProjetoAgora.Models.business.Elemento.Link)el.Elemento;
+                                            if (link.UrlLink == false)
+                                            {
+                                                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                                                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                                                    <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
+
+                                                    @if (link.Despendentes.Count > 1)
+                                                    {
+                                                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                    }
+
+                                                    <p class="text-center text-primary">@link.IdElemento</p>
+                                                    <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                </div>
+
+                                            }
+                                            else
+                                            {
+                                                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                                                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                                                    <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
+                                                    @if (link.Despendentes.Count > 1)
+                                                    {
+                                                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                    }
+
+                                                    <p class="text-center text-primary">@link.IdElemento</p>
+                                                    <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                </div>
+
+                                            }
+
+                                        }
+
+                                        if (el.Elemento.GetType().Name == "Imagem")
+                                        {
+                                            var imagem = (MeuProjetoAgora.Models.business.Elemento.Imagem)el.Elemento;
+                                            <div id='ImagemCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+                                                <img class='img-responsive' src='@(imagem.ArquivoImagem)' alt='imagem' style='width:100%;' />
+                                            </div>
+                                        }
+
+                                        if (el.Elemento.GetType().Name == "Formulario")
+                                        {
+                                            var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                            <div id='Form@(formulario.IdElemento)' class='col-md-2'>
+                                                <form>
+
+                                                    @foreach (var depe in formulario.Despendentes)
+                                                    {
+                                                        var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                        <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+                                                    }
+
+                                                    <button>Salvar</button>
+
+                                                </form>
+
+                                                <p class="text-center text-primary">@formulario.IdElemento</p>
+                                                <button data-value='@formulario.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                            </div>
+                                        }
+
+                                        if (el.Elemento.GetType().Name == "Formulario")
+                                        {
+                                            var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                            <div id='Form@(formulario.IdElemento)' class='col-md-2'>
+                                                <form>
+
+                                                    @foreach (var depe in formulario.Despendentes)
+                                                    {
+                                                        var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                        <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+                                                    }
+
+                                                    <button>Salvar</button>
+
+                                                </form>
+
+                                                <p class="text-center text-primary">@formulario.IdElemento</p>
+                                                <button data-value='@formulario.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                            </div>
+                                        }
+                                    }
+
+                                </div>
+                            }
+
+                        </div>
+                    }
+                </div>
+            </div>
+            <div>
+                <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            $('.item:first-child').addClass('active@(carousel.IdElemento)').show();
+
+                            setInterval(slide, 5000);
+
+                            function slide() {
+                                if ($('.active@(carousel.IdElemento)').next().size()) {
+                                    $('.active@(carousel.IdElemento)').fadeOut()
+                                    .removeClass('active@(carousel.IdElemento)').next().addClass('active@(carousel.IdElemento)');
+                                    $('.active@(carousel.IdElemento)').delay(500).fadeIn();
+                                } else {
+                                    $('.active@(carousel.IdElemento)').fadeOut().removeClass('active@(carousel.IdElemento)');
+
+                                    $('.item:first-child').delay(500).fadeIn().addClass('active@(carousel.IdElemento)');
+                                }
+                            }
+
+                        });
+                </script>
+            </div>
+        </div>
+    }
+
+    <br />
+
+}
+

@@ -36,6 +36,7 @@
             <div class='modal-body'>
                 <div id='conteudoTabela'>
 
+                   
                 </div>
             </div>
             <div class='modal-footer'>
@@ -52,25 +53,15 @@
 
 <div>
 
-    <script type='text/javascript'>
+    <script type='text/javascript'> 
 
+        jQuery(function () {
 
-        $('.Linkform').click(function () {
-
-            var id = $(this).data('value');
-
-
-            $('#conteudo2').load('/Formulario/formid/' + id, function () {
-                $('#Modal2').modal('show');
-            });
-
-        });
-
-
-        $('.botaoDetalhes').click(function () {
+        $('.botaoDetalhesProduto').click(function () {
 
             var id = $(this).data('value');
 
+            
 
             $('#conteudoTabela').load('/Produto/Details/' + id, function () {
                 $('#ModalTabela').modal('show');
@@ -82,14 +73,13 @@
 
             var id = $(this).data('value');
 
-
             $('#conteudoTabela').load('/Requisicao/Create/' + id, function () {
                 $('#ModalTabela').modal('show');
             });
 
         });
 
-
+        });
 
 
 

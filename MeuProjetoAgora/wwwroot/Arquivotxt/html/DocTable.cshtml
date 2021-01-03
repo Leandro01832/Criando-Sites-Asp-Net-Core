@@ -1,0 +1,72 @@
+﻿#if($element.Elemento.tipo == 'Table')
+
+<div id='Table${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+
+    <table class='$element.Elemento.EstiloTabela'>
+
+        <tr>
+            <th>
+                <label>Nome</label>
+            </th>
+            <th>
+                <label>Imagem</label>
+            </th>
+            <th></th>
+
+        </tr>
+
+        #foreach($prod in $element.Elemento.Despendentes)
+
+        <tr class='linhaProduto' id='Produto$prod.ElementoDependente.Dependente.IdElemento' data-value='$prod.ElementoDependente.Dependente.IdElemento'>
+            <th>
+                <label>$prod.ElementoDependente.Dependente.Nome</label>
+            </th>
+            <th>
+                #set($imgIndice = 0)
+                #foreach($img in $prod.ElementoDependente.Dependente.Despendentes)
+
+
+                #if($imgIndice == 0)
+                <img src='$img.ElementoDependente.Dependente.ArquivoImagem' width='100' />
+                #end
+
+                #set($imgIndice = $imgIndice + 1)
+
+                #end
+            </th>
+
+
+            <th>
+                <div id='LinksTabela'>
+                    <a href='#' data-value='$prod.ElementoDependente.Dependente.IdElemento' class='btn btn-danger botaoDetalhesProduto'>  Detalhes </a>
+                </div>
+
+                <div>
+                    <script type='text/javascript'>
+
+                        jQuery(function () {
+
+                            if ($('.bloco')[0].baseURI.includes('https')) {
+                                document.getElementById('LinksTabela').innerHTML += '<button href=# ' +
+                                    'data-value=$prod.ElementoDependente.Dependente.IdElemento class=botaoAdicionarCarrinho ' +
+                                    '> Adicionar ao carrinho </button> ';
+                            }
+
+                        });
+
+                    </script>
+
+                </div>
+            </th>
+        </tr>
+
+        
+
+        #end
+
+    </table>
+
+</div>
+
+#end
+

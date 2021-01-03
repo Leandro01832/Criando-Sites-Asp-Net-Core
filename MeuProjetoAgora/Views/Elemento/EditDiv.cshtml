@@ -3,10 +3,13 @@
 <h4>Div</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
         <form asp-action="EditDiv">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdDiv" />
+
+            <input type="hidden" id="selecionado" value="@ViewBag.selecionado" />
+
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
                 <input asp-for="Nome" class="form-control" />
@@ -14,52 +17,122 @@
             </div>
             <div class="form-group">
                 <label asp-for="Padding" class="control-label"></label>
-                <input asp-for="Padding" class="form-control" />
+                <input asp-for="Padding" type="range" max="95" min="5" value="5" class="form-control" />
                 <span asp-validation-for="Padding" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Height" class="control-label"></label>
-                <input asp-for="Height" class="form-control" />
+                <input asp-for="Height" type="range" max="2000" min="0" value="200" class="form-control" />
                 <span asp-validation-for="Height" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Colunas" class="control-label"></label>
-                <input asp-for="Colunas" class="form-control" />
+                <select asp-for="Colunas" class="form-control">
+                    <option value="auto">1 coluna</option>
+                    <option value="auto auto">2 colunas</option>
+                    <option value="auto auto auto">3 colunas</option>
+                    <option value="auto auto auto auto">4 colunas</option>
+                    <option value="auto auto auto auto auto">5 colunas</option>
+                    <option value="auto auto auto auto auto auto">6 colunas</option>
+                    <option value="auto auto auto auto auto auto auto">7 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto">8 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto">9 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto">10 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto auto">11 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto auto auto">12 colunas</option>
+                </select>
                 <span asp-validation-for="Colunas" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Desenhado" class="control-label"></label>
-                <input asp-for="Desenhado" class="form-control" />
-                <span asp-validation-for="Desenhado" class="text-danger"></span>
+
+                <input asp-for="Desenhado" type="hidden" value="0" />
+
             </div>
             <div class="form-group">
                 <label asp-for="Divisao" class="control-label"></label>
-                <input asp-for="Divisao" class="form-control" />
+                <select asp-for="Divisao" class="form-control">
+                    <option value="col-md-12">inteiro</option>
+                    <option value="col-md-11">11 partes</option>
+                    <option value="col-md-10">10 partes</option>
+                    <option value="col-md-8">8 partes</option>
+                    <option value="col-md-2">1/6 da linha</option>
+                    <option value="col-md-3">1/4 da linha</option>
+                    <option value="col-md-4">1/3 da linha</option>
+                    <option value="col-md-6">1/2 da linha</option>
+                    <option value="col-md-1">12 partes</option>
+                </select>
                 <span asp-validation-for="Divisao" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BorderRadius" class="control-label"></label>
-                <input asp-for="BorderRadius" class="form-control" />
+                <input asp-for="BorderRadius" type="range" max="200" min="0" value="0" class="form-control" />
                 <span asp-validation-for="BorderRadius" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Ordem" class="control-label"></label>
-                <input asp-for="Ordem" class="form-control" />
-                <span asp-validation-for="Ordem" class="text-danger"></span>
+
+                <input asp-for="Ordem" type="hidden" value="0" />
+
             </div>
             <div class="form-group">
                 <label asp-for="background_" class="control-label"></label>
-                <select asp-for="background_" class="form-control" asp-items="ViewBag.background_"></select>
-                <span asp-validation-for="background_" class="text-danger"></span>
+                <select asp-for="background_" class="form-control backgroundSelected"></select>
             </div>
+
+            <div class="jumbotron">
+
+                <p class="text-center text-primary">Bloco Fixado</p>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="Fixado" /> @Html.DisplayNameFor(model => model.Fixado)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EixoYBlocoFixado" class="control-label"></label>
+                    <input asp-for="EixoYBlocoFixado" type="range" max="100" min="0" class="form-control" />
+                    <span asp-validation-for="EixoYBlocoFixado" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="EixoXBlocoFixado" class="control-label"></label>
+                    <input asp-for="EixoXBlocoFixado" type="range" max="100" min="0" class="form-control" />
+                    <span asp-validation-for="EixoXBlocoFixado" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input asp-for="EscolherPosicao" /> @Html.DisplayNameFor(model => model.EscolherPosicao)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="InicioFixacao" class="control-label"></label>
+                    <input asp-for="InicioFixacao" type="range" max="500" min="-500" class="form-control" />
+                    <span asp-validation-for="InicioFixacao" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="PosicaoFixacao" class="control-label"></label>
+                    <input asp-for="PosicaoFixacao" type="range" max="100" min="0" class="form-control" />
+                    <span asp-validation-for="PosicaoFixacao" class="text-danger"></span>
+                </div>
+
+            </div>
+
             <div class="form-group">
-                <label asp-for="PaginaId" class="control-label"></label>
-                <select asp-for="PaginaId" class="form-control" asp-items="ViewBag.PaginaId"></select>
-                <span asp-validation-for="PaginaId" class="text-danger"></span>
+                <label class="control-label">Elementos do bloco</label>
+                <input asp-for="Elementos" type="text" value="@ViewBag.elementos" />
             </div>
+
             <div class="form-group">
-                <input type="button" value="Salvar" onclick="div.Update()"  class="btn btn-default" />
+                <input type="button" value="Copiar" onclick="div.Create()" class="btn btn-default" />
             </div>
+
         </form>
     </div>
 </div>
@@ -69,6 +142,21 @@
     <script src="~/js/Div.js"></script>
 
     <script src="~/js/AjaxGet.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            let token = $('[name=__RequestVerificationToken]').val();
+            let headers = {};
+            headers['RequestVerificationToken'] = token;
+
+    $("input, select").change(function () {
+
+        div.Update();
+    });
+
+            });
+    </script>
 </div>
 
 

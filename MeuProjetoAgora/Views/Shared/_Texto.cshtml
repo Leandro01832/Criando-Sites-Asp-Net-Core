@@ -1,7 +1,13 @@
-﻿@model MeuProjetoAgora.Models.ViewModelElemento
+﻿@model MeuProjetoAgora.Models.business.Elemento.Texto
 
 <h4>Texto</h4>
 <hr />
+
+@if (Model != null)
+{
+    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=m8nq39l31dv5y829ehcjsd0rciwei8crem0yubndhdgs72fd"></script>
+    <script src="~/js/Tynymce.js"></script>
+}
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -12,15 +18,59 @@
 </div>
 
 <div class="form-group">
-    <input asp-for="elemento" type="hidden" value="texto" />
+    <input id="elemento" name="elemento" type="hidden" value="Texto" />
 </div>
 
+@if (Model == null)
+{
+    <div class="form-group">
+        <label asp-for="PalavrasTexto" class="control-label"></label>
+        <script type="text/javascript">Criar();</script>
+        <textarea id="textarea" name="ajax_text" class="form-control"></textarea>
+        <span asp-validation-for="PalavrasTexto" class="text-danger"></span>
+    </div>
+}
+else
+{
+    <div class="form-group">
+        <label asp-for="PalavrasTexto" class="control-label"></label>
+        <script type="text/javascript">Editar();</script>
+        <textarea id="textarea" name="ajax_text" class="form-control">@Model.PalavrasTexto</textarea>
+        <span asp-validation-for="PalavrasTexto" class="text-danger"></span>
+    </div>
+}
 
-<div class="form-group">
-    <label asp-for="PalavrasTexto" class="control-label"></label>
-    <input asp-for="PalavrasTexto" class="form-control" />
-    <span asp-validation-for="PalavrasTexto" class="text-danger"></span>
-</div>
+
+@if (Model != null)
+{
+    <a href="#" class="btn btn-primary" id="EditorTexto">Editor de Texto</a>
+}
+
+@if (Model != null)
+{
+    <div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#EditorTexto").click(function () {
+
+                    $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
+                    $("#conteudomodal").load("/Pagina/EmBranco/");
+                    $("#FormTexto").fadeIn("slow");
+                    $("#FormTexto").load("/Elemento/Edit/" + @Model.IdElemento);
+                });
+            });
+        </script>
+    </div>
+}
+
+@if (Model != null)
+{
+    <div class="form-group">
+        <input type="button" value="Copiar" onclick="ScriptElemento.Create()" class="btn btn-default" />
+    </div>
+}
+
 
 
 @section Scripts {

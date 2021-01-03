@@ -1,6 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,8 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryTable
     {
-        Task<string> salvarTable(ViewModelElemento elemento, IList<IFormFile> files);
-        Task editarTable(ViewModelElemento elemento);
-        Task apagarTable(ViewModelElemento elemento);
+        Task<Table> TestarTable(string id);
+        Table RetornaTable(ViewModelElemento elemento);
     }
 
 
@@ -30,52 +30,35 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Task apagarTable(ViewModelElemento elemento)
+        public Table RetornaTable(ViewModelElemento elemento)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task editarTable(ViewModelElemento elemento)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> salvarTable(ViewModelElemento elemento, IList<IFormFile> files)
-        {
-            Table table = new Table
+            var table = new Table
             {
-                div_ = elemento.div,
+                Pagina_ = elemento.Pagina_,
+                IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
-                Estilo = elemento.EstiloTable
-
+                Ordem = elemento.Ordem,
+                EstiloTabela = elemento.EstiloTabela,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
+            return table;
+        }
 
-
+        public async Task<Table> TestarTable(string id)
+        {
+            Table table;
             try
             {
-               await dbSet.AddAsync(table);
-                await contexto.SaveChangesAsync();
+                table = await contexto.Elemento.
+               OfType<Table>().FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
+
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var erro = "Preencha o formulario corretamente" + ex;
-                return "";
+                table = null;
             }
-
-            var t = dbSet.Include(ca => ca.div).First(c => c.IdTable == table.IdTable);
-            var element = new Elemento();
-            element.table_ = table.IdTable;
-            await contexto.Elemento.AddAsync(element);
-            await contexto.SaveChangesAsync();
-
-            if (elemento.Renderizar)
-            {
-                element.div_2 = table.div.IdDiv;
-                contexto.Entry(element).State = EntityState.Modified;
-                await contexto.SaveChangesAsync();
-            }
-
-            return $"Chave do elemento: {element.IdElemento}";
+            return table;
         }
     }
 }

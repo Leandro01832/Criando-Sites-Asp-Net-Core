@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Drawing;
 using System.Globalization;
 
@@ -14,6 +15,9 @@ namespace MeuProjetoAgora.Models.business
         [Display(Name="Para qual plano de fundo?")]
         public int BackgroundGradienteId { get; set; }        
         public BackgroundGradiente BackgroundGradiente { get; set; }
+
+        [NotMapped]
+        public int Grau { get; set; }
 
 
         public static string HexToColor(string hexString)

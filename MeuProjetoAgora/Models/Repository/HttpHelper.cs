@@ -24,6 +24,21 @@ namespace MeuProjetoAgora.Models.Repository
             UserManager = userManager;
         }
 
+        public int? GetRequisicaoId()
+        {
+            return contextAccessor.HttpContext.Session.GetInt32($"RequisicaoId_{GetClienteId()}");
+        }
+
+        public void SetRequisicaoId(int RequisicaoId)
+        {
+            contextAccessor.HttpContext.Session.SetInt32($"RequisicaoId_{GetClienteId()}", RequisicaoId);
+        }
+
+        public void ResetRequisicaoId()
+        {
+            contextAccessor.HttpContext.Session.Remove($"RequisicaoId_{GetClienteId()}");
+        }
+
         public int? GetPedidoId()
         {
             return contextAccessor.HttpContext.Session.GetInt32($"pedidoId_{GetClienteId()}");

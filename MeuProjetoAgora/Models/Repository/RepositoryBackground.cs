@@ -1,5 +1,6 @@
 ﻿using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -34,7 +35,7 @@ namespace MeuProjetoAgora.Models.Repository
                 PaginaId = pag.IdPagina,
                 Cor = "#000000",
                 imagem = imagens[0],
-                imagem_ = imagens[0].IdImagem,
+                imagem_ = imagens[0].IdElemento,
                 Nome = "plano de fundo da pagina",
                 BackgroundGradiente = new BackgroundGradiente()
                 {
@@ -51,7 +52,7 @@ namespace MeuProjetoAgora.Models.Repository
                     PaginaId = pag.IdPagina,
                     Cor = "#000000",
                     imagem = imagens[1],
-                    imagem_ = imagens[1].IdImagem,
+                    imagem_ = imagens[1].IdElemento,
                     Nome = "topo",
                     BackgroundGradiente = new BackgroundGradiente()
                     {
@@ -69,7 +70,7 @@ namespace MeuProjetoAgora.Models.Repository
                     PaginaId = pag.IdPagina,
                     Cor = "#000000",
                     imagem = imagens[2],
-                    imagem_ = imagens[2].IdImagem,
+                    imagem_ = imagens[2].IdElemento,
                     Nome = "menu",
                     BackgroundGradiente = new BackgroundGradiente()
                     {
@@ -86,7 +87,7 @@ namespace MeuProjetoAgora.Models.Repository
                     PaginaId = pag.IdPagina,
                     Cor = "#000000",
                     imagem = imagens[0],
-                    imagem_ = imagens[0].IdImagem,
+                    imagem_ = imagens[0].IdElemento,
                     Nome = "borda esquerda",
                     BackgroundGradiente = new BackgroundGradiente()
                     {
@@ -103,7 +104,7 @@ namespace MeuProjetoAgora.Models.Repository
                     PaginaId = pag.IdPagina,
                     Cor = "#000000",
                     imagem = imagens[0],
-                    imagem_ = imagens[0].IdImagem,
+                    imagem_ = imagens[0].IdElemento,
                     Nome = "borda direita",
                     BackgroundGradiente = new BackgroundGradiente()
                     {
@@ -120,7 +121,7 @@ namespace MeuProjetoAgora.Models.Repository
                     PaginaId = pag.IdPagina,
                     Cor = "#000000",
                     imagem = imagens[0],
-                    imagem_ = imagens[0].IdImagem,
+                    imagem_ = imagens[0].IdElemento,
                     Nome = "blocos",
                     BackgroundGradiente = new BackgroundGradiente()
                     {

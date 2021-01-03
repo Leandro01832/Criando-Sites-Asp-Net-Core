@@ -10,7 +10,10 @@ namespace MeuProjetoAgora.Models.Repository
     {
         IConfiguration Configuration { get; }
         int? GetPedidoId();
+        int? GetRequisicaoId();
         void SetPedidoId(int pedidoId);
+        void SetRequisicaoId(int pedidoId);
         void ResetPedidoId();
+        void ResetRequisicaoId();
     }
 }

@@ -1,34 +1,66 @@
-#set($valor = 0)
+
 #foreach($bloco in $divs)
 
+#if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao == false)
 
-#if($bloco.Background.backgroundImage)
 <style>
-    #DIV$bloco.IdDiv {
-        display: grid;
-        grid-template-columns: ${bloco.Colunas};
-
-    padding: ${bloco.Padding}%;
-    background-image: url($bloco.Background.imagem.Arquivo);
-
-    border-radius: ${bloco.BorderRadius}px;
-
-    min-height: ${bloco.Height}px;
-    height: auto;
-
-    position: relative;
-
-    bottom: ${valor}px;
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} 
+    {
+        display: none;
+        position: fixed; 
+        right: ${bloco.Div.EixoXBlocoFixado}%;
+        top: ${bloco.Div.EixoYBlocoFixado}%;
     }
 </style>
 
-#elseif($bloco.Background.Gradiente)
+#elseif($bloco.Div.Fixado)
+
+<style>
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} 
+    {
+        display: none;
+    }
+</style>
+
+#else
+
+<style>
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} 
+    {
+       position: relative;
+       display: grid;
+    }
+</style>
+
+#end
+
+#if($bloco.Div.Background.backgroundImage)
+<style>
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} {
+
+      background-repeat: ${bloco.Div.Background.Background_Repeat};
+        
+        grid-template-columns: ${bloco.Div.Colunas};
+
+    padding: ${bloco.Div.Padding}%;
+    background-image: url($bloco.Div.Background.imagem.ArquivoImagem);
+
+    border-radius: ${bloco.Div.BorderRadius}px;
+
+    min-height: ${bloco.Div.Height}px;
+    height: auto;
+    
+    
+    }
+</style>
+
+#elseif($bloco.Div.Background.Gradiente)
 
   <style>
-    #DIV$bloco.IdDiv {
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} {
 
         #set($um = 1)
-         #foreach($Cores in $bloco.Background.BackgroundGradiente.Cores)
+         #foreach($Cores in $bloco.Div.Background.BackgroundGradiente.Cores)
          #if($um == 1)
         #set($back = $Cores.HexToColor($Cores.CorBackground))
         background: rgb($back); 
@@ -37,9 +69,9 @@
          #end
 
 
-         #set($quantidade = $bloco.Background.BackgroundGradiente.Cores.Count())
-        background: -moz-linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+         #set($quantidade = $bloco.Div.Background.BackgroundGradiente.Cores.Count())
+        background: -moz-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
          #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -51,8 +83,8 @@
 
         #end  
 
-        background: -webkit-linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+        background: -webkit-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -64,8 +96,8 @@
 
         #end  
 
-        background: linear-gradient(${bloco.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Background.BackgroundGradiente.Cores)
+        background: linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -80,39 +112,103 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#09e718',endColorstr='#1c8ea5',GradientType=1);
 
 
-        display: grid;
-        grid-template-columns: ${bloco.Colunas};
+        
+        grid-template-columns: ${bloco.Div.Colunas};
 
-    padding: ${bloco.Padding}%;    
-    border-radius: ${bloco.BorderRadius}px; 
-    min-height: ${bloco.Height}px;
+    padding: ${bloco.Div.Padding}%;    
+    border-radius: ${bloco.Div.BorderRadius}px; 
+    min-height: ${bloco.Div.Height}px;
     height: auto;
-    position: relative; 
-    bottom: ${valor}px;
+     
+    
     }
 </style>
 
 #else
 
 <style>
-    #DIV$bloco.IdDiv {
-        display: grid;
-        grid-template-columns: ${bloco.Colunas};
+    #DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} {
+        
+        grid-template-columns: ${bloco.Div.Colunas};
 
-    padding: ${bloco.Padding}%;
-    background-color: $bloco.Background.Cor;
+    padding: ${bloco.Div.Padding}%;
+    background-color: $bloco.Div.Background.Cor;
 
-    border-radius: ${bloco.BorderRadius}px;
+    border-radius: ${bloco.Div.BorderRadius}px;
 
-    min-height: ${bloco.Height}px;
+    min-height: ${bloco.Div.Height}px;
     height: auto;
-
-    position: relative;
-
-    bottom: ${valor}px;
+    
+    
     }
 </style>
 #end
-#set($valor = $valor + 20)
+
 #end
+
+<div>
+    <script type='text/javascript'>
+        jQuery(function () {
+
+                $('#Ocultar').click(function () {
+
+                    #foreach($bloco in $divs)
+                    $('#DIV${bloco.Div.IdDIv}Pagina${model.Pagina.IdPagina}').css('display', 'block');
+                    #end
+
+                });
+
+            $('.Ferramenta').click(function () {
+
+                    #foreach($bloco in $divs)
+                    #if($bloco.Div.Fixado)
+                        $('#DIV${bloco.Div.IdDIv}Pagina${model.Pagina.IdPagina}').css('display', 'none');
+                    #end
+                    #end
+
+            });
+
+
+                    #foreach($bloco in $divs) 
+                    #if ($bloco.Div.Fixado && $bloco.Div.EscolherPosicao)
+
+                        var header = $('#DIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina}');
+                    var sticky = header[0].offsetTop;
+
+                        window.onscroll = function () {
+                            if (window.pageYOffset + ${bloco.Div.InicioFixacao} > sticky) {
+
+                        header.addClass('stickyDIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina}');
+                    } else
+                    {
+                        header.removeClass('stickyDIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina}');
+                    }
+                }
+        #end
+        #end
+
+        });
+    </script>
+</div>
+
+
+#foreach($bloco in $divs)
+
+#if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao)
+
+<style>
+    .stickyDIV${bloco.Div.IdDiv}Pagina${model.Pagina.IdPagina} {
+        position: fixed;
+        top: ${bloco.Div.PosicaoFixacao}%;
+        
+    }
+</style>
+
+#end
+#end
+
+
+
+
+
 

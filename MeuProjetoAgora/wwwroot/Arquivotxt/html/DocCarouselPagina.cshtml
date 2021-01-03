@@ -1,0 +1,163 @@
+﻿#if($element.Elemento.tipo == 'CarouselPagina')
+
+<div id='CarouselPagina${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <div id='carouselsiteCarouselPagina$element.Elemento.IdElemento' class='carousel' data-ride='carousel'>
+        <div class='carousel-inner' role='listbox'>
+            #foreach($Page in $element.Paginas)
+            <div id='Page$Page.Pagina.IdPagina' class='item'>
+                #foreach($bl in $Page.Pagina.Div)
+                <div id='BlocoCarouselPagina$bl.Div.IdDiv' class='BlocoCarouselPagina $bl.Div.Divisao'>
+
+                    #foreach($el in $bl.Div.Elemento)
+
+                    <div id='ElementoCarouselPagina$el.Elemento.IdElemento'>
+
+                        #if ($el.Elemento.tipo == 'Video')
+
+                        <div id='VideoCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+
+                            <video style='width:100%; height:100%' controls>
+                                <source src='$el.Elemento.ArquivoVideo' type='video/mp4' />
+                            </video>
+
+                        </div>
+
+                        #end
+
+                        #if ($el.Elemento.tipo == 'Texto')
+
+                        <div id='textoCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+
+                            <p>$el.Elemento.PalavrasTexto</p>
+                        </div>
+
+                        #end
+
+                        #if($el.Elemento.tipo == 'Link')
+
+                        #if($el.Elemento.UrlLink == false)
+
+                        <div id='LinkCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+                            <a href='/site/$el.Elemento.Destino.Pedido.DominioTemporario/$el.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+
+                                #set($linkIndice = 0)
+                                #foreach($el in $el.Elemento.Despendentes)
+
+                                #if($linkIndice == 0)
+                                $el.ElementoDependente.Dependente.PalavrasTexto
+                                #end
+
+                                #if($linkIndice == 1)
+                                <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                #end
+
+                                #set($linkIndice = $linkIndice + 1)
+
+                                #end
+
+
+                            </a>
+                        </div>
+
+                        #else
+
+                        <div id='LinkCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+                            <a href='$el.Elemento.TextoLink'>
+
+                                #set($linkIndice = 0)
+                                #foreach($el in $el.Elemento.Despendentes)
+
+                                #if($linkIndice == 0)
+                                $el.ElementoDependente.Dependente.PalavrasTexto
+                                #end
+
+                                #if($linkIndice == 1)
+                                <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                #end
+
+                                #set($linkIndice = $linkIndice + 1)
+
+                                #end
+                            </a>
+                        </div>
+
+                        #end
+                        #end
+
+
+                        #if ($el.Elemento.tipo == 'Imagem')
+
+                        <div id='ImagemCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+                            <img class='img-responsive' src='$el.Elemento.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        </div>
+
+                        #end
+
+                        #if($el.Elemento.tipo == 'Formulario')
+
+                        <div id='FormCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
+
+                            <form>
+                                #foreach($el in $el.Elemento.Despendentes)
+
+                                <label>$el.ElementoDependente.Dependente.Nome</label>
+                                <input class='CampoFormulario$el.Elemento.IdElemento' id='Campo$el.ElementoDependente.Dependente.IdElemento' name='Campo$el.ElementoDependente.Dependente.IdElemento' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' value='$el.ElementoDependente.Dependente.ValorCampo' />
+                                <br />
+
+                                #end
+                                <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+                            </form>
+
+                        </div>
+
+                        <script type='text/javascript'>
+
+                            $(document).ready(function () {
+
+                                $('#SalvarDadosFormulario').click(function () {
+
+                                    var Arquivos = $('.CampoFormulario');
+                                    var formData = new FormData();
+
+                                    let token = $('[name=__RequestVerificationToken]').val();
+                                    let headers = {};
+                                    headers['RequestVerificationToken'] = token;
+
+                                    for (var i = 0; i !== Arquivos.length; i++) {
+                                        formData.append('valores', document.getElementsByClassName('CampoFormulario$el.Elemento.IdElemento')[i].value);
+                                        formData.append('Formulario', $el.Elemento.IdElemento);
+                                    }
+
+                                    jQuery.ajax({
+                                        url: '/Formulario/SalvarDados',
+                                        data: formData,
+                                        processData: !1,
+                                        contentType: !1,
+                                        type: 'POST',
+                                        headers: headers,
+                                        success: function (data) {
+                                            alert('dados salvos com sucesso!' + data);
+                                        }
+                                    });
+
+
+                                });
+
+                            });
+
+                        </script>
+
+                        #end
+
+                    </div>
+
+                    #end
+
+                </div>
+                #end
+            </div>
+            #end 
+        </div>
+    </div>
+</div>
+#end

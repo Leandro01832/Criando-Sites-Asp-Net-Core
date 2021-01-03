@@ -6,100 +6,43 @@
     <div class="col-md-12">
         <form asp-action="CadastrarInfoEntrega">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <div class="checkbox">
-                    <label>
-                        <input asp-for="entregaCorreio" />
-                        <label>Entrega de correio</label>
-                    </label>
+
+
+                        
+                <div class="form-group">
+                    <label asp-for="LarguraCaixa" class="control-label"></label>
+                    <input asp-for="LarguraCaixa" class="form-control" />
+                    <span asp-validation-for="LarguraCaixa" class="text-danger"></span>
                 </div>
-            </div>
-            <div class="form-group">
-                <label asp-for="CidadesEntrega" class="control-label"></label>
-                <input asp-for="CidadesEntrega" class="form-control" />
-                <span asp-validation-for="CidadesEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="EstadosEntrega" class="control-label"></label>
-                <input asp-for="EstadosEntrega" class="form-control" />
-                <span asp-validation-for="EstadosEntrega" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="LarguraCaixa" class="control-label"></label>
-                <input asp-for="LarguraCaixa" class="form-control" />
-                <span asp-validation-for="LarguraCaixa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="AlturaCaixa" class="control-label"></label>
-                <input asp-for="AlturaCaixa" class="form-control" />
-                <span asp-validation-for="AlturaCaixa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PesoCaixa" class="control-label"></label>
-                <input asp-for="PesoCaixa" class="form-control" />
-                <span asp-validation-for="PesoCaixa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ComprimentoCaixa" class="control-label"></label>
-                <input asp-for="ComprimentoCaixa" class="form-control" />
-                <span asp-validation-for="ComprimentoCaixa" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="ValorFrete" class="control-label"></label>
-                <input asp-for="ValorFrete" class="form-control" />
-                <span asp-validation-for="ValorFrete" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input asp-for="ClienteId" type="hidden" />
-            </div>
-            <div class="form-group">
-                <input type="button" value="Proximo" id="InfomarEntrega" class="btn btn-default" />
-            </div>
+                <div class="form-group">
+                    <label asp-for="AlturaCaixa" class="control-label"></label>
+                    <input asp-for="AlturaCaixa" class="form-control" />
+                    <span asp-validation-for="AlturaCaixa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PesoCaixa" class="control-label"></label>
+                    <input asp-for="PesoCaixa" class="form-control" />
+                    <span asp-validation-for="PesoCaixa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ComprimentoCaixa" class="control-label"></label>
+                    <input asp-for="ComprimentoCaixa" class="form-control" />
+                    <span asp-validation-for="ComprimentoCaixa" class="text-danger"></span>
+                </div>
+                            
+                <div class="form-group">
+                    <input asp-for="ClienteId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input type="button" value="Salvar" id="InfomarEntrega" onclick="ScriptInfoEntrega.Create();" class="btn btn-default" />
+                </div>
         </form>
     </div>
 </div>
 
-<div> 
-    <script type="text/javascript">
-
-        $(document).ready(function () {
-
-            $("#InfomarEntrega").click(function () {
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/InfoVenda/CadastrarInfoEntrega',
-                    dataType: 'json',
-                    data:
-                    {
-                        AlturaCaixa: $("#AlturaCaixa").val(),
-                        CidadesEntrega: $("#CidadesEntrega").val(),
-                        ComprimentoCaixa: $("#ComprimentoCaixa").val(),
-                        entregaCorreio: $("#entregaCorreio").val(),
-                        EstadosEntrega: $("#EstadosEntrega").val(),
-                        LarguraCaixa: $("#LarguraCaixa").val(),
-                        PesoCaixa: $("#PesoCaixa").val(),
-                        ValorFrete: $("#ValorFrete").val()
-                    },
-                    headers: headers,
-                    success: function (data) {
-
-                        if (data !== "") {
-                            alert(data);
-                        }
-                        else { alert('Erro: Preencha o formulario corretamente'); }
 
 
-                    },
-                    error: function (ex) {
-                        alert('Falha na alteração.' + ex);
-                    }
-                });
-                return false;
-            });
-
-        });
-
-    </script>
+<div>
+    <script src="~/js/InfoEntrega.js"></script> 
 </div>
 

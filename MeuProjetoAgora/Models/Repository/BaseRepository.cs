@@ -25,5 +25,7 @@ namespace MeuProjetoAgora.Models.Repository
             this.contexto = contexto;
             dbSet = contexto.Set<T>();
         }
+
+        
     }
 }

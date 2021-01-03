@@ -1,29 +1,19 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MeuProjetoAgora.Data;
+using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
-using MeuProjetoAgora.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MeuProjetoAgora.Models.Repository;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using MeuProjetoAgora.Models.business;
-using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.AspNetCore.Diagnostics;
-using System.IO;
-using Microsoft.AspNetCore.Internal;
-using Microsoft.AspNetCore.ResponseCompression;
-using System.IO.Compression;
+using System;
+using System.Threading.Tasks;
 
 
 namespace MeuProjetoAgora
@@ -105,12 +95,19 @@ namespace MeuProjetoAgora
             services.AddTransient<IRepositoryBackground, RepositoryBackground>();
             services.AddTransient<IRepositoryDiv, RepositoryDiv>();
             services.AddTransient<IRepositoryElemento, RepositoryElemento>();
+            services.AddTransient<IRepositoryElementoDependente, RepositoryElementoDependente>();
             services.AddTransient<IRepositoryForm, RepositoryForm>();
             services.AddTransient<IRepositoryLink, RepositoryLink>();
             services.AddTransient<IRepositoryTable, RepositoryTable>();
+            services.AddTransient<IRepositoryProduto, RepositoryProduto>();
+            services.AddTransient<IRepositoryCampo, RepositoryCampo>();
             services.AddTransient<IRepositoryTexto, RepositoryTexto>();
             services.AddTransient<IRepositoryVideo, RepositoryVideo>();
             services.AddTransient<IRepositoryCarousel, RepositoryCarousel>();
+            services.AddTransient<IRepositoryDropdown, RepositoryDropdown>();
+            services.AddTransient<IRepositoryCarouselPaginaCarousel, RepositoryPaginaCarouselPagina>();
+            services.AddTransient<IRepositoryRequisicao, RepositoryRequisicao>();
+            services.AddTransient<IRepositoryCadastro, RepositoryCadastro>();
             services.AddTransient<IUserHelper, UserHelper>();
 
             services.AddAuthentication()
@@ -124,15 +121,12 @@ namespace MeuProjetoAgora
             {
                 options.ForwardedHeaders = ForwardedHeaders.XForwardedFor |
                               ForwardedHeaders.XForwardedProto;
-                // Only loopback proxies are allowed by default.
-                // Clear that restriction because forwarders are enabled by explicit
-                // configuration.
+
                 options.KnownNetworks.Clear();
                 options.KnownProxies.Clear();
             });
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             IServiceProvider serviceProvider, IUserHelper userHelper)
         {
@@ -145,7 +139,7 @@ namespace MeuProjetoAgora
             else
             {
                 app.UseStatusCodePagesWithReExecute("/Error/{0}");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                
                 app.UseHsts();
             }
 
@@ -183,7 +177,7 @@ namespace MeuProjetoAgora
                 {
                 "Admin", "SuperAdmin", "Index", "Create", "Edit", "Delete", "User", "Carousel",
                 "Background", "Imagem", "Video", "Music", "Ecommerce", "Texto", "AlteraPagina",
-                "Consultor", "Transacao", "Link", "Div", "Elemento", "Pagina"
+                "Consultor", "Transacao", "Link", "Div", "Elemento", "Pagina", "Formulario"
             };
             IdentityResult result;
             foreach (var namesRole in rolesNames)

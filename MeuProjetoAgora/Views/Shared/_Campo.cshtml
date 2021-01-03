@@ -1,0 +1,50 @@
+﻿@model MeuProjetoAgora.Models.business.Elemento.Campo
+
+<h4>Campo</h4>
+<hr />
+
+<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+<input type="hidden" id="selecionadoFormulario" value="@ViewBag.selecionadoformulario" />
+
+<div class="form-group">
+    <input id="elemento" name="elemento" type="hidden" value="Campo" />
+</div>
+
+<div class="form-group">
+    <label asp-for="Nome" class="control-label"></label>
+    <input asp-for="Nome" class="form-control" />
+    <span asp-validation-for="Nome" class="text-danger"></span>
+</div>
+
+<div class="form-group">
+    <label asp-for="Placeholder" class="control-label"></label>
+    <input asp-for="Placeholder" class="form-control" placeholder="ex: digite seu nome" />
+    <span asp-validation-for="Placeholder" class="text-danger"></span>
+</div>
+<div class="form-group">
+    <label asp-for="TipoCampo" class="control-label"></label>
+    
+    <select asp-for="TipoCampo" class="form-control">
+        <option value="text">Texto</option>
+        <option value="number">Numero</option>
+    </select>
+    <span asp-validation-for="TipoCampo" class="text-danger"></span>
+</div>
+
+
+<div class="jumbotron">
+
+    <div class="form-group">
+        <label class="control-label">Colocar em qual formulario?</label>
+        <select id="formulario_" name="formulario_" class="form-control Form"> </select>
+    </div>
+
+    <div class="form-group">
+        <input id="elementosDependentes" name="elementosDependentes" type="hidden" value="" />
+    </div>
+
+</div>
+
+
+

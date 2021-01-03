@@ -1,14 +1,16 @@
 ﻿var Criar = function () {
     tinymce.init({
-        selector: "#textareaCriar", setup: function (editor) {
+        selector: "#textarea", setup: function (editor) {
             editor.on('change', function () {
                 editor.save();
             });
         }
     });
-}; var Editar = function () {
+};
+
+var Editar = function () {
     tinymce.init({
-        selector: "#Palavras",
+        selector: "#textarea",
         plugins: ['advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker',
             'searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime media nonbreaking',
             'table emoticons template paste help'],

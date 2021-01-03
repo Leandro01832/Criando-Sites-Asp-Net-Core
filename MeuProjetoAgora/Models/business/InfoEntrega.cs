@@ -7,9 +7,7 @@ namespace MeuProjetoAgora.Models.business
     public class InfoEntrega
     {
         [Key]
-        public int IdInfoEntrega { get; set; }
-        [Display(Name ="Deseja fazer entrega por todo o brasil utilizando os serviços do correios")]
-        public bool entregaCorreio { get; set; }
+        public int IdInfoEntrega { get; set; }        
 
         [Display(Name = "Largura da caixa em centimetros")]
         public int? LarguraCaixa { get; set; }
@@ -22,13 +20,7 @@ namespace MeuProjetoAgora.Models.business
 
         [Display(Name = "Comprimento da caixa em centimetros")]
         public int? ComprimentoCaixa { get; set; }
-
-        [Display(Name = "Cidades de entrega de produto")]
-        public string CidadesEntrega { get; set; }
-        [Display(Name = "Estados de entrega de produto")]
-        public string EstadosEntrega { get; set; }
-        [Display(Name = "Informe o valor do frete")]
-        public decimal? ValorFrete { get; set; }
+        
         [Required]
         public virtual string ClienteId { get; set; }
     }

@@ -1,0 +1,11 @@
+﻿#if ($element.Elemento.tipo == 'Video')
+
+<div id='Video${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+
+    <video style='width:100%; height:100%' controls>
+        <source src='$element.Elemento.ArquivoVideo' type='video/mp4' />
+    </video>
+
+</div>
+
+#end

@@ -1,48 +1,49 @@
 ﻿@model MeuProjetoAgora.Models.business.Pedido
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Detalhes";
+    var fim = Model.Datapedido.AddDays(Model.DiasLiberados);
 }
 
-<h1>Details</h1>
+<h1>Detalhes</h1>
 
 <div>
     <h4>Pedido</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Venda)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Venda)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DominioTemporario)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DominioTemporario)
-        </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-md-12">
             @Html.DisplayNameFor(model => model.Nome)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-md-12">
             @Html.DisplayFor(model => model.Nome)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Datapedido)
+
+        <dt class="col-md-12">
+            @Html.DisplayNameFor(model => model.DominioTemporario)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-md-12">
+            @Html.DisplayFor(model => model.DominioTemporario)
+        </dd>
+        <dt class="col-md-12">
+            @Html.DisplayName("Data Criação/Renovação")
+        </dt>
+        <dd class="col-md-12">
             @Html.DisplayFor(model => model.Datapedido)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
+        <dt class="col-md-12">
+            @Html.DisplayName("Prazo para manutenção")
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
+        <dd class="col-md-12">
+            <p>@Model.DiasLiberados dias.</p>
         </dd>
+
+        <dt class="col-md-12">
+            @Html.DisplayName("Fim do Prazo")
+        </dt>
+        <dd class="col-md-12">
+            @fim
+        </dd>
+
     </dl>
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.IdPedido">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

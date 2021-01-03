@@ -1,0 +1,31 @@
+﻿@model MeuProjetoAgora.Models.business.BackgroundGradiente
+
+<h4>BackgroundGradiente</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="CreateBackgrounkGradiente">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdBackgroundGradiente" class="control-label"></label>
+                <select asp-for="IdBackgroundGradiente" class ="form-control" asp-items="ViewBag.IdBackgroundGradiente"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Grau" class="control-label"></label>
+                <input asp-for="Grau" class="form-control" />
+                <span asp-validation-for="Grau" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,7 +1,103 @@
 ﻿var items = $(".imagem");
-var numero = $(".Topo")[0].baseURI.replace(/[^0-9]/g, '');
+var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
 numero = numero.replace('44398', '');
 var imgs_ = [['']];
+
+var selects = $("select");
+
+var elementoSelect = "";
+
+for (var i = 0; i < selects.length; i++) {
+
+    var ele_selecionado = selects[i].className;
+
+    if (ele_selecionado.includes("Texto"))
+        buscar("Texto");
+
+    if (ele_selecionado.includes("Carrossel"))
+        buscar("Carrossel");
+
+    if (ele_selecionado.includes("Imagem"))
+        buscar("Imagem");
+
+    if (ele_selecionado.includes("Form"))
+        buscar("Form");
+
+    if (ele_selecionado.includes("link"))
+        buscar("link");
+
+    if (ele_selecionado.includes("Video"))
+        buscar("Video");
+
+    if (ele_selecionado.includes("Table"))
+        buscar("Table");
+
+    if (ele_selecionado.includes("Produto"))
+        buscar("Produto");
+
+    if (ele_selecionado.includes("Campo"))
+        buscar("Campo");
+
+    if (ele_selecionado.includes("Elementos"))
+        buscar("Elementos");
+}
+
+function buscar(elemento)
+{
+    $.ajax({
+        type: 'POST',
+        url: '/AjaxGet/Elementos',
+        dataType: 'json',
+        data: { Pagina: numero, Tipo: elemento },
+        success: function (data) {
+
+            $("." + elemento).empty();
+
+            if ($("#selecionado" + elemento).val() === "") {
+                $("." + elemento).append('<option value="">Escolher ' + elemento + '...</option>');
+            }
+
+
+            $.each(data, function (i) {
+
+                if (i === data.length / 2) return false;
+
+                if ($("#selecionado" + elemento).val() !== "" &&
+                    parseInt($("#selecionado" + elemento).val()) === data[i]) {
+                    $("." + elemento).append('<option value="'
+                        + data[i] + '" ' + '" selected =' + "selected" + '> ' + data[data.length / 2 + i] +
+                        ' - Chave: '  + data[i]
+                        + '</option>');
+                }
+                else {
+                    $("." + elemento).append('<option value="' + data[i] + '" > ' + data[data.length / 2 + i] +
+                        ' - Chave: ' + data[i]
+                        + '</option>');
+                }
+            });
+        },
+        error: function (ex) {
+            alert('Falha ao buscar elementos.' + ex);
+        }
+    });
+}
+
+items.change(function () {
+    var x = items[0];
+    var y = x.selectedOptions[0].className;
+    y = y.replace("~", "../..");
+
+    var visu = document.getElementsByClassName("VisualizarImagem");
+
+    for (var i = 0; i < visu.length; i++) {
+        document.getElementsByClassName("VisualizarImagem")[i].innerHTML
+            = "<br /> <img src='" + y
+            + "' style='max-width: 100%;' /> <br />";
+    }
+
+});
+
+
 
 $("#PaginaId").val(numero);
 
@@ -91,29 +187,6 @@ $.ajax({
 
     });
 
-
-$.ajax({
-    type: 'POST',
-    url: '/AjaxGet/GetDivs',
-    dataType: 'json',
-    data: { PaginaId: numero },
-    success: function (data) {
-
-        $(".div").empty();
-        $(".div").append('<option value="">[Selecione  um bloco..]</option>');
-
-        $.each(data, function (i, data) {
-            $(".div").append('<option value="'
-                + data.idDiv + '">'
-                + data.nome + ' - Chave: ' + data.idDiv + '</option>');
-        });
-    },
-    error: function (ex) {
-        alert('Falha ao buscar blocos.' + ex);
-    }
-});
-
-
 $(".backgroundGradiente").click(function () {
 
     $.ajax({
@@ -137,78 +210,133 @@ $(".backgroundGradiente").click(function () {
 });
 
 
-$(".pastas").change(function () {
+//$(".pastas").change(function () {
 
-    $.ajax({
-        type: 'POST',
-        url: '/AjaxGet/GetImagens',
-        dataType: 'json',
-        data: { Pasta: $(this).val() },
-        success: function (data) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/AjaxGet/Elementos',
+//        dataType: 'json',
+//        data: { Pagina: numero, Tipo: "Imagem" },
+//        success: function (data) {
             
-            $(".imagem").empty();
-            $(".imagem").append('<option value="">Escolher uma imagem</option>');
+//            $(".imagem").empty();
 
-            $.each(data, function (i) { 
+//            if ($("#selecionado").val() !== "") {
+//                $(".imagem").append('<option value="">Escolher uma imagem</option>');
+//            }
+            
 
-                if (i === data.length / 2) return false;
+//            $.each(data, function (i) { 
 
-                $(".imagem").append('<option class="' + data[data.length / 2 + i] + '" value="'
-                    + data[i] + '" > - Chave: ' + data[i]
-                    + '</option>'); 
+//                if (i === data.length / 2) return false;
 
-                
-                
-            });
-        },
-        error: function (ex) {
-            alert('Falha ao buscar imagens.' + ex);
+//                if ($("#selecionado").val() !== "" &&
+//                    parseInt($("#selecionado").val()) === data[i]) {
+//                    $(".imagem").append('<option class="' + data[data.length / 2 + i] + '" value="'
+//                        + data[i] + '" ' + '" selected =' + "selected" + '> - Chave: ' + data[i]
+//                        + '</option>');
+//                }
+//                else {
+//                    $(".imagem").append('<option class="' + data[data.length / 2 + i] + '" value="'
+//                    + data[i] + '" > - Chave: ' + data[i]
+//                    + '</option>'); 
+//                }
+//            });
+//        },
+//        error: function (ex) {
+//            alert('Falha ao buscar imagens.' + ex);
+//        }
+//    });
+//    return false;
+//});
+
+
+$.ajax({
+    type: 'POST',
+    url: '/AjaxGet/GetPaginas',
+    dataType: 'json',
+    data: { Pagina: numero },
+    success: function (data) {
+        $(".pagina").empty();
+
+        if ($("#selecionadoPagina").val() === "") {
+            $(".pagina").append('<option value="">[Selecione  uma pagina..]</option>');
         }
-    });
-    return false;
+
+        
+        $.each(data, function (i, data) {
+
+            if ($("#selecionadoPagina").val() !== "" &&
+                parseInt($("#selecionadoPagina").val()) === data[i]) {
+                $(".pagina").append('<option value="'
+                    + data.idPagina + '" ' + '" selected =' + "selected" + '>'
+                    + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
+            }
+            else {
+                $(".pagina").append('<option value="'
+                    + data.idPagina + '" ' +  ' >'
+                    + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
+            }
+
+            
+        });
+    },
+    error: function (ex) {
+        alert('Falha ao buscar paginas.' + ex);
+    }
+});
+
+
+$.ajax({
+    type: 'POST',
+    url: '/AjaxGet/GetSites',
+    dataType: 'json',
+    data: { Pagina: numero },
+    success: function (data) {
+        $(".site").empty();
+
+        if ($("#selecionadoPedido").val() === "") {
+            $(".site").append('<option value="">[Selecione  uma site..]</option>');
+        }
+
+        $.each(data, function (i, data) {
+
+            if ($("#selecionadoPedido").val() !== "" &&
+                parseInt($("#selecionadoPedido").val()) === data[i]) {
+                $(".site").append('<option value="'
+                    + data.idPedido + '" ' + '" selected =' + "selected" + ' >'
+                    + data.nome + ' - Chave: ' + data.idPedido + '</option>');
+            }
+            else {
+                $(".site").append('<option value="'
+                    + data.idPedido + '" ' + ' >'
+                    + data.nome + ' - Chave: ' + data.idPedido + '</option>');
+            }
+
+        });
+    },
+    error: function (ex) {
+        alert('Falha ao buscar sites.' + ex);
+    }
 });
 
 
 
 
-$(".site").click(function () {    
+
+$(".site").change(function () {
 
     $.ajax({
         type: 'POST',
-        url: '/AjaxGet/GetPaginas',
+        url: '/AjaxGet/GetPaginasDoSite',
         dataType: 'json',
-        data: { PedidoId: $(this).val() },
+        data: { Pedido: $(this).val() },
         success: function (data) {
             $(".pagina").empty();
             $(".pagina").append('<option value="">[Selecione  uma pagina..]</option>');
-            $.each(data, function (i, data) {                
-                
-                $(".pagina").append('<option value="'
-                    + data.idPagina + '">'
-                    + data.titulo + ' - Chave: '+ data.idPagina +'</option>');
-            });
-        },
-        error: function (ex) {
-            alert('Falha ao buscar paginas.' + ex);
-        }
-    });
-    return false;
-});
-
-
-$(".site").click(function () {
-
-    $.ajax({
-        type: 'POST',
-        url: '/AjaxGet/GetPaginas',
-        dataType: 'json',
-        data: { PedidoId: $(this).val() },
-        success: function (data) {
-            $(".Getpagina").empty();
-            $(".Getpagina").append('<option value="">[Selecione  uma pagina..]</option>');
             $.each(data, function (i, data) {
 
-                $(".Getpagina").append('<option value="'
+                $(".pagina").append('<option value="'
                     + data.idPagina + '">'
                     + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
             });
@@ -245,198 +373,224 @@ $(".pagina").change(function () {
     return false;
 });
 
-$(".div").change(function () {
-    $.ajax({
-        type: 'POST',
-        url: '/AjaxGet/GetTexto',
-        dataType: 'json',
-        data: { DivId: $(this).val() },
-        success: function (data) {
-            $(".texto").empty();
-            $(".texto").append('<option value="">[Selecione um texto..]</option>');
 
-            $.each(data, function (i) {  
+//$.ajax({
+//    type: 'POST',
+//    url: '/AjaxGet/Elementos',
+//    dataType: 'json',
+//    data: { Pagina: numero, Tipo: "Texto" },
+//    success: function (data) {
+//        $(".texto").empty();
+//        $(".texto").append('<option value="">[Selecione um texto..]</option>');
 
-                if (i === data.length / 2) return false;
+//        $.each(data, function (i) {
+
+//            if (i === data.length / 2) return false;
+
+//            $(".texto").append('<option value="'
+//                + data[i] + '">'
+//                + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//        });
+//    },
+//    error: function (ex) {
+//        alert('Falha ao buscar textos.' + ex);
+//    }
+//});
+
+
+
+//$(".divTexto").change(function () {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/AjaxGet/Elementos',
+//        dataType: 'json',
+//        data: { Pagina: numero, Tipo: "Texto" },
+//        success: function (data) {
+//            $(".texto").empty();
+//            $(".texto").append('<option value="">[Selecione um texto..]</option>');
+
+//            $.each(data, function (i) {  
+
+//                if (i === data.length / 2) return false;
                 
-                $(".texto").append('<option value="'
-                    + data[i] + '">'
-                    + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
-            });
-        },
-        error: function (ex) {
-            alert('Falha ao buscar textos.' + ex);
-        }
-    });
+//                $(".texto").append('<option value="'
+//                    + data[i] + '">'
+//                    + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//            });
+//        },
+//        error: function (ex) {
+//            alert('Falha ao buscar textos.' + ex);
+//        }
+//    });
 
-    $(".imagem").empty();
-    $(".imagem").append('<option value="">[Selecione uma imagem..]</option>');
+//    $(".imagem").empty();
+//    $(".imagem").append('<option value="">[Selecione uma imagem..]</option>');
 
-});
+//});
 
-$(".div").click(function () {
+//$(".divTable").click(function () {
 
-    $(".table").empty();
-    $(".table").append('<option value="">[Selecione  uma tabela...]</option>');
+//    $(".table").empty();
+//    $(".table").append('<option value="">[Selecione  uma tabela...]</option>');
 
-    $.ajax({
-        type: 'POST',
-        url: '/AjaxGet/GetTable',
-        dataType: 'json',
-        data: { DivId: $(this).val() },
-        success: function (data) {
-            $.each(data, function (i) {
-                if (i === data.length / 2) return false;
+//    $.ajax({
+//        type: 'POST',
+//        url: '/AjaxGet/Elementos',
+//        dataType: 'json',
+//        data: { Pagina: numero, Tipo: "Table" },
+//        success: function (data) {
+//            $.each(data, function (i) {
+//                if (i === data.length / 2) return false;
 
-                $(".table").append('<option value="'
-                    + data[i] + '">'
-                    + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
-            });
-        },
-        error: function (ex) {
-            alert('Falha ao buscar tabelas.' + ex);
-        }
-    });
-    return false;
-});
+//                $(".table").append('<option value="'
+//                    + data[i] + '">'
+//                    + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//            });
+//        },
+//        error: function (ex) {
+//            alert('Falha ao buscar tabelas.' + ex);
+//        }
+//    });
+//    return false;
+//});
 
-$("#element").change(function () {
+//$("#element").change(function () {
 
-    $.ajax({
-        type: 'POST',
-        url: '/AjaxGet/GetElementos',
-        dataType: 'json',
-        data: { DivId: $("#div_51").val(), valor: $("#element").val(), pagina: numero },
-        success: function (data) {
+//    $.ajax({
+//        type: 'POST',
+//        url: '/AjaxGet/Elementos',
+//        dataType: 'json',
+//        data: { Pagina: numero, Tipo: $(this).val() },
+//        success: function (data) {
 
 
-            if ($("#element").val() === "Texto") {
-                $("#texto_").empty();
-                $("#texto_").append('<option value="">Escolher um texto</option>');
+//            if ($("#element").val() === "Texto") {
+//                $("#texto_").empty();
+//                $("#texto_").append('<option value="">Escolher um texto</option>');
 
-                $.each(data, function (i) {
-                    if (i === data.length / 2) return false;
+//                $.each(data, function (i) {
+//                    if (i === data.length / 2) return false;
 
-                    $("#texto_").append('<option value="'
-                        + data[i] + '">'
-                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
-                });
-                document.getElementById('texto_').disabled = false;
-            }
-            else {
-                document.getElementById('texto_').disabled = true;
-                $("#texto_").empty();
-            }
+//                    $("#texto_").append('<option value="'
+//                        + data[i] + '">'
+//                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//                });
+//                document.getElementById('texto_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('texto_').disabled = true;
+//                $("#texto_").empty();
+//            }
 
-            if ($("#element").val() === "Carrossel") {
-                $("#carousel_").empty();
-                $("#carousel_").append('<option value="">Escolher um carrossel</option>');
-                $.each(data, function (i) { 
-                    if (i === data.length / 2) return false;
+//            if ($("#element").val() === "Carrossel") {
+//                $("#carousel_").empty();
+//                $("#carousel_").append('<option value="">Escolher um carrossel</option>');
+//                $.each(data, function (i) { 
+//                    if (i === data.length / 2) return false;
 
-                    $("#carousel_").append('<option value="'
-                        + data[i] + '">'
-                        + data[data.length + i] + ' - Chave: ' + data[i] + '</option>');
-                });
-                document.getElementById('carousel_').disabled = false;
-            }
-            else {
-                document.getElementById('carousel_').disabled = true;
-                $("#carousel_").empty();
+//                    $("#carousel_").append('<option value="'
+//                        + data[i] + '">'
+//                        + data[data.length + i] + ' - Chave: ' + data[i] + '</option>');
+//                });
+//                document.getElementById('carousel_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('carousel_').disabled = true;
+//                $("#carousel_").empty();
 
-            }
+//            }
 
-            if ($("#element").val() === "Video") {
-                $("#video_").empty();
-                $("#video_").append('<option value="">Escolher un video</option>');
+//            if ($("#element").val() === "Video") {
+//                $("#video_").empty();
+//                $("#video_").append('<option value="">Escolher un video</option>');
 
-                $.each(data, function (i) {
-                    if (i === data.length / 2) return false;
+//                $.each(data, function (i) {
+//                    if (i === data.length / 2) return false;
 
-                    $("#video_").append('<option value="'
-                        + data[i] + '">'
-                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
-                });
-                document.getElementById('video_').disabled = false;
-            }
-            else {
-                document.getElementById('video_').disabled = true;
-                $("#video_").empty();
-            }
+//                    $("#video_").append('<option value="'
+//                        + data[i] + '">'
+//                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//                });
+//                document.getElementById('video_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('video_').disabled = true;
+//                $("#video_").empty();
+//            }
 
-            if ($("#element").val() === "Imagem") {
+//            if ($("#element").val() === "Imagem") {
 
-                // busca-se imagens atraves do select pastas
-                // busca-se imagens atraves do select pastas
-                // busca-se imagens atraves do select pastas
-                // busca-se imagens atraves do select pastas              
+//                // busca-se imagens atraves do select pastas
+//                // busca-se imagens atraves do select pastas
+//                // busca-se imagens atraves do select pastas
+//                // busca-se imagens atraves do select pastas              
                 
-                document.getElementById('imagem_71').disabled = false;
-            }
-            else {
-                document.getElementById('imagem_71').disabled = true;
-                $("#imagem_71").empty();
-            }
+//                document.getElementById('imagem_71').disabled = false;
+//            }
+//            else {
+//                document.getElementById('imagem_71').disabled = true;
+//                $("#imagem_71").empty();
+//            }
 
-            if ($("#element").val() === "Link") {
-                $("#link_").empty();
-                $("#link_").append('<option value="">Escolher um Link</option>');
+//            if ($("#element").val() === "Link") {
+//                $("#link_").empty();
+//                $("#link_").append('<option value="">Escolher um Link</option>');
 
-                $.each(data, function (i) {
-                    if (i === data.length / 2) return false;
+//                $.each(data, function (i) {
+//                    if (i === data.length / 2) return false;
 
-                    $("#link_").append('<option value="'
-                        + data[i] + '">'
-                        + ' - Chave: ' + data[i] +'</option>');
-                });
-                document.getElementById('link_').disabled = false;
-            }
-            else {
-                document.getElementById('link_').disabled = true;
-                $("#link_").empty();
-            }
+//                    $("#link_").append('<option value="'
+//                        + data[i] + '">'
+//                        + ' - Chave: ' + data[i] +'</option>');
+//                });
+//                document.getElementById('link_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('link_').disabled = true;
+//                $("#link_").empty();
+//            }
 
-            if ($("#element").val() === "Form") {
-                $("#form_").empty();
-                $("#form_").append('<option value="">Escolher um formulario</option>');
+//            if ($("#element").val() === "Form") {
+//                $("#form_").empty();
+//                $("#form_").append('<option value="">Escolher um formulario</option>');
 
-                $.each(data, function (i, data) {
-                    if (i === data.length / 2) return false;
+//                $.each(data, function (i, data) {
+//                    if (i === data.length / 2) return false;
 
-                    $("#form_").append('<option value="'
-                        + data[i] + '">'
-                        + ' - Chave: ' + data[i]+'</option>');
-                });
-                document.getElementById('form_').disabled = false;
-            }
-            else {
-                document.getElementById('form_').disabled = true;
-                $("#form_").empty();
-            }
+//                    $("#form_").append('<option value="'
+//                        + data[i] + '">'
+//                        + ' - Chave: ' + data[i]+'</option>');
+//                });
+//                document.getElementById('form_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('form_').disabled = true;
+//                $("#form_").empty();
+//            }
 
-            if ($("#element").val() === "Table") {
-                $("#table_").empty();
-                $("#table_").append('<option value="">Escolher uma tabela</option>');
+//            if ($("#element").val() === "Table") {
+//                $("#table_").empty();
+//                $("#table_").append('<option value="">Escolher uma tabela</option>');
 
-                $.each(data, function (i) {
-                    if (i === data.length / 2) return false;
+//                $.each(data, function (i) {
+//                    if (i === data.length / 2) return false;
 
-                    $("#table_").append('<option value="'
-                        + data[i] + '">'
-                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
-                });
-                document.getElementById('table_').disabled = false;
-            }
-            else {
-                document.getElementById('table_').disabled = true;
-                $("#table_").empty();
-            }
+//                    $("#table_").append('<option value="'
+//                        + data[i] + '">'
+//                        + data[data.length / 2 + i] + ' - Chave: ' + data[i] + '</option>');
+//                });
+//                document.getElementById('table_').disabled = false;
+//            }
+//            else {
+//                document.getElementById('table_').disabled = true;
+//                $("#table_").empty();
+//            }
 
-        },
-        error: function (ex) {
-            alert('Falha ao buscar elementos.' + ex);
-        }
-    });
+//        },
+//        error: function (ex) {
+//            alert('Falha ao buscar elementos.' + ex);
+//        }
+//    });
 
-});
+//});
 

@@ -4,9 +4,6 @@
     Layout = "~/Views/Shared/_Render.cshtml";
 }
 
-
-@*<script src="//code.jquery.com/jquery-1.12.4.js"></script>*@
-@*<script src="//code.jquery.com/ui/1.12.1/jquery-ui.js"></script>*@
 <script src="/lib/jquery/dist/jquery.js"></script>
 <script src="~/js/jquery-ui.min.js"></script>
 
@@ -58,61 +55,7 @@ else
 
             <div id="Chat" class="col-md-4" style="background-color: white;">
 
-                <partial name="Chat" />
-
-                <a href="#" id="CriaTexto" class="btn-warning">Criar textos</a>
-
-                <a href="#" id="CriaVideo" class="btn btn-warning">Criar videos</a>
-
-                <a href="#" id="CriaCarousel" class="btn btn-warning">Criar Carrosseis</a>
-
-                <a href="#" id="CriaImagem" class="btn btn-warning">Criar imagens</a>
-
-                <a href="#" id="CriaLink" class="btn btn-warning">Criar links</a>
-
-                <a href="#" id="CriaTable" class="btn btn-warning">Criar tabelas de produtos</a>
-
-                <a href="#" id="CriaBloco" class="btn btn-warning">Criar blocos</a>
-
-                <a href="#" class="btn btn-warning CoresBack">Criar cores</a>
-
-                <a href="#" class="btn btn-warning CriarPlano">Criar Background</a>
-
-                <a href="#" id="EscolherMusica" class="btn btn-warning">Escolher musica</a>
-
-                <a href="#" id="CreatePath" class="btn btn-warning">Criar pasta de imagens</a>
-
-                <a href="#" id="CriaElemento" class="btn btn-danger">Renderizar elementos</a>
-
-                <a href="/Criar-Pagina/" class="btn btn-warning">Criar nova pagina</a>
-                <a href="/Criar-Site/" class="btn btn-warning">Criar novo site</a>
-
-
-
-                <div id="ApagarElementosComId" style="background-color: brown;">
-
-                    <input id="IdApagar" type="number" />
-                    <input type="button" id="ApagarComId" value="Apagar Elemento" />
-
-
-                </div>
-
-                <div id="conteudomodal" style="background-color: white; min-height:200px;">
-                    <h4>Formulário</h4>
-
-                </div>
-
-                <div id="conteudoImagem" style="background-color: greenyellow; min-height:200px;">
-                    <h4>Imagem</h4>
-                </div>
-
-                <div id="conteudoMusica" style="background-color: yellow; min-height:200px;">
-                    <h4>Música</h4>
-                </div>
-
-                <div id="conteudoVideo" style="background-color: cadetblue; min-height:200px;">
-                    <h4>Vídeo</h4>
-                </div>
+                <partial name="BlocoFerramenta" /> 
 
             </div>
 
@@ -154,7 +97,7 @@ else
 
     </div>
 
-    <div id="FormTexto" style="display:none;">
+    <div id="FormTexto" style="display:none;  margin-left:50px;">
 
     </div>
 
@@ -162,14 +105,21 @@ else
 
     </div>
 
+    <div id="Galeria" style="display:none;">
+
+    </div>
+
+    <div id="GaleriaBlocos" style="display:none;">
+
+    </div>
+
 }
 
 
 
-@section scripts{ 
+@section scripts{
 
     <script src="~/js/FullScreen.js"></script>
-    <script src="~/js/AjaxDelete.js"></script>
     <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
     <script src="~/js/Chat.js"></script>
 
@@ -201,6 +151,10 @@ else
             });
             $("#paginas").change(function () {
                 document.getElementById("acesso").href = "/pagina/" + $(this).val();
+            });
+
+            $("#NumeroElementoEditar").focusout(function () {
+                $("#conteudomodal").load("/Elemento/Edit/" + $(this).val()); 
             });
 
         });

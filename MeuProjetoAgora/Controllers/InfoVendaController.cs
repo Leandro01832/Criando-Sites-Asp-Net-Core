@@ -25,7 +25,6 @@ namespace MeuProjetoAgora.Controllers
             db = Db;
             UserManager = userManager;
         }
-
         
         public ActionResult CadastrarCpf()
         {
@@ -34,25 +33,16 @@ namespace MeuProjetoAgora.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> CadastrarCpf(string Cpf)
+        public async Task<string> CadastrarCpf([FromBody] InfoVenda info)
         {
             var usuario = await UserManager.GetUserAsync(this.User);
+            var id = usuario.Id;
+            info.ClienteId = id;
 
-            var id = usuario.Id;            
-
-            InfoVenda info = new InfoVenda
-            {
-                ClienteId = id,
-                 Cpf = Cpf                  
-            };
-
-                await db.InfoVenda.AddAsync(info);
-                await db.SaveChangesAsync();
-            
-
-            return Json("Cadastro realizado com sucesso!!!");
+            await db.InfoVenda.AddAsync(info);
+            await db.SaveChangesAsync(); 
+            return "Cadastro realizado com sucesso!!!";
         }
-
         
         public ActionResult CadastrarInfoEntrega()
         {
@@ -61,31 +51,17 @@ namespace MeuProjetoAgora.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> CadastrarInfoEntrega(int? AlturaCaixa, string CidadesEntrega,
-            int? ComprimentoCaixa, bool entregaCorreio, string EstadosEntrega, int? LarguraCaixa,
-            int? PesoCaixa, decimal? ValorFrete)
+        public async Task<string> CadastrarInfoEntrega([FromBody] InfoEntrega info)
         {
             var usuario = await UserManager.GetUserAsync(this.User);
             var id = usuario.Id;
-
-            InfoEntrega info = new InfoEntrega
-            {
-                AlturaCaixa = AlturaCaixa,
-                CidadesEntrega = CidadesEntrega,
-                ComprimentoCaixa = ComprimentoCaixa,
-                entregaCorreio = entregaCorreio,
-                EstadosEntrega = EstadosEntrega,
-                ClienteId = id,
-                LarguraCaixa = LarguraCaixa,
-                PesoCaixa = PesoCaixa,
-                ValorFrete = ValorFrete
-            };
+            info.ClienteId = id;
 
             await db.InfoEntrega.AddAsync(info);
             await db.SaveChangesAsync();
 
 
-            return Json("Cadastro realizado com sucesso!!!");
+            return "Cadastro realizado com sucesso!!!";
         }
 
         
@@ -96,31 +72,18 @@ namespace MeuProjetoAgora.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> CadastrarContaBancaria(string Agencia, string CodigoBanco,
-            string Conta, string DVAgencia, string DVConta, string TipoConta)
+        public async Task<string> CadastrarContaBancaria([FromBody] ContaBancaria info)
         {
             var usuario = await UserManager.GetUserAsync(this.User);
             var id = usuario.Id;
-
-            ContaBancaria info = new ContaBancaria
-            {
-                ClienteId = id,
-                Agencia = Agencia,
-                CodigoBanco = CodigoBanco,
-                Conta = Conta,
-                DVAgencia = DVAgencia,
-                DVConta = DVConta,
-                TipoConta = TipoConta
-
-            };
+            info.ClienteId = id;
 
             await db.ContaBancaria.AddAsync(info);
             await db.SaveChangesAsync();
 
 
-            return Json("Cadastro feito com sucesso!!!");
-        }
-        
+            return "Cadastro feito com sucesso!!!";
+        }        
 
     }
 }

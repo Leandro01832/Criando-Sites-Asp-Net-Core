@@ -2,16 +2,21 @@
 
 function AlterarPosicaoBloco() {
 
+    let token = $('[name=__RequestVerificationToken]').val();
+
+    let headers = {};
+    headers['RequestVerificationToken'] = token;
+
     let formData = new FormData();
     $('.linha').find('div').each(function (i) {
-        formData.append('numeros', $('.linha').find('div')[i].id.replace('DIV', ''));
+        formData.append('numeros', $('.linha').find('div')[i].id.replace('DIV', '').replace("Pagina" + numero, ""));
     });
 
     formData.append('id', numero);
 
     $.ajax(
         {
-            url: '/AjaxEdit/AlterarPosicaoBloco',
+            url: '/Elemento/AlterarPosicaoBloco',
             data: formData,
             processData: false,
             contentType: false,
@@ -33,16 +38,21 @@ function AlterarPosicaoBloco() {
 
 function AlterarPosicaoElemento() {
 
+    let token = $('[name=__RequestVerificationToken]').val();
+
+    let headers = {};
+    headers['RequestVerificationToken'] = token;
+
     let formData = new FormData();
     $('.Elemento').each(function (i) {
-        formData.append('numeros', $('.Elemento')[i].id.replace('elemento', ''));
+        formData.append('numeros', $('.Elemento')[i].id.replace("elemento", "").replace("Pagina" + numero, ""));
     });
 
     formData.append('id', numero);
 
     $.ajax(
         {
-            url: '/AjaxEdit/AlterarPosicaoElemento',
+            url: '/Elemento/AlterarPosicaoElemento',
             data: formData,
             processData: false,
             contentType: false,

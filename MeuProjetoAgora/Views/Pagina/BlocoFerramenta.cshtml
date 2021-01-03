@@ -1,0 +1,144 @@
+﻿
+<style>
+    .container1 {
+        width: 255px;
+        margin-left: 0px;
+    }
+</style>
+
+<style>
+    #discussion {
+        background-color: lightblue;
+        width: 255px;
+        height: 255px;
+        overflow: scroll;
+    }
+</style>
+
+<h2>Chat</h2>
+<div class="container1">
+    <input type="text" id="message" />
+    <input type="button" id="sendmessage" value="Enviar mensagem" />
+    <input type="hidden" id="displayname" />
+    <ul id="discussion"></ul>
+</div>
+
+
+<label>Escolha o que quer criar</label>
+<select id="selectCriar">
+    <option value="">[Escolha o que quer criar...]</option>
+    <option value="Bloco">Blocos</option>
+    <option value="Background">Background</option>
+    <option value="Texto">Texto</option>
+    <option value="Video">Video</option>
+    <option value="Imagem">Imagens</option>
+    <option value="Pasta">Pasta para Imagens</option>
+    <option value="Carousel">Carrossel</option>
+    <option value="CarouselPagina">Carrossel de paginas</option>
+    <option value="Link">Link</option>
+    <option value="Dropdown">Conjunto de links</option>
+    <option value="Formulario">Formulario</option>
+    <option value="Campo">campos para formulários</option>
+    <option value="Table">Tabela de produtos</option>
+    <option value="Produto">Produtos</option>
+    <option value="Cor">Cores</option>
+    <option value="Pagina">Pagina</option>
+    <option value="Site">Site</option>
+</select>
+
+<div id="BlocoCriarFormulario" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaFormulario" class="btn-warning">Criar formulários</a>
+</div>
+
+<div id="BlocoCriarCampo" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaCampo" class="btn-warning">Criar campos para formulários</a>
+</div>
+
+<div id="BlocoCriarTexto" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaTexto" class="btn-warning">Criar textos</a>
+</div>
+
+<div id="BlocoCriarVideo" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaVideo" class="btn btn-warning">Criar videos</a>
+</div>
+
+<div id="BlocoCriarCarousel" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaCarousel" class="btn btn-warning">Criar Carrosseis</a>
+</div>
+
+<div id="BlocoCriarCarouselPagina" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaCarouselPagina" class="btn btn-warning">Criar Carrosseis de pagina</a>
+</div>
+
+<div id="BlocoCriarImagem" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaImagem" class="btn btn-warning">Criar imagens</a>
+</div>
+
+<div id="BlocoCriarLink" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaLink" class="btn btn-warning">Criar links</a>
+</div>
+
+<div id="BlocoCriarDropdown" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaDropdown" class="btn btn-warning">Criar conjunto de links</a>
+</div>
+
+<div id="BlocoCriarTable" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaTable" class="btn btn-warning">Criar tabelas de produtos</a>
+</div>
+
+<div id="BlocoCriarProduto" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaProduto" class="btn btn-warning">Criar produtos</a>
+</div>
+
+<div id="BlocoCriarBloco" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CriaBloco" class="btn btn-warning">Criar blocos</a>
+</div>
+
+<div id="BlocoCriarCor" class="BlocoCriar" style="display: none;">
+    <a href="#" class="btn btn-warning CoresBack">Criar cores</a>
+</div>
+
+<div id="BlocoCriarBackground" class="BlocoCriar" style="display: none;">
+    <a href="#" class="btn btn-warning CriarPlano">Criar Background</a>
+</div>
+
+<div id="BlocoCriarMusica" class="BlocoCriar" style="display: none;">
+    <a href="#" id="EscolherMusica" class="btn btn-warning">Escolher musica</a>
+</div>
+
+<div id="BlocoCriarPasta" class="BlocoCriar" style="display: none;">
+    <a href="#" id="CreatePath" class="btn btn-warning">Criar pasta de imagens</a>
+</div>
+
+
+<div id="BlocoCriarPagina" class="BlocoCriar" style="display: none;">
+    <a href="/Criar-Pagina/" class="btn btn-warning">Criar nova pagina</a>
+</div>
+
+<div id="BlocoCriarSite" class="BlocoCriar" style="display: none;">
+    <a href="/Criar-Site/" class="btn btn-warning">Criar novo site</a>
+</div>
+
+<label>Informe id do elemento:</label>
+<input type="number" id="NumeroElementoEditar" />
+<a href="#" id="BotaoEditarElemento">Editar</a>
+
+<div id="conteudomodal" style="background-color: white; min-height:200px;">
+    <h4>Formulário</h4>
+</div>
+
+<div id="conteudoImagem" style="background-color: greenyellow; min-height:200px;">
+    <h4>Imagem</h4>
+</div>
+
+<div id="conteudoMusica" style="background-color: yellow; min-height:200px;">
+    <h4>Música</h4>
+</div>
+
+<div id="conteudoVideo" style="background-color: cadetblue; min-height:200px;">
+    <h4>Vídeo</h4>
+</div>
+
+
+
+

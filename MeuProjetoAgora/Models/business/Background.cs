@@ -1,4 +1,5 @@
 ﻿
+using MeuProjetoAgora.Models.business.Elemento;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -48,6 +49,8 @@ namespace MeuProjetoAgora.Models.business
         public virtual Imagem imagem { get; set; }
 
         public BackgroundGradiente BackgroundGradiente { get; set; }
+
+        public virtual List<Div> Div { get; set; }
 
     }
 }

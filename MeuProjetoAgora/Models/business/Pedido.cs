@@ -1,6 +1,5 @@
 ﻿
 using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.Join;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -21,7 +20,7 @@ namespace MeuProjetoAgora.Models.business
         public bool Venda { get; set; }
 
         [MaxLength(30, ErrorMessage = "Não é possivel adicionar mais de 30 caracteres")]
-        [Display(Name = "Dominio temporário: myprojectnow.somee.com/site/")]
+        [Display(Name = "Dominio temporário: siteprofissional.somee.com/site/")]
         [Required(ErrorMessage = "O campo Dominio Temporário é requirido!!!")]
         public string DominioTemporario { get; set; }
 
@@ -33,7 +32,9 @@ namespace MeuProjetoAgora.Models.business
         public virtual Servico Servico { get; set; }
         [JsonIgnore]
         public virtual DateTime Datapedido { get; set; }
-        
+
+        public int DiasLiberados { get; set; }
+
         [Required]
         public virtual string ClienteId { get; set; }
 

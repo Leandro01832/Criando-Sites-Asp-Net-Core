@@ -1,7 +1,6 @@
-﻿
-
-
+﻿using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Join;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -39,36 +38,36 @@ namespace MeuProjetoAgora.Models.business
         [Display(Name = "Borda arredondada")]
         public int BorderRadius { get; set; }
 
-        public int Ordem { get; set; }
+        public bool Fixado { get; set; }
+        public bool EscolherPosicao { get; set; }
+        public int PosicaoFixacao { get; set; }
+        public int InicioFixacao { get; set; }
 
-        [Range(1, 10000, ErrorMessage ="Escolha um plano de fundo para a div")]
+        public int EixoYBlocoFixado { get; set; }
+
+        public int EixoXBlocoFixado { get; set; }        
+
+        public int Ordem { get; set; }
+        
         [Display(Name = "Qual plano de fundo do bloco?")]
         public int background_ { get; set; }
         [ForeignKey("background_")]
-        
+        [JsonIgnore]
         public virtual Background Background { get; set; }
+        [JsonIgnore]
+        public virtual List<DivElemento> Elemento { get; set; }
+        [JsonIgnore]
+        public virtual List<DivPagina> Pagina { get; set; }
 
-        public virtual List<Formulario> form { get; set; }
+        public int Pagina_ { get; set; }
 
-        public virtual List<Table> Tabelas { get; set; }
+        [NotMapped]
+        public string Elementos { get; set; }
 
-        public virtual List<Texto> Textos { get; set; }
-        
-        public virtual List<Carousel> Carousel { get; set; }
-        
-        public virtual List<Video> Video { get; set; }
-        
-        public virtual List<DivImagem> Imagem { get; set; }
-
-        public virtual List<Link> Link { get; set; }
-
-        public virtual List<Elemento> Elemento { get; set; }
-        
-        [Display(Name = "colocar em qual pagina o bloco?")]
-        public int? PaginaId { get; set; }       
-        public virtual Pagina Pagina { get; set; }
-
-        
+        public void IncluiElemento(MeuProjetoAgora.Models.business.Elemento.Elemento elemento)
+        {
+            this.Elemento.Add(new DivElemento { Elemento = elemento });
+        }
 
 
     }

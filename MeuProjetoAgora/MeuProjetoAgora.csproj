@@ -8,11 +8,18 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="2.2.5" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.3" />
     <PackageReference Include="NVelocity" Version="1.2.0" />
     <PackageReference Include="RestSharp" Version="106.11.7" />
     <PackageReference Include="SharpZipLib" Version="1.2.0" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="Views\Requisicao\" />
+    <Folder Include="wwwroot\Html\" />
   </ItemGroup>
 
 </Project>

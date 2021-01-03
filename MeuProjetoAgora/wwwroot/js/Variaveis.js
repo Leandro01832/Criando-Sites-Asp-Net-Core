@@ -7,5 +7,5 @@ var x;
 var y;
 var z;
 var substring = "ClassDiv";
-var numero = $(".Topo")[0].baseURI.replace(/[^0-9]/g, '');
-numero = numero.replace('5001', ''); 
+var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+numero = numero.replace('44398', ''); 

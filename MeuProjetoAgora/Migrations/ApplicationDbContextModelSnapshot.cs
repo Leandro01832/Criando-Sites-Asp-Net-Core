@@ -19,43 +19,56 @@ namespace MeuProjetoAgora.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.CarouselImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivElemento", b =>
                 {
-                    b.Property<int>("ImagemId");
-
-                    b.Property<int>("CarouselId");
-
-                    b.HasKey("ImagemId", "CarouselId");
-
-                    b.HasIndex("CarouselId");
-
-                    b.ToTable("CarouselImagem");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivImagem", b =>
-                {
-                    b.Property<int>("ImagemId");
-
                     b.Property<int>("DivId");
 
-                    b.HasKey("ImagemId", "DivId");
+                    b.Property<int>("ElementoId");
 
-                    b.HasIndex("DivId");
+                    b.HasKey("DivId", "ElementoId");
 
-                    b.ToTable("DivImagem");
+                    b.HasIndex("ElementoId");
+
+                    b.ToTable("DivElemento");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.ProdutoImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivPagina", b =>
                 {
-                    b.Property<int>("ImagemId");
+                    b.Property<int>("DivId");
 
-                    b.Property<int>("ProdutoId");
+                    b.Property<int>("PaginaId");
 
-                    b.HasKey("ImagemId", "ProdutoId");
+                    b.HasKey("DivId", "PaginaId");
 
-                    b.HasIndex("ProdutoId");
+                    b.HasIndex("PaginaId");
 
-                    b.ToTable("ProdutoImagem");
+                    b.ToTable("DivPagina");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.ElementoDependenteElemento", b =>
+                {
+                    b.Property<int>("ElementoDependenteId");
+
+                    b.Property<int>("ElementoId");
+
+                    b.HasKey("ElementoDependenteId", "ElementoId");
+
+                    b.HasIndex("ElementoId");
+
+                    b.ToTable("ElementoDependenteElemento");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.PaginaCarouselPagina", b =>
+                {
+                    b.Property<int>("CarouselPaginaId");
+
+                    b.Property<int>("PaginaId");
+
+                    b.HasKey("CarouselPaginaId", "PaginaId");
+
+                    b.HasIndex("PaginaId");
+
+                    b.ToTable("PaginaCarouselPagina");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Background", b =>
@@ -103,43 +116,43 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("BackgroundGradiente");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Campo", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Cadastro", b =>
                 {
-                    b.Property<int>("IdCampo")
+                    b.Property<int>("IdCadastro")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Nome");
-
-                    b.Property<string>("Placeholder");
-
-                    b.Property<string>("Tipo");
-
-                    b.Property<int?>("formularioIdForm");
-
-                    b.HasKey("IdCampo");
-
-                    b.HasIndex("formularioIdForm");
-
-                    b.ToTable("Campo");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Carousel", b =>
-                {
-                    b.Property<int>("IdCarousel")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nome")
+                    b.Property<string>("Bairro")
                         .IsRequired();
 
-                    b.Property<int>("div_2");
+                    b.Property<string>("CEP")
+                        .IsRequired();
 
-                    b.HasKey("IdCarousel");
+                    b.Property<string>("Complemento")
+                        .IsRequired();
 
-                    b.HasIndex("div_2");
+                    b.Property<string>("Email")
+                        .IsRequired();
 
-                    b.ToTable("Carousel");
+                    b.Property<string>("Endereco")
+                        .IsRequired();
+
+                    b.Property<string>("Municipio")
+                        .IsRequired();
+
+                    b.Property<string>("Nome")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("Telefone")
+                        .IsRequired();
+
+                    b.Property<string>("UF")
+                        .IsRequired();
+
+                    b.HasKey("IdCadastro");
+
+                    b.ToTable("Cadastro");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.ContaBancaria", b =>
@@ -153,7 +166,8 @@ namespace MeuProjetoAgora.Migrations
                     b.Property<string>("ClienteId")
                         .IsRequired();
 
-                    b.Property<string>("CodigoBanco");
+                    b.Property<string>("CodigoBanco")
+                        .IsRequired();
 
                     b.Property<string>("Conta");
 
@@ -161,7 +175,8 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<string>("DVConta");
 
-                    b.Property<string>("TipoConta");
+                    b.Property<string>("TipoConta")
+                        .IsRequired();
 
                     b.HasKey("IdContaBancaria");
 
@@ -189,6 +204,23 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Cor");
                 });
 
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.DadoFormulario", b =>
+                {
+                    b.Property<int>("IdDadoFormulario")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Campo");
+
+                    b.Property<int>("Formulario");
+
+                    b.Property<string>("Valor");
+
+                    b.HasKey("IdDadoFormulario");
+
+                    b.ToTable("DadoFormulario");
+                });
+
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Div", b =>
                 {
                     b.Property<int>("IdDiv")
@@ -203,7 +235,17 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<string>("Divisao");
 
+                    b.Property<int>("EixoXBlocoFixado");
+
+                    b.Property<int>("EixoYBlocoFixado");
+
+                    b.Property<bool>("EscolherPosicao");
+
+                    b.Property<bool>("Fixado");
+
                     b.Property<int>("Height");
+
+                    b.Property<int>("InicioFixacao");
 
                     b.Property<string>("Nome")
                         .IsRequired();
@@ -212,153 +254,54 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<int>("Padding");
 
-                    b.Property<int?>("PaginaId");
+                    b.Property<int>("Pagina_");
+
+                    b.Property<int>("PosicaoFixacao");
 
                     b.Property<int>("background_");
 
                     b.HasKey("IdDiv");
-
-                    b.HasIndex("PaginaId");
 
                     b.HasIndex("background_");
 
                     b.ToTable("Div");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Elemento", b =>
                 {
                     b.Property<int>("IdElemento")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Discriminator")
+                        .IsRequired();
+
                     b.Property<string>("Nome");
 
                     b.Property<int>("Ordem");
 
-                    b.Property<bool>("Renderizar");
-
-                    b.Property<int?>("carousel_");
-
-                    b.Property<int?>("div_2");
-
-                    b.Property<int?>("form_");
-
-                    b.Property<int?>("imagem_");
-
-                    b.Property<int?>("link_");
-
-                    b.Property<int?>("table_");
-
-                    b.Property<int?>("texto_");
-
-                    b.Property<int?>("video_");
+                    b.Property<int>("Pagina_");
 
                     b.HasKey("IdElemento");
 
-                    b.HasIndex("carousel_");
-
-                    b.HasIndex("div_2");
-
-                    b.HasIndex("form_");
-
-                    b.HasIndex("imagem_");
-
-                    b.HasIndex("link_");
-
-                    b.HasIndex("table_");
-
-                    b.HasIndex("texto_");
-
-                    b.HasIndex("video_");
-
                     b.ToTable("Elemento");
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("Elemento");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Endereco", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", b =>
                 {
-                    b.Property<int>("IdEndereco")
+                    b.Property<int>("IdElementoDependente")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Bairro");
+                    b.Property<int?>("Elemento_");
 
-                    b.Property<string>("Cep");
+                    b.HasKey("IdElementoDependente");
 
-                    b.Property<string>("Cidade");
+                    b.HasIndex("Elemento_");
 
-                    b.Property<string>("ClienteId")
-                        .IsRequired();
-
-                    b.Property<string>("Estado");
-
-                    b.Property<long>("Numero");
-
-                    b.Property<string>("Rua");
-
-                    b.HasKey("IdEndereco");
-
-                    b.ToTable("Endereco");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.EnderecoRequisicao", b =>
-                {
-                    b.Property<int>("IdEnderecoRequisicao");
-
-                    b.Property<string>("Bairro");
-
-                    b.Property<string>("Cep");
-
-                    b.Property<string>("Cidade");
-
-                    b.Property<string>("Estado");
-
-                    b.Property<long>("NumeroCasa");
-
-                    b.Property<string>("Rua");
-
-                    b.HasKey("IdEnderecoRequisicao");
-
-                    b.ToTable("EnderecoRequisicao");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Formulario", b =>
-                {
-                    b.Property<int>("IdForm")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Model");
-
-                    b.Property<string>("Nome");
-
-                    b.Property<int>("div_");
-
-                    b.Property<int>("link_");
-
-                    b.HasKey("IdForm");
-
-                    b.HasIndex("div_");
-
-                    b.HasIndex("link_");
-
-                    b.ToTable("Form");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Imagem", b =>
-                {
-                    b.Property<int>("IdImagem")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Arquivo");
-
-                    b.Property<int?>("PastaImagemId");
-
-                    b.HasKey("IdImagem");
-
-                    b.HasIndex("PastaImagemId");
-
-                    b.ToTable("Imagem");
+                    b.ToTable("ElementoDependente");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.InfoEntrega", b =>
@@ -369,22 +312,14 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<int?>("AlturaCaixa");
 
-                    b.Property<string>("CidadesEntrega");
-
                     b.Property<string>("ClienteId")
                         .IsRequired();
 
                     b.Property<int?>("ComprimentoCaixa");
 
-                    b.Property<string>("EstadosEntrega");
-
                     b.Property<int?>("LarguraCaixa");
 
                     b.Property<int?>("PesoCaixa");
-
-                    b.Property<decimal?>("ValorFrete");
-
-                    b.Property<bool>("entregaCorreio");
 
                     b.HasKey("IdInfoEntrega");
 
@@ -397,10 +332,28 @@ namespace MeuProjetoAgora.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<string>("Bairro")
+                        .IsRequired();
+
+                    b.Property<string>("Cep")
+                        .IsRequired();
+
+                    b.Property<string>("Cidade")
+                        .IsRequired();
+
                     b.Property<string>("ClienteId")
                         .IsRequired();
 
-                    b.Property<string>("Cpf");
+                    b.Property<string>("Cpf")
+                        .IsRequired();
+
+                    b.Property<string>("Estado")
+                        .IsRequired();
+
+                    b.Property<long>("Numero");
+
+                    b.Property<string>("Rua")
+                        .IsRequired();
 
                     b.HasKey("IdInfoVenda");
 
@@ -412,6 +365,8 @@ namespace MeuProjetoAgora.Migrations
                     b.Property<int>("IdItem")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("PrecoUnitario");
 
                     b.Property<int>("Quantidade");
 
@@ -426,37 +381,6 @@ namespace MeuProjetoAgora.Migrations
                     b.HasIndex("requisicao_");
 
                     b.ToTable("ItemRequisicao");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Link", b =>
-                {
-                    b.Property<int>("IdLink")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("TextoLink");
-
-                    b.Property<bool>("Url");
-
-                    b.Property<int?>("div_");
-
-                    b.Property<int?>("imagem_");
-
-                    b.Property<int?>("pagina_");
-
-                    b.Property<int?>("texto_");
-
-                    b.HasKey("IdLink");
-
-                    b.HasIndex("div_");
-
-                    b.HasIndex("imagem_");
-
-                    b.HasIndex("pagina_");
-
-                    b.HasIndex("texto_");
-
-                    b.ToTable("Link");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.MensagemChat", b =>
@@ -484,11 +408,15 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<string>("ArquivoMusic");
 
+                    b.Property<bool>("Exibicao");
+
                     b.Property<string>("Facebook");
 
                     b.Property<string>("Instagram");
 
                     b.Property<bool>("Margem");
+
+                    b.Property<bool>("Menu");
 
                     b.Property<bool>("Music");
 
@@ -496,6 +424,8 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<string>("Titulo")
                         .IsRequired();
+
+                    b.Property<bool>("Topo");
 
                     b.Property<string>("Twiter");
 
@@ -536,6 +466,8 @@ namespace MeuProjetoAgora.Migrations
 
                     b.Property<DateTime>("Datapedido");
 
+                    b.Property<int>("DiasLiberados");
+
                     b.Property<string>("DominioTemporario")
                         .IsRequired()
                         .HasMaxLength(30);
@@ -572,34 +504,9 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Permissao");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Produto", b =>
-                {
-                    b.Property<int>("IdProduto")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Descricao");
-
-                    b.Property<string>("Nome");
-
-                    b.Property<decimal>("Preco");
-
-                    b.Property<long?>("estoque");
-
-                    b.Property<int>("table_");
-
-                    b.HasKey("IdProduto");
-
-                    b.HasIndex("table_");
-
-                    b.ToTable("Produto");
-                });
-
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Requisicao", b =>
                 {
-                    b.Property<int>("IdRequisicao")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("IdRequisicao");
 
                     b.Property<string>("ClienteId")
                         .IsRequired();
@@ -639,25 +546,6 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Servico");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Table", b =>
-                {
-                    b.Property<int>("IdTable")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Estilo");
-
-                    b.Property<string>("Nome");
-
-                    b.Property<int>("div_");
-
-                    b.HasKey("IdTable");
-
-                    b.HasIndex("div_");
-
-                    b.ToTable("Table");
-                });
-
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Telefone", b =>
                 {
                     b.Property<int>("IdTelefone")
@@ -680,43 +568,6 @@ namespace MeuProjetoAgora.Migrations
                     b.HasKey("IdTelefone");
 
                     b.ToTable("Telefone");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Texto", b =>
-                {
-                    b.Property<int>("IdTexto")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Nome")
-                        .IsRequired();
-
-                    b.Property<string>("Palavras");
-
-                    b.Property<int>("div_");
-
-                    b.HasKey("IdTexto");
-
-                    b.HasIndex("div_");
-
-                    b.ToTable("Texto");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Video", b =>
-                {
-                    b.Property<int>("IdVideo")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("ArquivoVideo");
-
-                    b.Property<int>("div_");
-
-                    b.HasKey("IdVideo");
-
-                    b.HasIndex("div_");
-
-                    b.ToTable("Video");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -884,42 +735,189 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.CarouselImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Campo", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Carousel", "Carousel")
-                        .WithMany("imagens")
-                        .HasForeignKey("CarouselId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "Imagem")
-                        .WithMany("Carousels")
-                        .HasForeignKey("ImagemId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Property<string>("Placeholder");
+
+                    b.Property<string>("TipoCampo");
+
+                    b.ToTable("Campo");
+
+                    b.HasDiscriminator().HasValue("Campo");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Carousel", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.ToTable("Carousel");
+
+                    b.HasDiscriminator().HasValue("Carousel");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.CarouselPagina", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.HasDiscriminator().HasValue("CarouselPagina");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Dropdown", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.HasDiscriminator().HasValue("Dropdown");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Formulario", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.ToTable("Formulario");
+
+                    b.HasDiscriminator().HasValue("Formulario");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Imagem", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<string>("ArquivoImagem");
+
+                    b.Property<int?>("PastaImagemId");
+
+                    b.Property<int>("Width");
+
+                    b.HasIndex("PastaImagemId");
+
+                    b.ToTable("Imagem");
+
+                    b.HasDiscriminator().HasValue("Imagem");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Link", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<bool>("Menu");
+
+                    b.Property<string>("TextoLink");
+
+                    b.Property<bool>("UrlLink");
+
+                    b.Property<int?>("paginaDestinoLink_");
+
+                    b.HasIndex("paginaDestinoLink_");
+
+                    b.ToTable("Link");
+
+                    b.HasDiscriminator().HasValue("Link");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Produto", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<string>("Codigo")
+                        .IsRequired();
+
+                    b.Property<string>("Descricao");
+
+                    b.Property<decimal>("Preco");
+
+                    b.Property<string>("Segmento");
+
+                    b.Property<long?>("estoque");
+
+                    b.ToTable("Produto");
+
+                    b.HasDiscriminator().HasValue("Produto");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Table", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<string>("EstiloTabela");
+
+                    b.ToTable("Table");
+
+                    b.HasDiscriminator().HasValue("Table");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Texto", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<string>("PalavrasTexto");
+
+                    b.ToTable("Texto");
+
+                    b.HasDiscriminator().HasValue("Texto");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Video", b =>
+                {
+                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+
+                    b.Property<string>("ArquivoVideo");
+
+                    b.ToTable("Video");
+
+                    b.HasDiscriminator().HasValue("Video");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivElemento", b =>
                 {
                     b.HasOne("MeuProjetoAgora.Models.business.Div", "Div")
-                        .WithMany("Imagem")
+                        .WithMany("Elemento")
                         .HasForeignKey("DivId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "Imagem")
-                        .WithMany("Divs")
-                        .HasForeignKey("ImagemId")
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Elemento")
+                        .WithMany("div")
+                        .HasForeignKey("ElementoId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.Join.ProdutoImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivPagina", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "Imagem")
-                        .WithMany("Produto")
-                        .HasForeignKey("ImagemId")
+                    b.HasOne("MeuProjetoAgora.Models.business.Div", "Div")
+                        .WithMany("Pagina")
+                        .HasForeignKey("DivId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Produto", "Produto")
-                        .WithMany("Imagens")
-                        .HasForeignKey("ProdutoId")
+                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                        .WithMany("Div")
+                        .HasForeignKey("PaginaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.ElementoDependenteElemento", b =>
+                {
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", "ElementoDependente")
+                        .WithMany("Elemento")
+                        .HasForeignKey("ElementoDependenteId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Elemento")
+                        .WithMany("Despendentes")
+                        .HasForeignKey("ElementoId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.Join.PaginaCarouselPagina", b =>
+                {
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.CarouselPagina", "CarouselPagina")
+                        .WithMany("Paginas")
+                        .HasForeignKey("CarouselPaginaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                        .WithMany("CarouselPagina")
+                        .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -930,7 +928,7 @@ namespace MeuProjetoAgora.Migrations
                         .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "imagem")
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Imagem", "imagem")
                         .WithMany("Backgrounds")
                         .HasForeignKey("imagem_");
                 });
@@ -940,21 +938,6 @@ namespace MeuProjetoAgora.Migrations
                     b.HasOne("MeuProjetoAgora.Models.business.Background", "Background")
                         .WithOne("BackgroundGradiente")
                         .HasForeignKey("MeuProjetoAgora.Models.business.BackgroundGradiente", "IdBackgroundGradiente")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Campo", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Formulario", "formulario")
-                        .WithMany("Campos")
-                        .HasForeignKey("formularioIdForm");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Carousel", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "Div")
-                        .WithMany("Carousel")
-                        .HasForeignKey("div_2")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -968,82 +951,22 @@ namespace MeuProjetoAgora.Migrations
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Div", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
-                        .WithMany("Div")
-                        .HasForeignKey("PaginaId");
-
                     b.HasOne("MeuProjetoAgora.Models.business.Background", "Background")
-                        .WithMany()
+                        .WithMany("Div")
                         .HasForeignKey("background_")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Carousel", "carousel")
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Dependente")
                         .WithMany()
-                        .HasForeignKey("carousel_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("Elemento")
-                        .HasForeignKey("div_2");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Formulario", "form")
-                        .WithMany()
-                        .HasForeignKey("form_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "imagem")
-                        .WithMany()
-                        .HasForeignKey("imagem_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Link", "link")
-                        .WithMany()
-                        .HasForeignKey("link_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Table", "table")
-                        .WithMany()
-                        .HasForeignKey("table_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Texto", "texto")
-                        .WithMany()
-                        .HasForeignKey("texto_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Video", "video")
-                        .WithMany()
-                        .HasForeignKey("video_");
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.EnderecoRequisicao", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Requisicao", "Requisicao")
-                        .WithOne("Endereco")
-                        .HasForeignKey("MeuProjetoAgora.Models.business.EnderecoRequisicao", "IdEnderecoRequisicao")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Formulario", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("form")
-                        .HasForeignKey("div_")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Link", "link")
-                        .WithMany()
-                        .HasForeignKey("link_")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Imagem", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.PastaImagem", "PastaImagem")
-                        .WithMany("Imagens")
-                        .HasForeignKey("PastaImagemId");
+                        .HasForeignKey("Elemento_");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.ItemRequisicao", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Produto", "produto")
+                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Produto", "produto")
                         .WithMany("Itens")
                         .HasForeignKey("produto_")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -1052,25 +975,6 @@ namespace MeuProjetoAgora.Migrations
                         .WithMany("ItemRequisicao")
                         .HasForeignKey("requisicao_")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Link", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("Link")
-                        .HasForeignKey("div_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Imagem", "imagem")
-                        .WithMany()
-                        .HasForeignKey("imagem_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Destino")
-                        .WithMany()
-                        .HasForeignKey("pagina_");
-
-                    b.HasOne("MeuProjetoAgora.Models.business.Texto", "texto")
-                        .WithMany()
-                        .HasForeignKey("texto_");
                 });
 
             modelBuilder.Entity("MeuProjetoAgora.Models.business.Pagina", b =>
@@ -1089,11 +993,11 @@ namespace MeuProjetoAgora.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Produto", b =>
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Requisicao", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Table", "tabela")
-                        .WithMany("Produtos")
-                        .HasForeignKey("table_")
+                    b.HasOne("MeuProjetoAgora.Models.business.Cadastro", "Cadastro")
+                        .WithOne("Requisicao")
+                        .HasForeignKey("MeuProjetoAgora.Models.business.Requisicao", "IdRequisicao")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1102,30 +1006,6 @@ namespace MeuProjetoAgora.Migrations
                     b.HasOne("MeuProjetoAgora.Models.business.Pedido", "Pedido")
                         .WithOne("Servico")
                         .HasForeignKey("MeuProjetoAgora.Models.business.Servico", "IdServico")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Table", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("Tabelas")
-                        .HasForeignKey("div_")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Texto", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("Textos")
-                        .HasForeignKey("div_")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Video", b =>
-                {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "div")
-                        .WithMany("Video")
-                        .HasForeignKey("div_")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1172,6 +1052,20 @@ namespace MeuProjetoAgora.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Imagem", b =>
+                {
+                    b.HasOne("MeuProjetoAgora.Models.business.PastaImagem", "PastaImagem")
+                        .WithMany("Imagens")
+                        .HasForeignKey("PastaImagemId");
+                });
+
+            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Link", b =>
+                {
+                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Destino")
+                        .WithMany()
+                        .HasForeignKey("paginaDestinoLink_");
                 });
 #pragma warning restore 612, 618
         }

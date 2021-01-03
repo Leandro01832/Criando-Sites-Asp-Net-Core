@@ -1,7 +1,8 @@
 ﻿$(document).ready(function () {
 
+    var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+    numero = numero.replace('44398', '');
     
-
     el.click(function () {
 
         z = event.target;
@@ -31,39 +32,35 @@
         y = event.target;
         x = event.target.className;
 
-
-
         if (x !== "" && condicao === 4) {
             y = z;
-
-
-
+            
             if (y.tagName === "DIV" && x.includes(substring)) {
                 $(".Elemento").css("border", "none");
 
             }
 
-
             while (y !== null && x !== "content") {
 
-                if (y.className === "Elemento grid-item" && !$("#BotaoSalvar").length) {
+                if (y.className === "Elemento grid-item ui-sortable-handle") {
                     $(".Elemento").css("border", "none");
-                    var valor = y.id.replace("elemento", "");
-                    $("#" + y.id).css("display", "block");
-                    $("#" + y.id).css("border", "ridge");
-                    $("#" + y.id).css("border-width", "2px");
+                    var valor = y.id.replace("elemento", "").replace("Pagina" + numero, "");
+                    $(".Elemento" + valor).css("display", "block");
+                    $(".Elemento" + valor).css("border", "ridge");
+                    $(".Elemento" + valor).css("border-width", "2px");
+                    
                     $("#ElementoId").load("/Pagina/IdentificacaoElemento?elemento=" + valor);
                     break;
                 }
 
 
-                if (y.tagName === "DIV" && !$("#BotaoSalvar").length) {
+                if (y.tagName === "DIV") {
                     var arr = x.split(" ");
 
                     for (var i = 0; i <= arr.length; i++) {
                         if (arr[i] === "ClassDiv") {
                             $(".ClassDiv").css("border", "none");
-                             valor = y.id.replace("DIV", "");
+                            valor = y.id.replace("DIV", "").replace("Pagina" + numero, "");
                             $("#" + y.id).css("display", "block");
                             $("#" + y.id).css("border", "ridge");
                             $("#" + y.id).css("border-width", "10px");
@@ -71,21 +68,15 @@
                             $("#QuantidadeElementos").load("/Pagina/QuantidadeBloco?div=" + valor);
                         }
                     }
-
-
-
-
+                    
                     break;
                 }
 
                 y = y.parentElement;
 
-
             }
 
         }
-
-
 
     });
 
@@ -102,29 +93,16 @@
             condicao = 4;
             $(".remover").fadeOut("slow");
             $(".ClassDiv").css("border", "none");
+            $(".grid-item").css("border", "none");
         }
 
-    });
-
-    $(".remover").click(function () {
-
-        var valor = this.id.replace("remover", "");
-
-        $("#conteudomodal").load("/Elemento/Apagar/" + valor);
-        condicao = 0;
     });
 
     setInterval(verifica, 1000);
 
     function EditModalBorda(idElemento) {
-        debugger;
-        $("#conteudomodal").load("/EditTools/EditModalElemento/" + idElemento);
-        condicao = 0;
-    }
-
-    function CreateModal(string) {
-        $("#conteudomodal").load("/CreateTools/CreateModal" + string + "?id=" + numero);
-        x = "";
+        
+        $("#conteudomodal").load("/Elemento/Edit/" + idElemento);
         condicao = 0;
     }
 
@@ -139,7 +117,7 @@
                     var id = $("#" + y.id).data("value");
 
                     condicao = 0;
-                    $("#conteudomodal").load("/EditTools/EditModalDiv/" + id);
+                    $("#conteudomodal").load("/Elemento/EditDiv/" + id);
                 }
 
                 if (x === "Topo" || x === "Menu" || x === "bloco" || x === "bordaEsquerda" || x === "bordaDireita") {
@@ -150,23 +128,8 @@
                     $("#" + y.parentElement.id).css("border-width", "5px");
                     condicao = 0;
 
-                    $("#conteudomodal").load("/EditTools/EditModalBackground/" + id);
+                    $("#conteudomodal").load("/Ferramenta/EditBackground/" + id);
                 }
-
-
-                if (x === "video grid-item"
-                    //  || x == "Textos grid-item"
-                    || x === "Link grid-item"
-                    || x === "Form grid-item"
-                    || x === "Table grid-item") {
-
-                    y = z;
-                     id = $("#" + y.id).attr("data-id");
-                    EditModalBorda(id);
-                }
-
-
-
 
                 if (x === ""
                     || x !== ""
@@ -184,48 +147,13 @@
                             break;
                         }
 
-                        if (y.className === "Textos grid-item") {
+                        if (y.className === "Elemento grid-item ui-sortable-handle") {
 
-                            let id = $("#" + y.id).attr("data-id");
-
-                            $("#FormTexto, #estrutura, #Permissao").fadeOut("slow");
-                            $("#FormTexto").fadeIn("slow");
-                            
-                            Criar = undefined;                            
-                            $("#FormTexto").load("/EditTools/EditModalTexto/" + id);
-                            condicao = 0;
-                            break;
-                        }
-
-                        if (y.className === "Table grid-item") {
-                            let id = $("#" + y.id).attr("data-id");
-                            EditModalBorda(id);
-                            condicao = 0;
-                            break;
-                        }
-
-                        if (y.className === "Elemento grid-item") {
-                            
                             let id = $("#" + y.id).data("value");
                             EditModalBorda(id);
                             condicao = 0;
                             break;
-                        }
-
-                        if (y.className === "Imagem grid-item") {
-                            let id = $("#" + y.id).attr("data-id");
-                            EditModalBorda(id);
-                            condicao = 0;
-                            break;
-                        }
-
-
-                        if (y.className === "linhaProduto") {
-                            let id = $("#" + y.id).data("value");
-                            $("#conteudomodal").load("/EditTools/EditModalProduto/" + id);
-                            condicao = 0;
-                            break;
-                        }
+                        }                        
 
                         y = y.parentElement;
 
@@ -237,69 +165,8 @@
 
             if (condicao === 2) {
 
-
-
-                if (y.tagName === "DIV" && x.includes(substring)) {
-                    CreateModal("Div");
-
-                }
-
-                if (x === "Topo" || x === "Menu" || x === "bordaEsquerda" || x === "bordaDireita" || y.className === "content") {
-                    CreateModal("Background");
-                }
-
-                if (x === "bloco") {
-
-                    CreateModal("Div");
-                }
-
-                if (x === "video grid-item"
-                    || x === "Textos grid-item"
-                    || x === "img-responsive"
-                    || x === "Link grid-item"
-                    || x === "Form grid-item"
-                    || x === "Table grid-item") {
-
-                    CreateModal("Elemento");
-                    x = "";
-                }
-
-                if (x === "" && y !== null ||
-                    x === "carousel-inner" && y !== null ||
-                    x === "carousel-item ativo" && y !== null ||
-                    x === "img-responsive minhaimg") {
-                    y = z;
-                    while (y !== null && y.className !== "content") {
-                        y = y.parentElement;
-                        if (y.className === "content") {
-                            condicao = 0;
-                            break;
-                        }
-
-                        if (y.className === "Textos grid-item") {
-
-                            CreateModal("Elemento");
-                            x = "Textos";
-                            break;
-                        }
-
-                        if (y.className === "Table grid-item") {
-
-                            CreateModal("Elemento");
-                            x = "Textos";
-                            break;
-                        }
-
-                        if (y.className === "Carrosel grid-item") {
-
-                            CreateModal("Elemento");
-                            x = "Carrosel";
-                            break;
-                        }
-
-                    }
-
-                }
+                alert("condicao igual a 2");
+                condicao = 0;
 
             }
 

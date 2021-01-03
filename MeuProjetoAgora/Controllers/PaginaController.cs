@@ -28,11 +28,12 @@ namespace MeuProjetoAgora.Controllers
         public IRepositoryBackground RepositoryBackground { get; }
         public IHttpContextAccessor ContextAccessor { get; }
         public UserManager<IdentityUser> UserManager { get; }
+        public IUserHelper UserHelper { get; }
 
         public PaginaController(ApplicationDbContext context, IRepositoryPedido repositoryPedido,
             IRepositoryPagina repositoryPagina, IHttpHelper httpHelper,
             IRepositoryBackground repositoryBackground, IHttpContextAccessor contextAccessor,
-            UserManager<IdentityUser> userManager)
+            UserManager<IdentityUser> userManager, IUserHelper userHelper)
         {
             db = context;
             RepositoryPedido = repositoryPedido;
@@ -41,6 +42,7 @@ namespace MeuProjetoAgora.Controllers
             RepositoryBackground = repositoryBackground;
             ContextAccessor = contextAccessor;
             UserManager = userManager;
+            UserHelper = userHelper;
         }
 
         [AllowAnonymous]
@@ -52,36 +54,24 @@ namespace MeuProjetoAgora.Controllers
         [AllowAnonymous]
         public async Task<ActionResult> QuantidadeBloco(int div)
         {
-            var bloco = await  db.Div
-                .Include(d => d.Carousel)
-                .Include(d => d.Pagina.Pastas)
-                .Include(d => d.Link)
-                .Include(d => d.form)
-                .Include(d => d.Tabelas)
-                .Include(d => d.Video)
-                .Include(d => d.Textos)
-                .FirstAsync(d => d.IdDiv == div);
+            var bloco = await  db.DivElemento
+                .Include(de => de.Elemento)
+                .Include(de => de.Div)
+                .Where(d => d.Div.IdDiv == div).ToListAsync();
 
-            ViewBag.Quantidade = bloco.Carousel.Count + bloco.Pagina.Pastas.Count + bloco.Link.Count +
-                bloco.form.Count + bloco.Tabelas.Count + bloco.Video.Count + bloco.Textos.Count;
+            ViewBag.Quantidade = bloco.Count;
             return PartialView();
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> IdentificacaoBloco(int div)
         {
-            var bloco = await db.Div
-                .Include(d => d.Carousel)
-                .Include(d => d.Pagina.Pastas)
-                .Include(d => d.Link)
-                .Include(d => d.form)
-                .Include(d => d.Tabelas)
-                .Include(d => d.Video)
-                .Include(d => d.Textos)
-                .FirstAsync(d => d.IdDiv == div);
+            var bloco = await db.DivElemento
+                .Include(de => de.Elemento)
+                .Include(de => de.Div)
+                .Where(d => d.Div.IdDiv == div).ToListAsync();
 
-            ViewBag.Quantidade = bloco.Carousel.Count + bloco.Pagina.Pastas.Count + bloco.Link.Count +
-                bloco.form.Count + bloco.Tabelas.Count + bloco.Video.Count + bloco.Textos.Count;
+            ViewBag.Quantidade = bloco.Count;
             ViewBag.id = div;
             return PartialView();
         }
@@ -113,10 +103,11 @@ namespace MeuProjetoAgora.Controllers
             else
             {
                 HttpHelper.SetPedidoId(pagina.pedido_);
-                string html = RepositoryPagina.renderizarPaginaComCarousel(pagina);
+                string html = await RepositoryPagina.renderizarPaginaComCarousel(pagina);
                 ViewBag.Html = html;
                 pagina.Html = html;
-               
+
+
             }            
 
             return View(pagina);
@@ -132,7 +123,7 @@ namespace MeuProjetoAgora.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.html = RepositoryPagina.renderizarPagina(pagina);
+            ViewBag.html = await RepositoryPagina.renderizarPagina(pagina);
 
             return PartialView("GetView");
         }
@@ -150,31 +141,44 @@ namespace MeuProjetoAgora.Controllers
                 return RedirectToAction("Index", "Pedido", null);
             }
 
-            Pagina pag = new Pagina();
+            Pagina pag = null;
 
             if (pagina != null)
             {
-                var lista = await BuscarPaginas();
-                pagina = RemoveAccents(pagina);
-                pag = lista
-                .FirstOrDefault(p => p.Pedido.DominioTemporario
+                var pedido = await  RepositoryPedido.includes()
+                .FirstOrDefaultAsync(p => p.DominioTemporario
                 .ToLower()
-                == dominio.ToLower() && p.Titulo
-                .Replace(" ", "")
-                .Replace("à", "a")
-                .Replace("á", "a")
-                .Replace("ã", "a")
-                .Replace("â", "a")
-                .Replace("é", "e")
-                .Replace("ê", "e")
-                .Replace("í", "i")
-                .Replace("ó", "o")
-                .Replace("õ", "o")
-                .Replace("ô", "o")
-                .Replace("ú", "u")
-                .Replace("ü", "u")
-                .ToLower()
-                == pagina.ToLower());
+                == dominio.ToLower());
+
+                if(pedido != null)
+                {
+                    foreach (var p in pedido.Paginas)
+                    {
+                        var array = p.Rotas.Replace(" ", "").Split(',').ToList();
+
+                        foreach(var v in array)
+                        {
+                            if(v.ToLower() == pagina.ToLower())
+                            {
+                                var lista = await BuscarPaginas();
+                                pag = lista.FirstOrDefault(page => page.IdPagina == p.IdPagina);
+                            }
+                        }
+                    }
+                    if(pag == null)
+                    {
+                        var lista = await BuscarPaginas();
+                        pagina = RemoveAccents(pagina);
+                        pag = lista
+                        .FirstOrDefault(p => p.Pedido.DominioTemporario
+                        .ToLower()
+                        == dominio.ToLower() && RemoveAccents(p.Titulo)
+                        .Replace(" ", "")
+                        .ToLower()
+                        == pagina.ToLower());
+                    }
+                }              
+                
             }
 
             if (pagina == null)
@@ -183,23 +187,11 @@ namespace MeuProjetoAgora.Controllers
                 {
                     var lista2 = await BuscarPaginas();
                     var lista = lista2
-                    .Where(p => p.Pedido.DominioTemporario
+                    .Where(p => RemoveAccents(p.Pedido.DominioTemporario) 
                     .Replace(" ", "")
                     .Replace("www", "")
                     .Replace(".com", "")
-                    .Replace(".com.br", "")
-                    .Replace("à", "a")
-                    .Replace("á", "a")
-                    .Replace("ã", "a")
-                    .Replace("â", "a")
-                    .Replace("é", "e")
-                    .Replace("ê", "e")
-                    .Replace("í", "i")
-                    .Replace("ó", "o")
-                    .Replace("õ", "o")
-                    .Replace("ô", "o")
-                    .Replace("ú", "u")
-                    .Replace("ü", "u")
+                    .Replace(".com.br", "")                    
                     == dominio).ToList();
                     pag = lista[1];
                 }
@@ -211,18 +203,26 @@ namespace MeuProjetoAgora.Controllers
                 }
             }
 
-            foreach (var div in pag.Div)
+            if(pag == null && !string.IsNullOrEmpty(pagina))
             {
-                div.Elemento = div.Elemento.OrderBy(e => e.Ordem).ToList();
+                await db.Rota.AddAsync(new Rota { NomeRota = dominio + "/" + pagina });
+                await db.SaveChangesAsync();
+                return RedirectToAction("Index", "Pedido", null);
             }
 
-            string html = RepositoryPagina.renderizarPaginaComMenuDropDown(pag);
+            foreach (var div in pag.Div)
+            {
+                div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
+            }
+
+            string html = await RepositoryPagina.renderizarPaginaComMenuDropDown(pag);
             ViewBag.html = html;
             pag.Html = html;
             RepositoryPagina.criandoArquivoHtml(pag);
             return View(pag);            
         }
 
+        [Authorize(Roles ="Admin")]
         public async Task<IActionResult> Salvar(int id)
         {
             var lista = await BuscarPaginas();
@@ -236,50 +236,28 @@ namespace MeuProjetoAgora.Controllers
 
         public async Task<List<Pagina>> BuscarPaginas()
         {
-            List<Pagina> lista = await db.Pagina
-            .Include(p => p.Pastas)
-            .Include(p => p.Background)
-            .ThenInclude(b => b.imagem)
-            .Include(p => p.Background)
-            .ThenInclude(b => b.BackgroundGradiente)
-            .ThenInclude(b => b.Cores)
-            .Include(p => p.Pedido)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.texto)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.carousel)
-            .ThenInclude(b => b.imagens).ThenInclude(b => b.Imagem)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.carousel)
-            .ThenInclude(b => b.imagens).ThenInclude(b => b.Carousel)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.form)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.imagem)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.video)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.link)
-            .ThenInclude(b => b.texto)
-            .Include(p => p.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.link)
-            .ThenInclude(b => b.imagem)
-            .Include(p => p.Div)
-            .ThenInclude(b => b.Elemento)
-            .ThenInclude(b => b.table)
-            .ThenInclude(b => b.Produtos)
-            .ThenInclude(b => b.Imagens)
-            .ThenInclude(b => b.Imagem)
-            .Include(p => p.Div)
-            .ThenInclude(b => b.Elemento)
-            .ThenInclude(b => b.table)
-            .ThenInclude(b => b.Produtos)
-            .ThenInclude(b => b.Imagens)
-            .ThenInclude(b => b.Produto)
-            .ToListAsync();
+            var lista = await RepositoryPagina.MostrarPageModels();
           
 
-            foreach (var pag in lista)
+            foreach (var pag in lista.ToList())
             {
                 foreach (var div in pag.Div)
                 {
-                    div.Elemento = div.Elemento.OrderBy(e => e.Ordem).ToList();
+                    div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
+
+                    foreach (var elemento in div.Div.Elemento)
+                    {
+                        elemento.Elemento.tipo = elemento.Elemento.GetType().Name;
+
+                        foreach(var dependente in elemento.Elemento.Despendentes)
+                        {
+                            dependente.Elemento.tipo = dependente.Elemento.GetType().Name;
+                        }
+                    }
                 }
             }
 
-            return lista;
+            return lista.ToList();
         }        
 
         public string RemoveAccents(string text)
@@ -297,6 +275,82 @@ namespace MeuProjetoAgora.Controllers
         private ActionResult HttpNotFound()
         {
             throw new NotImplementedException();
+        }
+
+        [Authorize(Roles = "Pagina")]
+        public async Task<IActionResult> EditarPagina(int id)
+        {
+            bool permissao = await UserHelper.VerificarPermissaoSite(id);
+            if (!permissao)
+            {
+                return PartialView("NoPermission");
+            }
+
+            var pagina = db.Pagina
+            .Include(p => p.Pedido)
+            .Include(p => p.Div)
+            .ThenInclude(p => p.Div)
+            .First(p => p.IdPagina == id);
+            var usuario = await UserManager.GetUserAsync(this.User);
+            var sites = await db.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
+            ViewBag.pedido_ = new SelectList(sites, "IdPedido", "Nome", pagina.IdPagina);
+
+            var site = pagina.Pedido.DominioTemporario;
+
+            var rotas = db.Rota.Where(r => r.NomeRota.Contains(site)).ToList();
+            var rotasPossiveis = "";
+            foreach(var r in rotas)
+            {
+                if(!pagina.Rotas.Contains(r.NomeRota.Replace(site + "/", "")))
+                rotasPossiveis += r.NomeRota.Replace(site + "/", "") + ", ";
+            }
+            ViewBag.Rotas = rotasPossiveis;
+
+            var elements = "";
+
+            foreach (var ele in pagina.Div)
+            {
+                elements += ele.Div.IdDiv.ToString() + ", "; 
+            }
+
+            ViewBag.elementos = elements;
+            return PartialView(pagina);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Pagina")]
+        public async Task<string> EditarPagina([FromBody]Pagina pagina)
+        {
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    db.Update(pagina);
+                    await db.SaveChangesAsync();
+
+                    var Pagina = await db.Pagina
+                        .Include(p => p.Div)
+                        .ThenInclude(p => p.Div)
+                        .FirstAsync(p => p.IdPagina == pagina.IdPagina);
+
+                    await RepositoryPagina.BlocosdaPagina(Pagina);
+
+                }
+                catch (Exception ex)
+                {
+                    return "Erro!!!" + ex.Message;
+
+                }
+                return "";
+            }
+            return "Erro!!!";
+        }
+
+        public IActionResult NoPermission()
+        {
+            return PartialView();
         }
     }
 }

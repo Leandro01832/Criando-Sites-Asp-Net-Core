@@ -13,6 +13,8 @@ using Microsoft.AspNetCore.Http;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Identity;
 using MeuProjetoAgora.Models;
+using System.Text.RegularExpressions;
+using MeuProjetoAgora.Models.business.Elemento;
 
 namespace MeuProjetoAgora.Controllers
 {
@@ -23,17 +25,131 @@ namespace MeuProjetoAgora.Controllers
         public IRepositoryElemento RepositoryElemento { get; }
         public IRepositoryDiv RepositoryDiv { get; }
         public UserManager<IdentityUser> UserManager { get; }
+        public IHttpHelper HttpHelper { get; }
+        public IRepositoryCarouselPaginaCarousel RepositoryCarouselPaginaCarousel { get; }
+        public IRepositoryLink RepositoryLink { get; }
+        public IUserHelper UserHelper { get; }
 
         public ElementoController(ApplicationDbContext context, IRepositoryElemento repositoryElemento,
-            IRepositoryDiv repositoryDiv, UserManager<IdentityUser> userManager)
+            IRepositoryDiv repositoryDiv, UserManager<IdentityUser> userManager, IHttpHelper httpHelper,
+            IRepositoryCarouselPaginaCarousel repositoryCarouselPaginaCarousel, IRepositoryLink repositoryLink,
+            IUserHelper userHelper)
         {
             _context = context;
             RepositoryElemento = repositoryElemento;
             RepositoryDiv = repositoryDiv;
             UserManager = userManager;
+            HttpHelper = httpHelper;
+            RepositoryCarouselPaginaCarousel = repositoryCarouselPaginaCarousel;
+            RepositoryLink = repositoryLink;
+            UserHelper = userHelper;
         }
 
+        [Route("Elemento/ListaBlocos/{id}")]
+        public async Task<IActionResult> ListaBlocos(int id)
+        {
+            List<Div> lista = new List<Div>();
+
+            var pagina = await _context.Pagina.FirstAsync(p => p.IdPagina == id);
+            var pedido = await _context.Pedido.Include(p => p.Paginas)
+            .FirstAsync(p => p.IdPedido == pagina.pedido_);
+
+            foreach(var page in pedido.Paginas)
+            {
+                var divs = await RepositoryDiv.includes()
+                .Where(d => d.Pagina_ == page.IdPagina).ToListAsync();
+
+                foreach(var d in divs)
+                {
+                    foreach (var el in d.Elemento)
+                    {
+                        if(el.Elemento.GetType().Name == "CarouselPagina")
+                        {
+                            el.Elemento = await 
+                                RepositoryCarouselPaginaCarousel.includes()
+                                .FirstAsync(cp => cp.IdElemento == el.Elemento.IdElemento);
+                        }
+                    }
+                }
+
+                lista.AddRange(divs);
+            }
+
+            ViewBag.Pagina = id;
+            return PartialView(lista);
+        }
+
+        [Route("Elemento/Lista/{id}/{condicao}")]
+        public async Task<IActionResult> Lista(string id, int condicao)
+        {
+            var numero = Regex.Match(id, @"\d+").Value;
+            List<Elemento> lista = new List<Elemento>();
+            var listaLink = new List<Link>();
+            var listaCarouselPagina = new List<CarouselPagina>();
+            var pagina = await _context.Pagina.FirstAsync(p => p.IdPagina == int.Parse(numero));
+            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.IdPedido == pagina.pedido_);
+
+            var l = RepositoryElemento.includes();
+
+            var l2 = RepositoryLink.includes();
+
+            var l3 = RepositoryCarouselPaginaCarousel.includes();
+
+            ViewBag.elemento = id.Replace(numero, "").Replace("GaleriaElemento", "");
+
+            if(condicao == 0)
+            {
+                 lista = await l
+            .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+            }
+            else if(condicao == 1)
+            {
+                foreach (var page in pedido.Paginas)
+                {
+                    var itens = await l
+                    .Where(e => e.Pagina_ == page.IdPagina).ToListAsync();
+
+                    lista.AddRange(itens);
+                }
+            }
+
+            if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 0)
+            {
+                 listaLink = await l2
+                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+                return PartialView(listaLink);
+            }
+            else if(id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 1)
+            {
+                foreach (var page in pedido.Paginas)
+                {
+                    var itens = await l2
+                    .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+                    listaLink.AddRange(itens);
+                }
+                return PartialView(listaLink);
+            }
+            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "CarouselPagina" && condicao == 0)
+            {
+                var itens = await l3
+                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();               
+                return PartialView(listaCarouselPagina);
+            }
+
+            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "CarouselPagina" && condicao == 1)
+            {
+                foreach (var page in pedido.Paginas)
+                {
+                    var itens = await l3
+                    .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+                    listaCarouselPagina.AddRange(itens);
+                }
+                return PartialView(listaCarouselPagina);
+            }
+            return PartialView(lista);
+        }
         
+        [Authorize(Roles ="Div")]
         public IActionResult CreateDiv()
         {
             ViewBag.background_ = new SelectList(_context.Background, "IdBackground", "Nome");
@@ -43,155 +159,226 @@ namespace MeuProjetoAgora.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Div")]
         public async Task<string> CreateDiv([FromBody] Div div)
         {
 
             var v = await RepositoryDiv.SalvarBloco(div);
-            ViewBag.PaginaId = new SelectList(_context.Pagina, "IdPagina", "Titulo", div.PaginaId);
             ViewBag.background_ = new SelectList(_context.Background, "Idbackground", "Nome", div.background_);
             return v;
         }
-        
+
+        [Authorize(Roles = "Div")]
         public async Task<IActionResult> EditDiv(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var div = await _context.Div.FindAsync(id);
+            var div = await _context.Div
+                .Include(d => d.Elemento)
+                .ThenInclude(d => d.Elemento)
+                .FirstAsync(d => d.IdDiv == id);
             if (div == null)
             {
                 return NotFound();
             }
 
-            ViewBag.PaginaId = new SelectList(_context.Pagina, "IdPagina", "Titulo", div.PaginaId);
-            ViewBag.background_ = new SelectList(_context.Background, "Idbackground", "Nome", div.background_);
-            return View(div);
+            bool permissao = await UserHelper.VerificarPermissaoDiv(id);
+            if (!permissao) return PartialView("NoPermission");
+
+            var elements = "";
+            foreach (var el in div.Elemento)
+            {
+                elements += el.Elemento.IdElemento + ", ";
+            }
+
+            ViewBag.elementos = elements;
+            ViewBag.selecionado = div.background_;
+            return PartialView(div);
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public string EditDiv([FromBody] Div div)
+        [Authorize(Roles = "Div")]
+        public async Task<string> EditDiv([FromBody] Div div)
         {
-                try
-                {
-                    RepositoryDiv.EditarBloco(div);
-                }
-                catch (Exception)
-                {
-                     return "Erro na edição do bloco";
-                }
-
-            ViewBag.PaginaId = new SelectList(_context.Pagina, "IdPagina", "Titulo", div.PaginaId);
-            ViewBag.background_ = new SelectList(_context.Background, "Idbackground", "Nome", div.background_);
+            var v = await RepositoryDiv.EditarBloco(div);
             return "";
         }
-        
-        [Route("Elemento/Create/{Elemento}")]
-        public IActionResult Create(string Elemento)
+
+        [Route("Elemento/Create/{elemento}")]
+        public async Task<IActionResult> Create(string elemento)
         {
-            ViewBag.elemento = Elemento;
-            ViewBag.carousel_ = new SelectList(_context.Carousel, "IdCarousel", "Nome");
-            ViewBag.div_2 = new SelectList(_context.Div, "IdDiv", "Nome");
-            ViewBag.form_ = new SelectList(_context.Form, "IdForm", "IdForm");
-            ViewBag.imagem_ = new SelectList(_context.Imagem, "IdImagem", "IdImagem");
-            ViewBag.link_ = new SelectList(_context.Link, "IdLink", "IdLink");
-            ViewBag.table_ = new SelectList(_context.Table, "IdTable", "IdTable");
-            ViewBag.texto_ = new SelectList(_context.Texto, "IdTexto", "Nome");
-            ViewBag.video_ = new SelectList(_context.Video, "IdVideo", "IdVideo");
-            return View();
+            var site = HttpHelper.GetPedidoId();
+            var usuario = await UserManager.GetUserAsync(this.User);
+            var email = usuario.UserName;
+            var condicao = "";
+            ViewBag.elemento = elemento;
+            ViewBag.condicao = _context.InfoVenda.FirstOrDefault(i => i.ClienteId == usuario.Id);
+            ViewBag.condicao2 = _context.InfoEntrega.FirstOrDefault(i => i.ClienteId == usuario.Id);
+            ViewBag.condicao3 = _context.ContaBancaria.FirstOrDefault(i => i.ClienteId == usuario.Id);
+
+            var claims = User.Claims.ToList();
+            var roles = "";
+            foreach(var v in claims)
+            {
+                roles += v.Value + ", ";
+            }
+            
+            bool permissao2 = await UserHelper.VerificarPermissao2(site, email, condicao, elemento);
+            bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento);
+
+            if (!permissao2)
+            {
+                return PartialView("NoPermission");
+            }
+            
+            if (!permissao) return PartialView("NoPermission");
+
+            return PartialView();
         }
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [RequestFormLimits(MultipartBodyLengthLimit = 409715200)]
-        [RequestSizeLimit(409715200)]
-        public async Task<string> Create([FromBody] ViewModelElemento elemento, IList<IFormFile> files,
-            [FromServices] IHostingEnvironment hostingEnvironment)
-        {            
-            var v =  await  RepositoryElemento.salvar(elemento, files);             
+        public async Task<string> Create([FromBody] ViewModelElemento elemento)
+        {
+            var v = await RepositoryElemento.salvar(RepositoryElemento.Elemento(elemento));
             return v;
         }
         
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
+            var usuario = await UserManager.GetUserAsync(this.User);
+            string verifica = "";
+            Elemento elemento;
+            ViewBag.condicao = _context.InfoVenda.FirstOrDefault(i => i.ClienteId == usuario.Id);
+            ViewBag.condicao2 = _context.InfoEntrega.FirstOrDefault(i => i.ClienteId == usuario.Id);
+            ViewBag.condicao3 = _context.ContaBancaria.FirstOrDefault(i => i.ClienteId == usuario.Id);
+
+            var claims = User.Claims.ToList();
+            var roles = "";
+            foreach (var v in claims)
             {
-                return NotFound();
+                roles += v.Value + ", ";
             }
 
-            var elemento = await _context.Elemento.FindAsync(id);
+            try
+            {
+               elemento = await RepositoryElemento.includes()
+               .FirstAsync(e => e.IdElemento == id);
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("NaoEncontrado");
+            }
+
+            var site = HttpHelper.GetPedidoId();
+            
+            var email = usuario.UserName;
+            var sites = await _context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
+
             if (elemento == null)
             {
                 return NotFound();
             }
 
-            bool texto = (elemento.texto != null) ? true : false;
-            bool link = (elemento.link != null) ? true : false;
-            bool imagem = (elemento.imagem != null) ? true : false;
-            bool carousel = (elemento.carousel != null) ? true : false;
-            bool form = (elemento.form != null) ? true : false;
-            bool table = (elemento.table != null) ? true : false;
-            bool video = (elemento.video != null) ? true : false;
+            bool permissao2 = await UserHelper.VerificarPermissao2(site, email, verifica, elemento.GetType().Name);
+            bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento.GetType().Name);            
 
-            var viewModel = new ViewModelElemento
+            if (!permissao2)
             {
-                Nome = elemento.Nome,
-                Ordem = elemento.Ordem,
-                div_ = elemento.div_2,
-                Renderizar = elemento.Renderizar
-            };
-            if (imagem)
-            {
-                viewModel.ArquivoImagem = elemento.imagem.Arquivo;
-                viewModel.PastaImagemId = elemento.imagem.PastaImagemId;
-                ViewBag.elemento = "imagem";
+                return PartialView("NoPermission");
             }
-            if (texto)
+            
+            if (!permissao) return PartialView("NoPermission");
+
+            string elementos = "";
+
+            foreach (var dependente in elemento.Despendentes)
             {
-                viewModel.PalavrasTexto = elemento.texto.Palavras;
-                ViewBag.elemento = "texto";
-            }
-            if (table)
-            {
-                viewModel.EstiloTable = elemento.table.Estilo;
-                ViewBag.elemento = "table";
-            }
-            if (link)
-            {
-                viewModel.imagemLink_ = elemento.link.imagem_;
-                viewModel.paginaDestinoLink_ = elemento.link.pagina_;
-                viewModel.TextoLink = elemento.link.TextoLink;
-                viewModel.UrlLink = elemento.link.Url;
-                viewModel.textoLink_ = elemento.link.texto_;
-                ViewBag.elemento = "link";
-            }
-            if (video)
-            {
-                ViewBag.elemento = "video";
-            }
-            if (form)
-            {
-                ViewBag.elemento = "form";
-            }
-            if (carousel)
-            {
-                ViewBag.elemento = "carousel";
+                elementos += dependente.ElementoDependente.Dependente.IdElemento + ", ";
             }
 
+            var condicao = await _context.ElementoDependente.Include(e => e.Dependente)
+                .FirstOrDefaultAsync(e => e.Dependente.IdElemento == elemento.IdElemento);
 
-            ViewData["carousel_"] = new SelectList(_context.Carousel, "IdCarousel", "Nome", elemento.carousel_);
-            ViewData["div_2"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_2);
-            ViewData["form_"] = new SelectList(_context.Form, "IdForm", "IdForm", elemento.form_);
-            ViewData["imagem_"] = new SelectList(_context.Imagem, "IdImagem", "IdImagem", elemento.imagem_);
-            ViewData["link_"] = new SelectList(_context.Link, "IdLink", "IdLink", elemento.link_);
-            ViewData["table_"] = new SelectList(_context.Table, "IdTable", "IdTable", elemento.table_);
-            ViewData["texto_"] = new SelectList(_context.Texto, "IdTexto", "Nome", elemento.texto_);
-            ViewData["video_"] = new SelectList(_context.Video, "IdVideo", "IdVideo", elemento.video_);
-            return View(viewModel);
+            if (condicao == null)
+                ViewBag.condicao = false;
+            else
+                ViewBag.condicao = true;
+
+
+
+            var elements = await RepositoryElemento.includes()
+                    .Where(e => e.Pagina_ == elemento.Pagina_).ToListAsync();
+
+            if (elemento.GetType().Name == "Link")
+            {
+                ViewBag.selecionadotexto = elemento.Despendentes[0].ElementoDependente.Dependente.IdElemento;
+                if(elemento.Despendentes.Count > 1)
+                {
+                    ViewBag.selecionadoimagem = elemento.Despendentes[1].ElementoDependente.Dependente.IdElemento;
+                }
+
+                var link = (Link)elemento;
+                if (!link.UrlLink)
+                {
+                    ViewBag.selecionadopagina = link.paginaDestinoLink_;
+                 //   ViewBag.selecionadopedido = link.div.Pagina.pedido_;
+
+                }
+                
+            }
+
+            if (elemento.GetType().Name == "Produto")
+            {
+                ViewBag.selecionadoimagem = elemento.Despendentes[0].ElementoDependente.Dependente.IdElemento;
+                var tables = elements.OfType<Table>();
+
+                foreach(var table in tables)
+                {
+                    foreach(var depe in table.Despendentes)
+                    {
+                        if(depe.ElementoDependente.Dependente.IdElemento == elemento.IdElemento)
+                        {
+                            ViewBag.selecionadotable = depe.ElementoDependente.Dependente.IdElemento;
+                        }
+                    }
+                }
+            }
+
+            if (elemento.GetType().Name == "Campo")
+            {
+                var formularios =  elements.OfType<Formulario>();
+
+                foreach (var formulario in formularios)
+                {
+                    foreach (var depe in formulario.Despendentes)
+                    {
+                        if (depe.ElementoDependente.Dependente.IdElemento == elemento.IdElemento)
+                        {
+                            ViewBag.selecionadoformulario = depe.ElementoDependente.Dependente.IdElemento;
+                        }
+                    }
+                }
+            }
+
+            if (elemento.GetType().Name == "CarouselPagina")
+            {
+                var carouselPagina = await RepositoryCarouselPaginaCarousel.includes()
+                    .FirstAsync(e => e.IdElemento == elemento.IdElemento);
+
+                var pages = "";
+                foreach (var pcp in carouselPagina.Paginas)
+                {
+                    pages += pcp.Pagina.IdPagina + ", ";
+                }
+                ViewBag.Paginas = pages;
+            }
+
+
+            ViewBag.elementos = elementos;
+           // ViewBag.selecioando = elemento.div_;
+            
+            return PartialView(elemento);
         }
-
         
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -201,17 +388,19 @@ namespace MeuProjetoAgora.Controllers
             {
                 try
                 {
-                    await RepositoryElemento.Editar(elemento);
+                    await RepositoryElemento.Editar(RepositoryElemento.Elemento(elemento));
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    return "Erro!!! Não foi possivel editar o elemento";
+                        return "" + ex.Message;
+                    
                 }
                 return "";
             }
-            return "Erro!!! Não foi possivel editar o elemento";
+            ViewData["div_"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_);
+            return "";
         }
-        
+                
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Div")]
@@ -280,44 +469,14 @@ namespace MeuProjetoAgora.Controllers
             return Json("valor");
         }
         
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult NoPermission()
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var elemento = await _context.Elemento
-                .Include(e => e.carousel)
-                .Include(e => e.div)
-                .Include(e => e.form)
-                .Include(e => e.imagem)
-                .Include(e => e.link)
-                .Include(e => e.table)
-                .Include(e => e.texto)
-                .Include(e => e.video)
-                .FirstOrDefaultAsync(m => m.IdElemento == id);
-            if (elemento == null)
-            {
-                return NotFound();
-            }
-
-            return View(elemento);
-        }
-        
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var elemento = await _context.Elemento.FindAsync(id);
-            _context.Elemento.Remove(elemento);
-            await _context.SaveChangesAsync();
-            return RedirectToAction("RenderizarDinamico", "Pagina", null);
+            return PartialView();
         }
 
-        private bool ElementoExists(int id)
+        public IActionResult NaoEncontrado()
         {
-            return _context.Elemento.Any(e => e.IdElemento == id);
+            return PartialView();
         }
     }
 }

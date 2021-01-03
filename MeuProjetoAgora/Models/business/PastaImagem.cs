@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using MeuProjetoAgora.Models.business.Elemento;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MeuProjetoAgora.Models.business

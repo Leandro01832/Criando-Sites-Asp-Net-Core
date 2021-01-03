@@ -1,6 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -18,12 +19,14 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryImagem
     {
-        Task SaveImagemsAsync(List<Imagem> imagens);
-        Task<string> SaveImagem(ViewModelElemento elemento, IList<IFormFile> files);
+        Task SaveImagems(List<Imagem> imagens);
+        Task<string> SaveImagem(ViewModelElemento elemento);
         Task EditarImagem(ViewModelElemento elemento);
         Task apagarImagem(ViewModelElemento elemento);
         string EnsureCorrectFilename(string filename, int Id);
         string GetPathAndFilenameImagens(string filename, string pasta, int? Id);
+        Task<Imagem> TestarImagem(string id);
+        Elemento RetornaImagem(ViewModelElemento elemento);
     }
 
 
@@ -38,7 +41,7 @@ namespace MeuProjetoAgora.Models.Repository
             HostingEnvironment = hostingEnvironment;
         }
 
-        public async Task SaveImagemsAsync(List<Imagem> imagens)
+        public async Task SaveImagems(List<Imagem> imagens)
         {
             await dbSet.AddRangeAsync(imagens);
             await contexto.SaveChangesAsync();
@@ -62,62 +65,9 @@ namespace MeuProjetoAgora.Models.Repository
             return Id + "-" + filename;
         }        
 
-        public async Task<string> SaveImagem(ViewModelElemento elemento, IList<IFormFile> files)
+        public Task<string> SaveImagem(ViewModelElemento elemento)
         {
-            var local = await contexto.PastaImagem
-                .Include(p => p.Imagens)
-                .FirstAsync(p => p.IdPastaImagem == elemento.PastaImagemId);
-            var location = local.Nome;
-            var Iddiv = elemento.div;
-            var Div = await contexto.Div.FirstAsync(d => d.IdDiv == Iddiv);
-
-            long totalBytes = files.Sum(f => f.Length);
-            foreach (IFormFile source in files)
-            {
-                string filename = ContentDispositionHeaderValue.Parse(source.ContentDisposition).FileName.ToString().Trim('"');
-
-                
-
-                Imagem img = new Imagem
-                {
-                    Arquivo = ""  
-                };
-
-                await dbSet.AddAsync(img);
-                local.Imagens.Add(img);
-                await contexto.SaveChangesAsync();
-
-                filename = this.EnsureCorrectFilename(filename, img.IdImagem);
-
-                img.Arquivo = "/ImagensGaleria/" + Div.PaginaId + "Pagina" + location + "/" + filename;
-                contexto.Entry(img).State = EntityState.Modified;
-                await contexto.SaveChangesAsync();
-
-                var element = new Elemento();
-                element.imagem_ = img.IdImagem;
-                await contexto.Elemento.AddAsync(element);
-                  await contexto.SaveChangesAsync();
-
-                byte[] buffer = new byte[16 * 1024];
-
-                using (FileStream output = System.IO.File.Create(this.GetPathAndFilenameImagens(filename, location, Div.PaginaId)))
-                {
-                    using (Stream input = source.OpenReadStream())
-                    {
-                        long totalReadBytes = 0;
-                        int readBytes;
-
-                        while ((readBytes = input.Read(buffer, 0, buffer.Length)) > 0)
-                        {
-                            await output.WriteAsync(buffer, 0, readBytes);
-                            totalReadBytes += readBytes;
-                            // await Task.Delay(10); // It is only to make the process slower
-                        }
-                    }
-                }
-            }
-
-            return "";
+            throw new NotImplementedException();
         }
 
         public Task EditarImagem(ViewModelElemento elemento)
@@ -128,6 +78,38 @@ namespace MeuProjetoAgora.Models.Repository
         public Task apagarImagem(ViewModelElemento elemento)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<Imagem> TestarImagem(string id)
+        {
+            Imagem imagem;
+            try
+            {
+                imagem = await contexto.Elemento.
+               OfType<Imagem>().FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
+            }
+            catch (Exception)
+            {
+                imagem = null;
+            }
+            return imagem;
+        }
+
+        public Elemento RetornaImagem(ViewModelElemento elemento)
+        {
+            var imagem = new Imagem
+            {
+                Pagina_ = elemento.Pagina_,
+                IdElemento = elemento.IdElemento,
+                Nome = elemento.Nome,
+                ElementosDependentes = elemento.elementosDependentes,
+                Width = elemento.Width,
+                Ordem = elemento.Ordem,
+                ArquivoImagem = elemento.ArquivoImagem,
+                PastaImagemId = elemento.PastaImagemId
+
+            };
+            return imagem;
         }
     }
 }

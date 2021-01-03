@@ -1,0 +1,673 @@
+﻿@model IEnumerable<MeuProjetoAgora.Models.business.Elemento.Elemento>
+
+<script src="~/lib/jquery/dist/jquery.js"></script>
+
+<input id="ElementoGaleria" name="ElementoGaleria" type="hidden" value="@ViewBag.elemento" />
+
+<style>
+    .FecharGaleria {
+        margin-left: 50px;
+    }
+</style>
+
+<br />
+<br />
+<br />
+<br />
+
+<input type="checkbox" id="BuscarElementoSite" name="BuscarElementoSite" /> <label>buscar todos os elementos do site</label>
+<input type="checkbox" id="BuscarElementoPagina" name="BuscarElementoPagina" /> <label>buscar todos os elementos da pagina</label>
+@{
+
+
+    <div class="row Galeria" id="ElementosLink" style="display:none;">
+
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <hr />
+        <h1 class="text-center">Links</h1>
+
+
+        @foreach (var link in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Link>())
+        {
+            if (link.UrlLink == false)
+            {
+                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                    <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
+
+                    @if (link.Despendentes.Count > 1)
+                    {
+                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                    }
+
+                    <p class="text-center text-primary">@link.IdElemento</p>
+                    <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                </div>
+
+            }
+            else if (link.UrlLink == true)
+            {
+                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                <div id='Link@(link.IdElemento)' class='col-md-2'>
+                    <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
+                    @if (link.Despendentes.Count > 1)
+                    {
+                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                    }
+
+                    <p class="text-center text-primary">@link.IdElemento</p>
+                    <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                </div>
+
+            }
+
+        }
+
+
+    </div>
+
+    <hr />
+}
+
+
+@{
+
+
+    <div class="row Galeria" id="ElementosTexto" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Textos</h1>
+
+        @foreach (var texto in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Texto>())
+        {
+            <div id='texto@(texto.IdElemento)' class='col-md-2'>
+
+
+                @Html.Raw(texto.PalavrasTexto)
+                <p class="text-center text-primary">@texto.IdElemento</p>
+                <button data-value='@texto.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+
+        }
+
+
+    </div>
+
+    <hr />
+}
+
+@{
+
+
+    <div class="row Galeria" id="ElementosVideo" style="display:none;">
+
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Videos</h1>
+
+        @foreach (var video in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Video>())
+        {
+            <div id='Video@(video.IdElemento)' class='col-md-2'>
+
+                <video style='width:100%; height:100%' controls>
+                    <source src='@video.ArquivoVideo' type='video/mp4' />
+                </video>
+                <p class="text-center text-primary">@video.IdElemento</p>
+                <button data-value='@video.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+        }
+
+    </div>
+
+    <hr />
+}
+
+
+@{
+
+
+    <div class="row Galeria" id="ElementosImagem" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Imagens</h1>
+
+        @foreach (var imagem in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Imagem>())
+        {
+            <div id='Imagem@(imagem.IdElemento)' class='col-md-2'>
+                <img class='img-responsive' src='@imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+                <p class="text-center text-primary">@imagem.IdElemento</p>
+                <button data-value='@imagem.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+        }
+
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosFormulario" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Formulários</h1>
+
+        @foreach (var formulario in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Formulario>())
+        {
+
+            <div id='Form@(formulario.IdElemento)' class='col-md-2'>
+                <form>
+
+                    @foreach (var depe in formulario.Despendentes)
+                    {
+                        var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                        <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+                    }
+
+                    <button>Salvar</button>
+
+                </form>
+
+                <p class="text-center text-primary">@formulario.IdElemento</p>
+                <button data-value='@formulario.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+        }
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosFormulario" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Campos</h1>
+
+        @foreach (var campo in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Campo>())
+        {
+            <div id='Form@(campo.IdElemento)' class='col-md-2'>
+                <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+
+                <p class="text-center text-primary">@campo.IdElemento</p>
+                <button data-value='@campo.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+        }
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosDropdown" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Grupos de link</h1>
+
+        @foreach (var dropdown in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Dropdown>())
+        {
+            <div id='Dropdown@(dropdown.IdElemento)' class='col-md-6'>
+
+                <p class="text-center">Links:</p>
+                @foreach (var depe in dropdown.Despendentes)
+                {
+                    var link = (MeuProjetoAgora.Models.business.Elemento.Link)depe.ElementoDependente.Dependente;
+
+                    if (link.UrlLink == false)
+                    {
+                        var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                        <div id='Link@(link.IdElemento)' class='col-md-2'>
+                            <a href='#'> @Html.Raw(ele.PalavrasTexto) </a>
+                        </div>
+
+                    }
+                    else
+                    {
+                        var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                        <div id='Link@(link.IdElemento)' class='col-md-2'>
+                            <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
+                        </div>
+
+                    }
+
+                }
+
+                <p class="text-center text-primary">@dropdown.IdElemento</p>
+                <button data-value='@dropdown.IdElemento' class="EditarElementoGaleria">Editar</button>
+
+            </div>
+        }
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosTable" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Tabelas</h1>
+
+        @foreach (var table in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Table>())
+        {
+            <div id='Table@(table.IdElemento)' class='col-md-12'>
+
+                <table class='@table.EstiloTabela'>
+
+                    <tr>
+                        <th>
+                            <label>Nome</label>
+                        </th>
+                        <th>
+                            <label>Imagem</label>
+                        </th>
+                        <th></th>
+
+                    </tr>
+
+                    @foreach (var prod in table.Despendentes)
+                    {
+
+                        var ele = (MeuProjetoAgora.Models.business.Elemento.Produto)prod.ElementoDependente.Dependente;
+                        <tr class='linhaProduto' id='Produto$prod.ElementoDependente.Dependente.IdElemento' data-value='$prod.ElementoDependente.Dependente.IdElemento'>
+                            <th>
+                                <label>@ele.Nome</label>
+                            </th>
+
+                            @{
+                                var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)ele.Despendentes[0].ElementoDependente.Dependente;
+                            }
+                            <th>
+                                <img src='@ele2.ArquivoImagem' width='100' />
+
+                            </th>
+
+
+                            <th>
+                                <a href='#' data-value='@(ele.IdElemento)' class='btn btn-danger botaoDetalhes'>  Detalhes </a>
+                                <a href='#' data-value='@(ele.IdElemento)' class='btn btn-success botaoAdicionarCarrinho'> Adicionar ao carrinho </a>
+                            </th>
+                        </tr>
+                    }
+
+                </table>
+                <p class="text-center text-primary">@table.IdElemento</p>
+                <button data-value='@table.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+
+        }
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosProduto" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Produtos</h1>
+
+        @foreach (var produto in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Produto>())
+        {
+        <div id='Produto@(produto.IdElemento)' class='col-md-2'>
+
+            <div class="jumbotron" style="border: double;">
+                <p><label>Nome:</label>@produto.Nome</p>
+                <p><label>Descrição:</label>@produto.Descricao</p>
+                <p><label>Preço:</label>@produto.Preco</p>
+                <p><label>Segmento:</label>@produto.Segmento</p> 
+                <p><label>Estoque:</label>@produto.estoque</p>
+                <p><label>Codigo do produto:</label>@produto.Codigo</p>
+            </div>
+            <p class="text-center text-primary">@produto.IdElemento</p>
+            <button data-value='@produto.IdElemento' class="EditarElementoGaleria">Editar</button>
+        </div>
+
+        }
+
+    </div>
+
+    <hr />
+}
+
+@{
+    <div class="row Galeria" id="ElementosCarousel" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Carrossel de imagens</h1>
+
+        @foreach (var carousel in Model.OfType<MeuProjetoAgora.Models.business.Elemento.Carousel>())
+        {
+            <div class="col-md-2">
+                <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
+
+                    <div class='carousel-inner' role='listbox'>
+                        @foreach (var dependente in carousel.Despendentes)
+                        {
+                            var ele = (MeuProjetoAgora.Models.business.Elemento.Imagem)dependente.ElementoDependente.Dependente;
+                            <div class='item'>
+                                <img class='img-responsive minhaimg' src='@ele.ArquivoImagem' alt='imagem' style='width:100%;' />
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div>
+                    <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            $('.item:first-child').addClass('active@(carousel.IdElemento)').show();
+
+                            setInterval(slide, 5000);
+
+                            function slide() {
+                                if ($('.active@(carousel.IdElemento)').next().size()) {
+                                    $('.active@(carousel.IdElemento)').fadeOut()
+                                    .removeClass('active@(carousel.IdElemento)').next().addClass('active@(carousel.IdElemento)');
+                                    $('.active@(carousel.IdElemento)').delay(500).fadeIn();
+                                } else {
+                                    $('.active@(carousel.IdElemento)').fadeOut().removeClass('active@(carousel.IdElemento)');
+
+                                    $('.item:first-child').delay(500).fadeIn().addClass('active@(carousel.IdElemento)');
+                                }
+                            }
+
+                        });
+                    </script>
+                </div>
+
+                <p class="text-center text-primary">@carousel.IdElemento</p>
+                <button data-value='@carousel.IdElemento' class="EditarElementoGaleria">Editar</button>
+            </div>
+        }
+
+
+    </div>
+
+    <hr />
+
+}
+
+@{
+    <div class="row Galeria" id="ElementosCarouselPagina" style="display:none;">
+        <button class="FecharGaleria btn btn-primary">Fechar</button>
+        <h1 class="text-center">Carrossel de paginas</h1>
+
+        @if (ViewBag.elemento == "CarouselPagina")
+        {
+            @foreach (var carousel in Model.OfType<MeuProjetoAgora.Models.business.Elemento.CarouselPagina>())
+            {
+                <div class="col-md-12">
+                    <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
+
+                        <div class='carousel-inner' role='listbox'>
+                            @foreach (var dependente in carousel.Paginas)
+                            {
+
+                                <div id="Page@(dependente.Pagina.IdPagina)" class='item'>
+
+                                    @foreach (var div in dependente.Pagina.Div)
+                                    {
+                                        <div id="BlocoCarouselPagina@(div.Div.IdDiv)" class="BlocoCarouselPagina @(div.Div.Divisao)">
+
+                                            @foreach (var el in div.Div.Elemento)
+                                            {
+                                                if (el.Elemento.GetType().Name == "Video")
+                                                {
+                                                    <div id='VideoCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+
+                                                        <video style='width:100%; height:100%' controls>
+                                                            <source src='$el.Elemento.ArquivoVideo' type='video/mp4' />
+                                                        </video>
+
+                                                    </div>
+                                                }
+
+                                                if (el.Elemento.GetType().Name == "Texto")
+                                                {
+                                                    var texto = (MeuProjetoAgora.Models.business.Elemento.Texto)el.Elemento;
+                                                    <div id='textoCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+
+                                                        <p>@(Html.Raw(texto.PalavrasTexto))</p>
+                                                    </div>
+                                                }
+
+                                                if (el.Elemento.GetType().Name == "Link")
+                                                {
+                                                    var link = (MeuProjetoAgora.Models.business.Elemento.Link)el.Elemento;
+                                                    if (link.UrlLink == false)
+                                                    {
+                                                        var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                                                        <div id='Link@(link.IdElemento)' class='col-md-2'>
+                                                            <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
+
+                                                            @if (link.Despendentes.Count > 1)
+                                                            {
+                                                                var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                                <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                            }
+
+                                                            <p class="text-center text-primary">@link.IdElemento</p>
+                                                            <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                        </div>
+
+                                                    }
+                                                    else
+                                                    {
+                                                        var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+
+                                                        <div id='Link@(link.IdElemento)' class='col-md-2'>
+                                                            <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
+                                                            @if (link.Despendentes.Count > 1)
+                                                            {
+                                                                var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                                <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                            }
+
+                                                            <p class="text-center text-primary">@link.IdElemento</p>
+                                                            <button data-value='@link.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                        </div>
+
+                                                    }
+
+                                                }
+
+                                                if (el.Elemento.GetType().Name == "Imagem")
+                                                {
+                                                    var imagem = (MeuProjetoAgora.Models.business.Elemento.Imagem)el.Elemento;
+                                                    <div id='ImagemCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
+                                                        <img class='img-responsive' src='@(imagem.ArquivoImagem)' alt='imagem' style='width:100%;' />
+                                                    </div>
+                                                }
+
+                                                if (el.Elemento.GetType().Name == "Formulario")
+                                                {
+                                                    var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                                    <div id='Form@(formulario.IdElemento)' class='col-md-2'>
+                                                        <form>
+
+                                                            @foreach (var depe in formulario.Despendentes)
+                                                            {
+                                                                var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                                <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+                                                            }
+
+                                                            <button>Salvar</button>
+
+                                                        </form>
+
+                                                        <p class="text-center text-primary">@formulario.IdElemento</p>
+                                                        <button data-value='@formulario.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                    </div>
+                                                }
+
+                                                if (el.Elemento.GetType().Name == "Formulario")
+                                                {
+                                                    var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                                    <div id='Form@(formulario.IdElemento)' class='col-md-2'>
+                                                        <form>
+
+                                                            @foreach (var depe in formulario.Despendentes)
+                                                            {
+                                                                var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                                <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
+                                                            }
+
+                                                            <button>Salvar</button>
+
+                                                        </form>
+
+                                                        <p class="text-center text-primary">@formulario.IdElemento</p>
+                                                        <button data-value='@formulario.IdElemento' class="EditarElementoGaleria">Editar</button>
+                                                    </div>
+                                                }
+                                            }
+
+                                        </div>
+                                    }
+
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <div>
+                        <script type="text/javascript">
+                        $(document).ready(function () {
+
+                            $('.item:first-child').addClass('active@(carousel.IdElemento)').show();
+
+                            setInterval(slide, 5000);
+
+                            function slide() {
+                                if ($('.active@(carousel.IdElemento)').next().size()) {
+                                    $('.active@(carousel.IdElemento)').fadeOut()
+                                    .removeClass('active@(carousel.IdElemento)').next().addClass('active@(carousel.IdElemento)');
+                                    $('.active@(carousel.IdElemento)').delay(500).fadeIn();
+                                } else {
+                                    $('.active@(carousel.IdElemento)').fadeOut().removeClass('active@(carousel.IdElemento)');
+
+                                    $('.item:first-child').delay(500).fadeIn().addClass('active@(carousel.IdElemento)');
+                                }
+                            }
+
+                        });
+                        </script>
+                    </div>
+
+                    <p class="text-center text-primary">@carousel.IdElemento</p>
+                    <button data-value='@carousel.IdElemento' class="EditarElementoGaleria">Editar</button>
+                </div>
+            }
+        }
+
+    </div>
+
+    <hr />
+
+}
+
+<br />
+<button class="FecharGaleria btn btn-primary">Fechar</button>
+
+<div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#BuscarElementoSite, #BuscarElementoPagina").change(function () {
+
+                var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+                numero = numero.replace('44398', '');
+
+                if ($("#BuscarElementoSite").is(':checked')) {
+                    $("#Galeria").load("/Elemento/Lista/GaleriaElemento" + $("#ElementoGaleria").val() + numero + "/1");
+                }
+                if ($("#BuscarElementoPagina").is(':checked')) {
+                    $("#Galeria").load("/Elemento/Lista/GaleriaElemento" + $("#ElementoGaleria").val() + numero + "/0");
+                }
+            });
+
+            $(".EditarElementoGaleria").click(function () {
+                var id = $(this).data("value");
+
+                $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
+                $("#estrutura").fadeIn("slow");
+                $("#conteudomodal").load("/Elemento/Edit/" + id);
+            });
+
+            $(".FecharGaleria").click(function () {
+                $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
+                $("#estrutura").fadeIn("slow");
+            });
+
+            if ($("#ElementoGaleria").val() == "Texto") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosTexto").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Carousel") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosCarousel").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "CarouselPagina") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosCarouselPagina").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Imagem") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosImagem").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Link") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosLink").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Formulario") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosFormulario").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Produto") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosProduto").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Table") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosTable").fadeIn("slow");
+            } 
+
+            if ($("#ElementoGaleria").val() == "Video") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosVideo").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Campo") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosCampo").fadeIn("slow");
+            }
+
+            if ($("#ElementoGaleria").val() == "Dropdown") {
+                $(".Galeria").fadeOut("slow");
+                $("#ElementosDropdown").fadeIn("slow");
+            }
+
+
+        });
+    </script>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+
+}
+
+
+
+
+
+
+

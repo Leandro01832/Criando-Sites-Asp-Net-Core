@@ -24,6 +24,9 @@ function openFullscreen2() {
     } else if (elem2.msRequestFullscreen) { /* IE/Edge */
         elem2.msRequestFullscreen();
     }
+
+
+
 }
 
 function openFullscreen3() {

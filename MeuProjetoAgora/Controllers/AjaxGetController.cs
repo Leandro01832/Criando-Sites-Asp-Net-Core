@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.Models.Join;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -29,73 +31,7 @@ namespace MeuProjetoAgora.Controllers
             RepositoryPagina = repositoryPagina;
             HttpHelper = httpHelper;
             RepositoryBackground = repositoryBackground;
-        }
-
-        public JsonResult GetTable(int DivId)
-        {
-            List<string> result = new List<string>();
-            List<Elemento> lista = new List<Elemento>();
-            var table = db.Table.Where(m => m.div_ == DivId);
-            foreach (var t in table.ToList())
-            {
-                var ele = db.Elemento.Include(e => e.table).First(e => e.table_ == t.IdTable);
-                lista.Add(ele);
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.IdElemento.ToString());
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.table.Nome);
-            }
-
-            return Json(result);
-        }       
-
-        public JsonResult GetTexto(int DivId)
-        {
-            List<string> result = new List<string>();
-            List<Elemento> lista = new List<Elemento>();
-            var t = db.Texto.Where(m => m.div_ == DivId);
-            foreach (var texto in t.ToList())
-            {
-                var ele = db.Elemento.Include(e => e.texto).First(e => e.texto_ == texto.IdTexto);
-                lista.Add(ele);
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.IdElemento.ToString());
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.texto.Nome);
-            }
-
-            return Json(result);
-        }
-
-        public JsonResult GetImagens(int Pasta)
-        {
-            List<string> result = new List<string>();
-            List<Elemento> lista = new List<Elemento>();
-            var imagens = db.Imagem.Where(b => b.PastaImagemId == Pasta);
-            foreach (var img in imagens.ToList())
-            {
-                var ele = db.Elemento.Include(e => e.imagem).First(e => e.imagem_ == img.IdImagem);
-                lista.Add(ele);
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.IdElemento.ToString());
-            }
-            foreach (var item in lista)
-            {
-                result.Add(item.imagem.Arquivo);
-            }
-
-            return Json(result);
-        }
+        } 
 
         public JsonResult GetPastas(int Pagina)
         {
@@ -118,35 +54,45 @@ namespace MeuProjetoAgora.Controllers
             return Json(pastas);
         }
 
-        public JsonResult GetPaginas(int PedidoId)
+        public async Task<JsonResult> GetPaginas(int Pagina)
         {
-            //  db.Configuration.ProxyCreationEnabled = false;
+            var pagina = await db.Pagina.FirstAsync(p => p.IdPagina == Pagina);
+            var PedidoId = pagina.pedido_;
             var paginas = db.Pagina.Where(m => m.pedido_ == PedidoId);
 
             return Json(paginas);
         }
 
-        public JsonResult GetDivs(int PaginaId)
+        public JsonResult GetPaginasDoSite(int Pedido)
         {
-            //  db.Configuration.ProxyCreationEnabled = false;
-            var backgrounds = db.Div.Where(m => m.PaginaId == PaginaId);
+            var paginas = db.Pagina.Where(m => m.pedido_ == Pedido);
 
-            return Json(backgrounds);
+            return Json(paginas);
         }
 
-        public JsonResult GetBackgrounds(int PaginaId)
+        public async Task<JsonResult> GetSites(int Pagina)
         {
-            var backgrounds = db.Background.Where(m => m.PaginaId == PaginaId);
+            var pagina = await db.Pagina.FirstAsync(p => p.IdPagina == Pagina);
+            var PedidoId = pagina.pedido_;
+            var pedido = await  db.Pedido.FirstAsync(m => m.IdPedido == PedidoId);
+            var pedidos = db.Pedido.Where(m => m.ClienteId == pedido.ClienteId);
 
-            return Json(backgrounds);
+            return Json(pedidos);
         }
 
-        public JsonResult GetSelectedBackgrounds(int PaginaId)
+        public async Task<JsonResult> GetBackgrounds(int PaginaId)
         {
-           // selected = "selected"
-            var backgrounds = db.Background.Where(m => m.PaginaId == PaginaId);
+            var background = await db.Background.Where(b => b.PaginaId == PaginaId).ToListAsync();
 
-            return Json(backgrounds);
+            return Json(background.AsQueryable());
+        }
+
+        public async Task<JsonResult> GetSelectedBackgrounds(int PaginaId)
+        {
+            // selected = "selected"
+            var background = await db.Background.Where(b => b.PaginaId == PaginaId).ToListAsync();
+
+            return Json(background.AsQueryable());
         }
 
         public JsonResult GetBackgroundsGradiente(int PaginaId)
@@ -158,149 +104,148 @@ namespace MeuProjetoAgora.Controllers
             return Json(backgrounds);
         }
 
-        public JsonResult GetElementos(int DivId, string valor, int pagina, int Pasta)
+        public async Task<JsonResult> Elementos(int Pagina, string Tipo)
         {
-            if (valor == "Video")
-            {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var v = db.Video.Where(m => m.div_ == DivId);
-                foreach (var video in v.ToList())
-                {
-                    var ele = db.Elemento.Include(e => e.video).First(e => e.video_ == video.IdVideo);
-                    lista.Add(ele);
-                }
-                foreach (var item in lista)
-                {
-                    result.Add(item.IdElemento.ToString());
-                }
-                foreach (var item in lista)
-                {
-                    result.Add(item.IdElemento.ToString());
-                }
+            var pagina = await db.Pagina.FirstAsync(p => p.IdPagina == Pagina);
+            var PedidoId = pagina.pedido_;
+            var pedido = await db.Pedido.Include(p => p.Paginas)
+                .FirstAsync(m => m.IdPedido == PedidoId);
 
-                return Json(result);
+            List<string> result = new List<string>();
+
+            List<Elemento> elementos = new List<Elemento>();
+
+            foreach(var pag in pedido.Paginas)
+            {
+                var page = await db.Pagina.Include(p => p.Div)
+                .FirstAsync(p => p.IdPagina == pag.IdPagina);
+
+                var elements = await db.Elemento.Where(e => e.Pagina_ == pag.IdPagina).ToListAsync();
+
+                elementos.AddRange(elements);
             }
 
-            if (valor == "Imagem")
+            if (Tipo == "Table")
             {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var imagens = db.Imagem.Where(b => b.PastaImagemId == Pasta);
-                foreach (var img in imagens.ToList())
-                {
-                    var ele = db.Elemento.Include(e => e.imagem).First(e => e.imagem_ == img.IdImagem);
-                    lista.Add(ele);
-                }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Table>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Table>())
                 {
-                    result.Add(item.imagem.Arquivo);
+                    result.Add(item.Nome);
                 }
-
-                return Json(result);
             }
 
-            if (valor == "Carrossel")
+            if (Tipo == "Carrossel")
             {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var c = db.Carousel.Where(m => m.div_2 == DivId);
-                foreach (var carousel in c.ToList())
-                {
-                    var ele = db.Elemento.Include(e => e.carousel).First(e => e.carousel_ == carousel.IdCarousel);
-                    lista.Add(ele);
-                }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Carousel>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Carousel>())
                 {
-                    result.Add(item.carousel.Nome);
+                    result.Add(item.Nome);
                 }
-
-                return Json(result);
             }
 
-            if (valor == "Texto")
+            if (Tipo == "Imagem")
             {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var t = db.Texto.Where(m => m.div_ == DivId);
-                foreach (var texto in t.ToList())
-                {
-                    var ele = db.Elemento.Include(e => e.texto).First(e => e.texto_ == texto.IdTexto);
-                    lista.Add(ele);
-                }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Imagem>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Imagem>())
                 {
-                    result.Add(item.texto.Nome);
+                    result.Add(item.Nome);
                 }
-
-                return Json(result);
             }
 
-            if (valor == "Link")
+            if (Tipo == "Video")
             {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var link = db.Link.Where(m => m.div_ == DivId);
-                foreach (var l in link.ToList())
-                {
-                    var ele = db.Elemento.Include(e => e.link).First(e => e.link_ == l.IdLink);
-                    lista.Add(ele);
-                }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Video>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Video>())
+                {
+                    result.Add(item.Nome);
+                }
+            }
+
+            if (Tipo == "Texto")
+            {
+                foreach (var item in elementos.OfType<Texto>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-
-                return Json(result);
-            }
-
-            if (valor == "Form")
-            {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var t = db.Form.Where(m => m.div_ == DivId);
-                return Json(t);
-            }
-
-            if (valor == "Table")
-            {
-                List<string> result = new List<string>();
-                List<Elemento> lista = new List<Elemento>();
-                var t = db.Table.Where(m => m.div_ == DivId);
-                foreach (var table in t.ToList())
+                foreach (var item in elementos.OfType<Texto>())
                 {
-                    var ele = db.Elemento.Include(e => e.table).First(e => e.table_ == table.IdTable);
-                    lista.Add(ele);
+                    result.Add(item.Nome);
                 }
-                foreach (var item in lista)
+            }
+
+            if (Tipo == "Produto")
+            {
+                foreach (var item in elementos.OfType<Produto>())
                 {
                     result.Add(item.IdElemento.ToString());
                 }
-                foreach (var item in lista)
+                foreach (var item in elementos.OfType<Produto>())
                 {
-                    result.Add(item.table.Nome);
+                    result.Add(item.Nome);
                 }
-
-                return Json(result);
             }
 
-            return Json("");
+            if (Tipo == "Form")
+            {
+                foreach (var item in elementos.OfType<Formulario>())
+                {
+                    result.Add(item.IdElemento.ToString());
+                }
+                foreach (var item in elementos.OfType<Formulario>())
+                {
+                    result.Add(item.Nome);
+                }
+            }
+
+            if (Tipo == "Campo")
+            {
+                foreach (var item in elementos.OfType<Campo>())
+                {
+                    result.Add(item.IdElemento.ToString());
+                }
+                foreach (var item in elementos.OfType<Campo>())
+                {
+                    result.Add(item.Nome);
+                }
+            }
+
+            if (Tipo == "Link")
+            {
+                foreach (var item in elementos.OfType<Link>())
+                {
+                    result.Add(item.IdElemento.ToString());
+                }
+                foreach (var item in elementos.OfType<Link>())
+                {
+                    result.Add(item.Nome);
+                }
+            }
+
+            if (Tipo == "Elementos")
+            {
+                foreach (var item in elementos)
+                {
+                    result.Add(item.IdElemento.ToString());
+                }
+                foreach (var item in elementos)
+                {
+                    result.Add(item.Nome);
+                }
+            }
+
+            return Json(result);
         }
     }
 }

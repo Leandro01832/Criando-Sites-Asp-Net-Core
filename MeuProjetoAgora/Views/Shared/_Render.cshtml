@@ -20,13 +20,14 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/the-big-picture.css" />
 
-    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=m8nq39l31dv5y829ehcjsd0rciwei8crem0yubndhdgs72fd"></script>     
+    <script src="https://cloud.tinymce.com/5/tinymce.min.js?apiKey=m8nq39l31dv5y829ehcjsd0rciwei8crem0yubndhdgs72fd"></script>
     <script src="~/js/Tynymce.js"></script>
+    <script data-ad-client="ca-pub-1473710636214528" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 </head>
 
 <body id="corpoPagina">
     <header>
-        <div class="navbar navbar-inverse navbar-fixed-top">
+        <div class="navbar navbar-inverse navbar-fixed-top" id="Menuzinho">
             <div class="container">
 
                 <div class="navbar-header">
@@ -48,31 +49,52 @@
                             <p class="text-primary text-center">@Model.Pedido.Nome </p>
                         </div>
                         <div id="Informações" class="col-md-4" style='background-color: #dcdcdc;'>
-                            <partial name="_LoginPartial" />                          
+                            <partial name="_LoginPartial" />
 
-                        </div>
+                        </div>                         
 
                         <ul class="nav navbar-nav">
+
                             <li class="dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações</a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">galerias e Configurações</a>
                                 <ul class="dropdown-menu">
-                                    <li><a id="EditarCores">Editar cores</a></li>
+                                    <li><a id="EditarCores">Galeria de cores</a></li>
+                                    <li><a href="#" id="GaleriaBloco">Galeria de blocos</a></li>
                                     <li><a href="#" class="Configuracao">Configurações de Pagina</a></li>
                                     <li><a href="#" class="imagemBackPagina">Background da pagina</a> </li>
+                                    <li><a href="#" class="GaleriaBackground">Galeria de backgrounds</a> </li>
+                                    <li>@Html.ActionLink("Galeria de Sites", "GaleriaSite", "Pedido")</li>
                                     <li><a id="btnPermissao">Permissões</a></li>
+                                </ul>
+                            </li>
+
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Galeria de elementos</a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" id="GaleriaElementoVideo" onclick="ElementoGaleria(this);">Videos</a></li>
+                                    <li><a href="#" id="GaleriaElementoImagem" onclick="ElementoGaleria(this);">Imagens</a></li>
+                                    <li><a href="#" id="GaleriaElementoCarousel" onclick="ElementoGaleria(this);">Carrossel de imagens</a></li>
+                                    <li><a href="#" id="GaleriaElementoCarouselPagina" onclick="ElementoGaleria(this);">Carrossel de paginas</a></li>
+                                    <li><a href="#" id="GaleriaElementoLink" onclick="ElementoGaleria(this);">Links</a></li>
+                                    <li><a href="#" id="GaleriaElementoDropdown" onclick="ElementoGaleria(this);">Grupo de links</a></li>
+                                    <li><a href="#" id="GaleriaElementoTexto" onclick="ElementoGaleria(this);">Textos</a></li>
+                                    <li><a href="#" id="GaleriaElementoTable" onclick="ElementoGaleria(this);">Tabelas</a></li>
+                                    <li><a href="#" id="GaleriaElementoCampo" onclick="ElementoGaleria(this);">Campos</a></li>
+                                    <li><a href="#" id="GaleriaElementoProduto" onclick="ElementoGaleria(this);">Produtos</a></li>
+                                    <li><a href="#" id="GaleriaElementoFormulario" onclick="ElementoGaleria(this);">Formulários</a></li>
                                 </ul>
                             </li>
 
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Visualizações</a>
                                 <ul class="dropdown-menu">
-                                    <li><a id="Ocultar">Ocultar ferramenta</a></li>
-                                    <li><a id="Ferramenta">Mostrar ferramenta</a></li>
+                                    <li><a id="Ocultar">Mostrar blocos fixos</a></li>
+                                    <li><a class="Ferramenta">Mostrar ferramenta</a></li>
                                     <li>
                                         <a href="/site/@Model.Pedido.DominioTemporario/@Model.Titulo.Replace(" ", "")" target="_blank">
                                             visualizar na Tela inteira
                                         </a>
-                                    </li>  
+                                    </li>
                                     <li><input id="modo" type="checkbox" />  Desktop || Mobile</li>
                                 </ul>
                             </li>
@@ -80,9 +102,9 @@
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Posições</a>
                                 <ul class="dropdown-menu">
-                                    <li><a id="AlterarPosicao" >Alterar posições</a></li>
-                                    <li><a id="SalvarBlocos" >Salvar posições do bloco</a></li>
-                                    <li><a id="SalvarElementos" >Salvar posições do elemento</a></li>
+                                    <li><a id="AlterarPosicao">Alterar posições</a></li>
+                                    <li><a id="SalvarBlocos">Salvar posições do bloco</a></li>
+                                    <li><a id="SalvarElementos">Salvar posições do elemento</a></li>
                                 </ul>
                             </li>
 
@@ -94,13 +116,18 @@
                                     <li><a href="#" onclick="openFullscreen3();">Ferramenta 2</a></li>
                                 </ul>
                             </li>
+
+
+
+
+
                         </ul>
 
                         <a href="#" class="btn btn-warning Salvar" data-value="Salvar(@Model.IdPagina)">Salvar</a>
                         <a href="#" id="Atualizar" class="btn btn-danger">Atualizar Pagina</a>
                         <a href="/Index/" class="btn btn-primary">Pagina Inicial</a>
 
-                        
+
 
                     </div>
 
@@ -113,10 +140,7 @@
 
 
     @RenderBody()
-    <hr />
-    <footer>
-        <p class="text-center">&copy; @DateTime.Now.Day - @DateTime.Now.Month - @DateTime.Now.Year</p>
-    </footer>
+    
 
     <environment names="Development">
         @*<script src="~/lib/jquery/dist/jquery.js"></script>*@

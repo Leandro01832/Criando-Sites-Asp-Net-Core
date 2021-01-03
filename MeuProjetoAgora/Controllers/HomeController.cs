@@ -15,6 +15,11 @@ namespace MeuProjetoAgora.Controllers
             return View();
         }
 
+        public IActionResult Contatos()
+        {
+            return View();
+        }
+
         public IActionResult Privacy()
         {
             return View();

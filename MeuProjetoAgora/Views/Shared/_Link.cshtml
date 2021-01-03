@@ -1,4 +1,4 @@
-﻿@model MeuProjetoAgora.Models.ViewModelElemento
+﻿@model MeuProjetoAgora.Models.business.Elemento.Link
 
 <h4>Link</h4>
 <hr />
@@ -7,6 +7,15 @@
 
 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+<input type="hidden" id="selecionadoImagem" value="@ViewBag.selecionadoimagem" />
+<input type="hidden" id="selecionadoTexto" value="@ViewBag.selecionadotexto" />
+<input type="hidden" id="selecionadoPagina" value="@ViewBag.selecionadopagina" />
+<input type="hidden" id="selecionadoPedido" value="@ViewBag.selecionadopedido" />
+
+<div class="form-group">
+    <input id="elemento" name="elemento" type="hidden" value="Link" />
+</div>
+
 <div class="form-group">
     <label asp-for="Nome" class="control-label"></label>
     <input asp-for="Nome" class="form-control" />
@@ -14,7 +23,12 @@
 </div>
 
 <div class="form-group">
-    <input asp-for="elemento" type="hidden" value="link" />
+    <div class="checkbox">
+        <label>
+            <input asp-for="Menu" />
+            @Html.DisplayNameFor(model => model.Menu)
+        </label>
+    </div>
 </div>
 
 <div class="form-group">
@@ -26,23 +40,85 @@
     </div>
 </div>
 
-<div class="form-group">
-    <label asp-for="textoLink_" class="control-label"></label>
-    <select asp-for="textoLink_" class="form-control texto"></select>
-</div>
-<div class="form-group">
-    <label asp-for="imagemLink_" class="control-label"></label>
-    <select asp-for="imagemLink_" class="form-control imagem"></select>
-</div>
-<div class="form-group">
-    <label asp-for="paginaDestinoLink_" class="control-label"></label>
-    <select asp-for="paginaDestinoLink_" class="form-control pagina"></select>
+<div id="oculto" style="display:none;">
+
+    <div class="form-group">
+        <label>Site de destino</label>
+        <div class="col-md-10">
+            <select id="site" name="site" class="form-control site"></select>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="paginaDestinoLink_" class="control-label"></label>
+        <select asp-for="paginaDestinoLink_" class="form-control pagina"></select>
+    </div>
+
 </div>
 
-<div class="form-group">
-    <label asp-for="TextoLink" class="control-label"></label>
-    <input asp-for="TextoLink" class="form-control" />
-    <span asp-validation-for="TextoLink" class="text-danger"></span>
+<div id="oculto2" style="display:none;">
+
+    <div class="form-group">
+        <label asp-for="TextoLink" class="control-label"></label>
+        <input asp-for="TextoLink" class="form-control" />
+        <span asp-validation-for="TextoLink" class="text-danger"></span>
+    </div>
+
+</div>
+
+<div class="jumbotron">
+
+    <div class="form-group">
+        <label class="control-label">Texto</label>
+        <select id="textoLink_" name="textoLink_" class="form-control Texto"></select>
+    </div>
+
+    <div class="form-group">
+        <label class="control-label">Imagem</label>
+        <select id="imagemLink_" name="imagemLink_" class="form-control Imagem"></select>
+    </div>
+
+    <div class="form-group">
+        <input id="elementosDependentes" name="elementosDependentes" type="hidden" value="" />
+    </div>
+
+</div>
+
+@if (Model != null)
+{
+    <div class="form-group">
+        <input type="button" value="Copiar" onclick="ScriptElemento.Create()" class="btn btn-default" />
+    </div>
+}
+
+<div>
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            if ($("#UrlLink").is(':checked') == false) {
+                $("#oculto").css("display", "block");
+                $("#oculto2").css("display", "none");
+            }
+            else {
+                $("#oculto").css("display", "none");
+                $("#oculto2").css("display", "block");
+            }
+
+            $("#UrlLink").click(function () {
+                if ($("#UrlLink").is(':checked') == false) {
+                    $("#oculto").css("display", "block");
+                    $("#oculto2").css("display", "none");
+                }
+                else {
+                    $("#oculto").css("display", "none");
+                    $("#oculto2").css("display", "block");
+                }
+
+            });
+
+        });
+    </script>
 </div>
 
 

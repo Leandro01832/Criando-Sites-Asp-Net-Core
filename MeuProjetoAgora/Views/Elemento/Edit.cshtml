@@ -1,4 +1,4 @@
-﻿@model MeuProjetoAgora.Models.ViewModelElemento
+﻿@model MeuProjetoAgora.Models.business.Elemento.Elemento
 
 @{
     ViewData["Title"] = "Edit";
@@ -8,64 +8,93 @@
 
 <h4>Elemento</h4>
 <hr />
+
+@if (ViewBag.condicao)
+{
+    <p class="text-danger">Este elemento é um elemento dependente</p>
+}
+else
+{
+    <p class="text-primary">Este elemento não é um elemento dependente</p>
+}
+
 <div class="row">
     <form asp-action="Create">
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-        @if (ViewBag.elemento == "texto")
-        {
-            <partial name="_Texto" />
-        }
 
-        @if (ViewBag.elemento == "carousel")
-        {
-            <partial name="_Carousel" />
-        }
+        <input type="hidden" id="selecionado" value="@ViewBag.selecionado" />
 
-        @if (ViewBag.elemento == "imagem")
-        {
-            <partial name="_Imagem" />
-        }
-
-        @if (ViewBag.elemento == "video")
-        {
-            <partial name="_Video" />
-        }
-
-        @if (ViewBag.elemento == "link")
-        {
-            <partial name="_Link" />
-        }
-
-        @if (ViewBag.elemento == "form")
-        {
-            <partial name="_Form" />
-        }
-
-        @if (ViewBag.elemento == "table")
-        {
-            <partial name="_Table" />
-        }
-
-
-        <div class="form-group">
-            <label asp-for="div_" class="control-label"></label>
-            <select asp-for="div_" class="form-control div"></select>
-        </div>
-
+        <input asp-for="IdElemento" type="hidden" />
 
         <div class="form-group">
             <input asp-for="Ordem" type="hidden" />
         </div>
-        <div class="form-group">
-            <input type="button" value="Criar" onclick="ScriptElemento.Update()" class="btn btn-default" />
-        </div>
+
+        @if (Model.GetType().Name == "Texto")
+        {
+            <partial name="_Texto" model="Model" />
+        }
+
+        @if (Model.GetType().Name == "Carousel")
+        {
+            <partial name="_Carousel" model="Model" />
+        }
+
+        @if (Model.GetType().Name == "Imagem")
+        {
+            <partial name="_Imagem" model="Model" />
+        }
+
+        @if (Model.GetType().Name == "Video")
+        {
+            <partial name="_Video" model="Model" />
+        }
+
+        @if (Model.GetType().Name == "Link")
+        {
+            <partial name="_Link" model="Model" />
+        }
+
+        @if (ViewBag.elemento == "Dropdown")
+        {
+            <partial name="_Dropdown" />
+        }
+
+        @if (Model.GetType().Name == "Formulario")
+        {
+            <partial name="_Formulario" model="Model" />
+        }
+        @if (Model.GetType().Name == "Table")
+        {
+            <partial name="_Table" model="Model" />
+        }
+        @if (Model.GetType().Name == "Produto")
+        {
+            <partial name="_Produto" model="Model" />
+        }
+        @if (Model.GetType().Name == "Campo")
+        {
+            <partial name="_Campo" model="Model" />
+        }
+
+        @if (ViewBag.elemento == "CarouselPagina")
+        {
+            <partial name="_CarouselPagina" />
+        }
     </form>
 </div>
 
 <div>
+    <script src="~/js/AdicionarElementosDependentes.js"></script>
     <script src="~/js/Elemento.js"></script>
     <script src="~/js/AjaxGet.js"></script>
-
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input, select, textarea").change(function () {
+                ScriptElemento.Update();
+            });
+        });
+    </script>
 </div>
 
 

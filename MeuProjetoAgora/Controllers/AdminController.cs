@@ -8,6 +8,7 @@ using MeuProjetoAgora.Models.business;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MeuProjetoAgora.Controllers
 {
@@ -22,6 +23,49 @@ namespace MeuProjetoAgora.Controllers
         }
 
         public UserManager<IdentityUser> UserManager { get; }
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Admin()
+        {
+            var usuario = await UserManager.GetUserAsync(this.User);
+
+            var pedidos = await _context.Pedido
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div)
+                .ThenInclude(p => p.Div)
+                .ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Despendentes)
+                .ThenInclude(p => p.ElementoDependente)
+                .ThenInclude(p => p.Dependente)
+                .Where(p => p.ClienteId == usuario.Id).ToListAsync();
+
+            var lista = new List<DadoFormulario>();
+
+            foreach(var site in pedidos)
+            {
+                foreach (var pagina in site.Paginas)
+                {
+                    foreach (var div in pagina.Div)
+                    {
+                        foreach (var elemento in div.Div.Elemento)
+                        {
+                            if (elemento.Elemento.GetType().Name == "Formulario")
+                            {
+                                var dados = await _context.DadoFormulario
+                                .Where(df => df.Formulario == elemento.Elemento.IdElemento)
+                                .ToListAsync();
+                                lista.AddRange(dados);
+                            }
+                        }
+                    }
+                }
+            }
+
+            ViewBag.dados = lista;
+
+            return View();
+        }
 
         [HttpPost]
         [Authorize(Roles="Admin")]

@@ -1,9 +1,11 @@
 ﻿
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -15,9 +17,9 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryLink
     {
-        Task<string> salvarLink(ViewModelElemento elemento, IList<IFormFile> files);
-        Task editarLink(ViewModelElemento elemento);
-        Task apagarLink(ViewModelElemento elemento);
+        IIncludableQueryable<Link, Elemento> includes();
+        Task<Link> TestarLink(string id);
+        Link RetornaLink(ViewModelElemento elemento);
     }
 
 
@@ -30,54 +32,55 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Task apagarLink(ViewModelElemento elemento)
+        public IIncludableQueryable<Link, Elemento> includes()
         {
-            throw new NotImplementedException();
+            var l2 = contexto.Link
+                .Include(e => e.Destino)
+                .Include(e => e.div)
+                .ThenInclude(e => e.Div)
+                .ThenInclude(e => e.Pagina)
+                .ThenInclude(e => e.Pagina)
+                .ThenInclude(e => e.Pedido)
+                .Include(e => e.div)
+                .ThenInclude(e => e.Elemento)
+                .Include(e => e.Despendentes)
+                .ThenInclude(e => e.ElementoDependente)
+                .ThenInclude(e => e.Dependente);
+
+            return l2;
         }
 
-        public Task editarLink(ViewModelElemento elemento)
+        public Link RetornaLink(ViewModelElemento elemento)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> salvarLink(ViewModelElemento elemento, IList<IFormFile> files)
-        {
-            Link link = new Link
+            var link = new Link
             {
-                div_ = elemento.div,
-                imagem_ = elemento.imagemLink_,
-                pagina_ = elemento.paginaDestinoLink_,
-                texto_ = elemento.textoLink_,
-                Url = elemento.UrlLink,
-                TextoLink = elemento.TextoLink
+                Pagina_ = elemento.Pagina_,
+                IdElemento = elemento.IdElemento,
+                Nome = elemento.Nome,
+                Ordem = elemento.Ordem,
+                Menu = elemento.Menu,
+                paginaDestinoLink_ = elemento.paginaDestinoLink_,
+                TextoLink = elemento.TextoLink,
+                UrlLink = elemento.UrlLink,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
+            return link;
+        }
 
-
+        public async Task<Link> TestarLink(string id)
+        {
+            Link link;
             try
             {
-                await dbSet.AddAsync(link);
-                await contexto.SaveChangesAsync();
+                link = await contexto.Elemento.
+               OfType<Link>().FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                var erro = "Preencha o formulario corretamente" + ex;
-                return "";
+                link = null;
             }
-
-            var l = dbSet.Include(e => e.div).First(el => el.IdLink == link.IdLink);
-            var element = new Elemento();
-            element.link_ = link.IdLink;
-            await contexto.Elemento.AddAsync(element);
-             await contexto.SaveChangesAsync();
-
-            if (elemento.Renderizar)
-            {
-                element.div_2 = link.div.IdDiv;
-                contexto.Entry(element).State = EntityState.Modified;
-                await contexto.SaveChangesAsync();
-            }
-
-            return $"Chave do elemento: {element.IdElemento}";
+            return link;
         }
     }
 }

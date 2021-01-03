@@ -1,0 +1,7 @@
+﻿#if ($element.Elemento.tipo == 'Imagem')
+
+<div id='Imagem${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <img class='img-responsive' src='$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
+</div>
+
+#end

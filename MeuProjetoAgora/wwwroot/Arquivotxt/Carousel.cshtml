@@ -1,23 +1,24 @@
 #foreach($bloco in $divs)
 
-#foreach($element in $bloco.Elemento)
+#foreach($element in $bloco.Div.Elemento)
 
-#if ($element.carousel_ > 0)
+#if ($element.Elemento.tipo == "Carousel")
 
 <script type='text/javascript'>
     jQuery(function () {
-        $('.item:first-child').addClass('active$element.carousel.IdCarousel').show();
+        $('.item:first-child').addClass('active$element.Elemento.IdElemento').show();
 
         setInterval(slide, 5000);
 
         function slide() {
-            if ($('.active$element.carousel.IdCarousel').next().size()) {
-                $('.active$element.carousel.IdCarousel').fadeOut().removeClass('active$element.carousel.IdCarousel').next().addClass('active$element.carousel.IdCarousel');
-                $('.active$element.carousel.IdCarousel').delay(500).fadeIn();
+            if ($('.active$element.Elemento.IdElemento').next().size()) {
+                $('.active$element.Elemento.IdElemento').fadeOut().removeClass('active$element.Elemento.IdElemento')
+                    .next().addClass('active$element.Elemento.IdElemento');
+                $('.active$element.Elemento.IdElemento').delay(500).fadeIn();
             } else {
-                $('.active$element.carousel.IdCarousel').fadeOut().removeClass('active$element.carousel.IdCarousel');
+                $('.active$element.Elemento.IdElemento').fadeOut().removeClass('active$element.Elemento.IdElemento');
 
-                $('.item:first-child').delay(500).fadeIn().addClass('active$element.carousel.IdCarousel');
+                $('.item:first-child').delay(500).fadeIn().addClass('active$element.Elemento.IdElemento');
             }
         }
     });

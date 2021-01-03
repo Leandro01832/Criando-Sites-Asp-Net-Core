@@ -9,7 +9,13 @@ namespace MeuProjetoAgora.Models.business
 {
     public class Requisicao
     {
-        [Key]
+        public Requisicao(string clienteId)
+        {
+            ClienteId = clienteId;
+            Cadastro = new Cadastro();
+        }
+
+        [Key, ForeignKey("Cadastro")]
         public int IdRequisicao { get; set; }
         public string Status { get; set; }
         [Display(Name = "Data do pedido")]
@@ -20,7 +26,7 @@ namespace MeuProjetoAgora.Models.business
         public string Erro { get; set; }
         [JsonIgnore]
         public virtual List<ItemRequisicao> ItemRequisicao { get; set; }        
-        public virtual EnderecoRequisicao Endereco { get; set; }
+        public virtual Cadastro Cadastro { get; set; }
         [Required]
         public virtual string ClienteId { get; set; }
     }

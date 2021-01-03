@@ -1,11 +1,14 @@
 ﻿
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,9 +16,8 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryForm
     {
-        Task<string> salvarForm(ViewModelElemento elemento, IList<IFormFile> files);
-        Task editarForm(ViewModelElemento elemento);
-        Task apagarForm(ViewModelElemento elemento);
+        Task<Formulario> TestarForm(string id);
+        Formulario RetornaFormulario(ViewModelElemento elemento);
     }
 
 
@@ -28,19 +30,34 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Task apagarForm(ViewModelElemento elemento)
+        public Formulario RetornaFormulario(ViewModelElemento elemento)
         {
-            throw new NotImplementedException();
+            var formulario = new Formulario
+            {
+                Pagina_ = elemento.Pagina_,
+                IdElemento = elemento.IdElemento,
+                Nome = elemento.Nome,
+                Ordem = elemento.Ordem,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
+            };
+            return formulario;
         }
 
-        public Task editarForm(ViewModelElemento elemento)
+        public async Task<Formulario> TestarForm(string id)
         {
-            throw new NotImplementedException();
-        }
+            Formulario formulario;
+            try
+            {
+                formulario = await contexto.Elemento.
+               OfType<Formulario>().FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
 
-        public Task<string> salvarForm(ViewModelElemento elemento, IList<IFormFile> files)
-        {
-            throw new NotImplementedException();
+            }
+            catch (Exception)
+            {
+                formulario = null;
+            }
+            return formulario;
         }
     }
 }

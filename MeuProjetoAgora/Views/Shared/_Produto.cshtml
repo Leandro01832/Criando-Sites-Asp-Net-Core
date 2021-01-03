@@ -1,0 +1,102 @@
+﻿@model MeuProjetoAgora.Models.business.Elemento.Produto
+
+@{
+    if (ViewBag.condicao == null)
+    {
+        <a href="#" id="InfoVenda" class="btn btn-primary">Informar CPF</a>
+    }
+    else if (ViewBag.condicao2 == null)
+    {
+        <a href="#" id="Info2" class="btn btn-primary">Informar Dados de entrega</a>
+    }
+    else if (ViewBag.condicao3 == null)
+    {
+        <a href="#" id="Info3" class="btn btn-primary">Informar conta bancária para recebimento</a>
+    }
+    else
+    {
+        <h4>Produto</h4>
+
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+        <input type="hidden" id="selecionadoImagem" value="@ViewBag.selecionadoimagem" />
+        <input type="hidden" id="selecionadoTable" value="@ViewBag.selecionadotable" />
+
+        <div class="form-group">
+            <input id="elemento" name="elemento" type="hidden" value="Produto" />
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Nome" class="control-label"></label>
+            <input asp-for="Nome" class="form-control" />
+            <span asp-validation-for="Nome" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Descricao" class="control-label"></label>
+            <input asp-for="Descricao" class="form-control" />
+            <span asp-validation-for="Descricao" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Preco" class="control-label"></label>
+            <input asp-for="Preco" class="form-control" />
+            <span asp-validation-for="Preco" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="estoque" class="control-label"></label>
+            <input asp-for="estoque" class="form-control" />
+            <span asp-validation-for="estoque" class="text-danger"></span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Codigo" class="control-label"></label>
+            <input asp-for="Codigo" class="form-control" />
+            <span asp-validation-for="Codigo" class="text-danger"></span>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Segmento" class="control-label"></label>
+            <input asp-for="Segmento" class="form-control" />
+            <span asp-validation-for="Segmento" class="text-danger"></span>
+        </div>
+
+
+        <div class="jumbotron">
+
+            <h3 class="text-primary text-center">Elementos dependentes</h3>
+            <h4 class="text-primary text-center">Elementos, tabela e imagem</h4>
+
+            <div class="form-group">
+                <label class="control-label">Tabela</label>
+                <select id="table_" name="table_" class="form-control Table"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Imagem</label>
+                <select id="imagem_" name="imagem_" class="form-control Imagem"></select>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label">Elementos</label>
+                <select id="elementoEscolhido" name="elementoEscolhido" class="form-control Elementos"></select>
+            </div>
+
+            <button class="AdicionarElementosDependentes" type="button">Adicionar elementos</button>
+
+            <div class="form-group">
+                <label class="control-label">elementos:</label>
+                <input id="elementosDependentes" name="elementosDependentes" type="text" value="" />
+            </div>
+
+        </div>
+
+        @if (Model != null)
+        {
+            <div class="form-group">
+                <input type="button" value="Copiar" onclick="ScriptElemento.Create()" class="btn btn-default" />
+            </div>
+        }
+    }
+}
+
+
+

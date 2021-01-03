@@ -61,14 +61,24 @@ namespace MeuProjetoAgora.Controllers
         public async Task<IActionResult> Index()
         {
             IList<Pagina> pages = await RepositoryPagina.MostrarPageModels();
-            foreach (var p in pages)
+            List<Pagina> pages2 = new List<Pagina>();
+            foreach (var p in pages.Where(p => p.Exibicao == true))
             {
-              p.Html = RepositoryPagina.renderizarPagina(p);
+              p.Html = await RepositoryPagina.renderizarPagina(p);
+                pages2.Add(p);
             }
 
-            return View(pages);
+            return View(pages2);
         }
-        
+
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var pedido = await Context.Pedido.FirstAsync(p => p.IdPedido == id);
+
+            return PartialView(pedido);
+        }
+
         [Route("Criar")]
         [Route("Create")]
         [Route("Cadastrar")]
@@ -108,11 +118,11 @@ namespace MeuProjetoAgora.Controllers
                 try
                 {
                     pedido.ClienteId = usuario.Id;
+                    pedido.DiasLiberados = 7;
+
                     Context.Add(pedido);
                     await Context.SaveChangesAsync();
                     HttpHelper.SetPedidoId(pedido.IdPedido);
-                    await RepositoryPedido.criarPedido(Context.Imagem.Where(i => i.IdImagem <= 3).ToList());
-                    await Context.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
@@ -128,51 +138,14 @@ namespace MeuProjetoAgora.Controllers
                     return View(pedido);
                 }
 
-                await UserHelper.CreateUserASPAsync(usuario.UserName, "Video");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Texto");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Imagem");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Carousel");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Background");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Music");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Link");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Div");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Elemento");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Pagina");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Ecommerce");
-               await UserHelper.CreateUserASPAsync(usuario.UserName, "Admin");
-               await Context.Permissao.AddAsync(new Permissao
-                    { NomePermissao = "Video", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                    { NomePermissao = "Texto", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                   { NomePermissao = "Imagem", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                 { NomePermissao = "Carousel", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-               { NomePermissao = "Background", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                    { NomePermissao = "Music", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                     { NomePermissao = "Link", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                      { NomePermissao = "Div", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                 { NomePermissao = "Elemento", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                   { NomePermissao = "Pagina", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                { NomePermissao = "Ecommerce", Site = pedido.IdPedido, UserName = usuario.UserName });
-               await Context.Permissao.AddAsync(new Permissao                             
-                    { NomePermissao = "Admin", Site = pedido.IdPedido, UserName = usuario.UserName });
+                await RepositoryPedido.PermissoesDoSite(pedido, usuario);
 
-               await Context.SaveChangesAsync();
-
-                return RedirectToAction(nameof(Galeria));
+                return RedirectToAction(nameof(GaleriaSite), new { email = usuario.UserName });
             }
             return View(pedido);
         }
         
-        [Authorize]
+        [Authorize(Roles ="Admin")]
         [Route("Editar-Site/{id?}")]
         [Route("EditarSite/{id?}")]
         [Route("Edit-Site/{id?}")]
@@ -199,7 +172,7 @@ namespace MeuProjetoAgora.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [Route("Editar-Site/{id?}")]
         [Route("EditarSite/{id?}")]
         [Route("Edit-Site/{id?}")]
@@ -234,46 +207,8 @@ namespace MeuProjetoAgora.Controllers
                 return RedirectToAction(nameof(Index));
             }
             return View(pedido);
-        }
+        } 
         
-        [Authorize]
-        [Route("Apagar-Site/{id?}")]
-        [Route("Deletar-Site/{id?}")]
-        [Route("Delete/{id?}")]
-        [Route("Pedido/Delete/{id?}")]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var pedido = await Context.Pedido
-                .FirstOrDefaultAsync(m => m.IdPedido == id);
-            if (pedido == null)
-            {
-                return NotFound();
-            }
-
-            return View(pedido);
-        }
-                
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        [Authorize]
-        [Route("Apagar-Site/{id?}")]
-        [Route("Deletar-Site/{id?}")]
-        [Route("Delete/{id?}")]
-        [Route("Pedido/DeleteConfirmed/{id}")]
-        public async Task<IActionResult> DeleteConfirmed(int id)
-        {
-            var pedido = await Context.Pedido.FindAsync(id);
-            Context.Pedido.Remove(pedido);
-            await Context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }               
-
-        [Authorize]        
         [Route("Galeria/{id?}")]
         [Route("Pedido/Galeria/{id?}")]
         [Route("Paginas-de-um-site/{id?}")]
@@ -281,25 +216,23 @@ namespace MeuProjetoAgora.Controllers
         [Route("Paginas/{id?}")]
         public async Task<ActionResult> Galeria(int? id)
         {
-            if(id == null)
-            {
-                id = HttpHelper.GetPedidoId();
-            } 
+            if (id == null) return View("Index");
             var paginas = await Context.Pagina.Where(p => p.pedido_ == id).ToListAsync();
             return View(paginas);
         }
 
-        [Authorize]
-        [Route("Sites")]
-        [Route("GaleriaSite")]
-        [Route("Pedido/GaleriaSite")]
-        public async Task<ActionResult> GaleriaSite()
+        [Route("Sites/{email}")]
+        [Route("GaleriaSite/{email}")]
+        [Route("Pedido/GaleriaSite/{email}")]
+        public async Task<ActionResult> GaleriaSite(string email)
         {
-            var usuario = await UserManager.GetUserAsync(this.User);            
+            var usuario = await UserManager.Users.FirstOrDefaultAsync(user => user.UserName == email);
+            if (usuario == null) return View("Index");
             var sites = await Context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
             return View(sites);
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<FileResult> Baixar(int id)
             {
             var site = await Context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.IdPedido == id);
@@ -331,7 +264,7 @@ namespace MeuProjetoAgora.Controllers
         [Route("CreatePage")]
         [Route("Criar-Pagina")]
         [Route("CriarPagina")]
-        public async Task<ActionResult> CreatePagina([Bind("PaginaId,Titulo,Codigo,pedido_,Facebook,Twiter,Instagram,Rotas")] Pagina pagina)
+        public async Task<ActionResult> CreatePagina(Pagina pagina)
         {
             var usuario = await UserManager.GetUserAsync(this.User);
             var sites = await Context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
@@ -346,9 +279,9 @@ namespace MeuProjetoAgora.Controllers
               await  Context.Pagina.AddAsync(pagina);
                 await  Context.SaveChangesAsync();
 
-               await RepositoryBackground.CriarBackground(pagina, await Context.Imagem.Where(i => i.IdImagem <= 3).ToListAsync());              
+               await RepositoryBackground.CriarBackground(pagina, await Context.Imagem.Where(i => i.IdElemento <= 3).ToListAsync());              
 
-                return RedirectToAction("Galeria");
+                return RedirectToAction("Galeria", new { id = pagina.pedido_ });
             }
 
 

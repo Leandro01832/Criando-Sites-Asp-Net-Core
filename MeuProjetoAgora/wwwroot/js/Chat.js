@@ -1,5 +1,5 @@
-﻿var numeroPagina = $(".Topo")[0].baseURI.replace(/[^0-9]/g, '');
-numeroPagina = numeroPagina.replace('5001', '');
+﻿var numeroPagina = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+numeroPagina = numeroPagina.replace('44398', '');
 
 var chat = new signalR.HubConnectionBuilder().withUrl("/streamingHub").build();
 

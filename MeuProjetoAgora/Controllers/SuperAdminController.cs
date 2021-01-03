@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
 using Microsoft.AspNetCore.Authorization;
+using MeuProjetoAgora.Models.Join;
+using Microsoft.AspNetCore.Identity;
 
 namespace MeuProjetoAgora.Controllers
 {
@@ -16,36 +18,80 @@ namespace MeuProjetoAgora.Controllers
     {
         private readonly ApplicationDbContext _context;
 
-        public SuperAdminController(ApplicationDbContext context)
+        public UserManager<IdentityUser> UserManager { get; }
+
+        public SuperAdminController(ApplicationDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            UserManager = userManager;
         }
 
-        
-        public async Task<IActionResult> IndexElemento()
+        //Região Index
+        #region
+        [Route("Mensagens")]
+        public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Elemento.Include(e => e.carousel).Include(e => e.div).Include(e => e.form).Include(e => e.imagem).Include(e => e.link).Include(e => e.table).Include(e => e.texto).Include(e => e.video);
+            return View(await _context.MensagemChat.ToListAsync());
+        }
+        [Route("Usuarios")]
+        public IActionResult IndexUsers()
+        {
+            var usuarios = UserManager.Users.ToList();
+            return View(usuarios);
+        }
+        public async Task<IActionResult> IndexBackground()
+        {
+            var applicationDbContext = _context.Background.Include(b => b.Pagina).Include(b => b.imagem);
             return View(await applicationDbContext.ToListAsync());
         }
-
+        public async Task<IActionResult> IndexElementoDependente()
+        {
+            var elementos = _context.ElementoDependente;
+            return View(await elementos.ToListAsync());
+        }
+        public async Task<IActionResult> IndexElementoDependenteElemento()
+        {
+            var applicationDbContext = _context.ElementoDependenteElemento
+            .Include(e => e.Elemento).Include(e => e.ElementoDependente);
+            return View(await applicationDbContext.ToListAsync());
+        }
+        [Route("SuperAdmin/Rotas")]
+        [Route("Rotas")]
+        public async Task<IActionResult> Rotas()
+        {
+            return View(await _context.Rota.ToListAsync());
+        }
+        #endregion
         
-        public async Task<IActionResult> DetailsElemento(int? id)
+        //Região Detalhes
+        #region
+        public async Task<IActionResult> DetailsBackground(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var elemento = await _context.Elemento
-                .Include(e => e.carousel)
-                .Include(e => e.div)
-                .Include(e => e.form)
-                .Include(e => e.imagem)
-                .Include(e => e.link)
-                .Include(e => e.table)
-                .Include(e => e.texto)
-                .Include(e => e.video)
-                .FirstOrDefaultAsync(m => m.IdElemento == id);
+            var background = await _context.Background
+                .Include(b => b.Pagina)
+                .Include(b => b.imagem)
+                .FirstOrDefaultAsync(m => m.IdBackground == id);
+            if (background == null)
+            {
+                return NotFound();
+            }
+
+            return View(background);
+        }
+        public async Task<IActionResult> DetailsElementoDependente(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var elemento = await _context.ElementoDependente
+                .FirstOrDefaultAsync(m => m.IdElementoDependente == id);
             if (elemento == null)
             {
                 return NotFound();
@@ -53,21 +99,6 @@ namespace MeuProjetoAgora.Controllers
 
             return View(elemento);
         }
-
-        [Route("Mensagens")]
-        public async Task<IActionResult> Index()
-        {
-            return View(await _context.MensagemChat.ToListAsync());
-        }
-
-        [Route("SuperAdmin/Rotas")]
-        [Route("Rotas")]
-        public async Task<IActionResult> Rotas()
-        {
-            return View(await _context.Rota.ToListAsync());
-        }
-
-        // GET: SuperAdmin/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -84,16 +115,32 @@ namespace MeuProjetoAgora.Controllers
 
             return View(mensagemChat);
         }
+        public async Task<IActionResult> DetailsElementoDependenteElemento(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        // GET: SuperAdmin/Create
+            var elementoDependenteElemento = await _context.ElementoDependenteElemento
+                .Include(e => e.Elemento)
+                .Include(e => e.ElementoDependente)
+                .FirstOrDefaultAsync(m => m.ElementoDependenteId == id);
+            if (elementoDependenteElemento == null)
+            {
+                return NotFound();
+            }
+
+            return View(elementoDependenteElemento);
+        }
+        #endregion
+
+        //Região Create
+        #region
         public IActionResult Create()
         {
             return View();
         }
-
-        // POST: SuperAdmin/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdMensagem,Pagina,NomeUsuario,Mensagem")] MensagemChat mensagemChat)
@@ -106,8 +153,30 @@ namespace MeuProjetoAgora.Controllers
             }
             return View(mensagemChat);
         }
+        public IActionResult CreateElementoDependente()
+        {
+            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator");
+            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente");
+            return View();
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateElementoDependente([Bind("ElementoId,ElementoDependenteId")] ElementoDependenteElemento elementoDependenteElemento)
+        {
+            if (ModelState.IsValid)
+            {
+                _context.Add(elementoDependenteElemento);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
+            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
+            return View(elementoDependenteElemento);
+        }
+        #endregion
 
-        // GET: SuperAdmin/Edit/5
+        //Região Editar
+        #region
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -122,10 +191,6 @@ namespace MeuProjetoAgora.Controllers
             }
             return View(mensagemChat);
         }
-
-        // POST: SuperAdmin/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdMensagem,Pagina,NomeUsuario,Mensagem")] MensagemChat mensagemChat)
@@ -142,23 +207,60 @@ namespace MeuProjetoAgora.Controllers
                     _context.Update(mensagemChat);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!MensagemChatExists(mensagemChat.IdMensagem))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    return NotFound();
                 }
                 return RedirectToAction(nameof(Index));
             }
             return View(mensagemChat);
         }
+        public async Task<IActionResult> EditElementoDependenteElemento(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
 
-        // GET: SuperAdmin/Delete/5
+            var elementoDependenteElemento = await _context.ElementoDependenteElemento.FindAsync(id);
+            if (elementoDependenteElemento == null)
+            {
+                return NotFound();
+            }
+            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
+            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
+            return View(elementoDependenteElemento);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditElementoDependenteElemento(int id, [Bind("ElementoId,ElementoDependenteId")] ElementoDependenteElemento elementoDependenteElemento)
+        {
+            if (id != elementoDependenteElemento.ElementoDependenteId)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(elementoDependenteElemento);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    return NotFound();
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
+            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
+            return View(elementoDependenteElemento);
+        }
+        #endregion
+
+        //Região Ddelete
+        #region
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -175,8 +277,6 @@ namespace MeuProjetoAgora.Controllers
 
             return View(mensagemChat);
         }
-
-        // POST: SuperAdmin/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -186,10 +286,34 @@ namespace MeuProjetoAgora.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
-        private bool MensagemChatExists(int id)
+        public async Task<IActionResult> DeleteElementoDependente(int? id)
         {
-            return _context.MensagemChat.Any(e => e.IdMensagem == id);
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var elementoDependenteElemento = await _context.ElementoDependenteElemento
+                .Include(e => e.Elemento)
+                .Include(e => e.ElementoDependente)
+                .FirstOrDefaultAsync(m => m.ElementoDependenteId == id);
+            if (elementoDependenteElemento == null)
+            {
+                return NotFound();
+            }
+
+            return View(elementoDependenteElemento);
         }
+        [HttpPost, ActionName("DeleteElementoDependente")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteElementoDependenteConfirmed(int id)
+        {
+            var elementoDependenteElemento = await _context.ElementoDependenteElemento.FindAsync(id);
+            _context.ElementoDependenteElemento.Remove(elementoDependenteElemento);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+        #endregion
+
     }
 }

@@ -1,0 +1,75 @@
+﻿@model MeuProjetoAgora.Models.business.Cor
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>Cor</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CorBackground)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.CorBackground)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Position)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Position)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Transparencia)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Transparencia)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.BackgroundGradiente)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.BackgroundGradiente.IdBackgroundGradiente)
+        </dd>
+    </dl>
+    
+    <form>
+        <input type="hidden" asp-for="IdCor" />
+        <input type="button" id="DeletarCor" value="Delete" class="btn btn-default" /> 
+        
+    </form>
+</div>
+
+<div>
+    <script src="~/js/Cor.js"></script>
+    <script src="~/js/AjaxGet.js"></script>
+
+    <script type="text/javascript">
+            $(document).ready(function () {
+
+                $("#DeletarCor").click(function () {
+
+                    let token = $('[name=__RequestVerificationToken]').val();
+
+                    let headers = {};
+                    headers['RequestVerificationToken'] = token;
+
+                    var formData = new FormData();
+                    formData.append("id", $("#IdCor").val());  
+
+                    $.ajax({
+                        url: '/Ferramenta/DeleteCor',
+                        type: 'POST',
+                        processData: !1,
+                        contentType: !1,
+                        data: formData,
+                        headers: headers
+                    }).done(function (response) {
+
+                        var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+                        numero = numero.replace('44398', '');
+                        $(".content").load("/Pagina/getview", { id: numero });
+
+                    });
+                });
+});
+    </script>
+</div>

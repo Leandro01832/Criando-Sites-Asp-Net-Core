@@ -1,0 +1,46 @@
+﻿@model IEnumerable<MeuProjetoAgora.Models.business.Background>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.IdBackground)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Nome)
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdBackground)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nome)
+            </td>
+
+            <td>
+                <a class="EditarBackground" data-value="@item.IdBackground">Editar</a> 
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".EditarBackground").click(function () {
+                var id = $(this).data("value");
+                $("#conteudomodal").load("/Ferramenta/EditBackground/" + id);
+            }); 
+
+        });
+    </script>
+</div>

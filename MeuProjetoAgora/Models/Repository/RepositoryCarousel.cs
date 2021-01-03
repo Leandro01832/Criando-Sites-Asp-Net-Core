@@ -1,6 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -15,9 +16,8 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryCarousel
     {
-        Task<string> salvarCarousel(ViewModelElemento elemento, IList<IFormFile> files);
-        Task editarCarousel(ViewModelElemento elemento);
-        Task apagarCarousel(ViewModelElemento elemento);
+        Task<string> TestarCarousel(int id);
+        Carousel RetornaCarousel(ViewModelElemento elemento);
     }
 
 
@@ -30,50 +30,24 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Task apagarCarousel(ViewModelElemento elemento)
+        public Carousel RetornaCarousel(ViewModelElemento elemento)
         {
-            throw new NotImplementedException();
-        }
-
-        public Task editarCarousel(ViewModelElemento elemento)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<string> salvarCarousel(ViewModelElemento elemento, IList<IFormFile> files)
-        {
-            Carousel carousel = new Carousel
+            var carousel = new Carousel
             {
-                div_2 = elemento.div,
-                Nome = elemento.Nome
+                Pagina_ = elemento.Pagina_,
+                IdElemento = elemento.IdElemento,
+                Nome = elemento.Nome,
+                Ordem = elemento.Ordem,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
+
             };
+            return carousel;
+        }
 
-            try
-            {
-                await dbSet.AddAsync(carousel);
-                await contexto.SaveChangesAsync();
-            }
-
-            catch (Exception ex)
-            {
-                var erro = "Preencha o formulario corretamente" + ex;
-                return "";
-            }
-
-            var Carousel = dbSet.Include(e => e.Div).First(el => el.IdCarousel == carousel.IdCarousel);
-            var element = new Elemento();
-            element.carousel_ = Carousel.IdCarousel;
-            await contexto.Elemento.AddAsync(element);
-            await contexto.SaveChangesAsync();
-
-            if (elemento.Renderizar)
-            {
-                element.div_2 = Carousel.Div.IdDiv;
-                contexto.Entry(element).State = EntityState.Modified;
-                await contexto.SaveChangesAsync();
-            }
-
-            return $"Chave do elemento: {element.IdElemento}";
+        public Task<string> TestarCarousel(int id)
+        {
+            throw new NotImplementedException();
         }
     }
 }
