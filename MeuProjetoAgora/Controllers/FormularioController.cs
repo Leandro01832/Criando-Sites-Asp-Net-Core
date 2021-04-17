@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 

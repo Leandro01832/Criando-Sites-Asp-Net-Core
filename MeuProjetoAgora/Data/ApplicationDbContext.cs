@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using MeuProjetoAgora.Models.business.Elemento;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.Join;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Join;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,6 +14,7 @@ namespace MeuProjetoAgora.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            
         }
 
         public DbSet<BackgroundGradiente> BackgroundGradiente { get; set; }

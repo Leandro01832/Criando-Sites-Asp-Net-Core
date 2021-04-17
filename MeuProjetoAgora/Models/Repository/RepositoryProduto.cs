@@ -1,7 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using MeuProjetoAgora.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +19,7 @@ namespace MeuProjetoAgora.Models.Repository
     {
         Task<Produto> TestarProduto(string id);
         Task<BuscaProdutosViewModel> GetProdutosAsync(string pesquisa);
-        Produto RetornaProduto(ViewModelElemento elemento);
+        Produto RetornaProduto(Elemento elemento);
         Task<bool> VerificaExistenciaElementoDependente(string id);
     }
 
@@ -45,21 +45,22 @@ namespace MeuProjetoAgora.Models.Repository
             return new BuscaProdutosViewModel(await query.ToListAsync(), pesquisa);
         }
 
-        public Produto RetornaProduto(ViewModelElemento elemento)
+        public Produto RetornaProduto(Elemento elemento)
         {
+            var p = (Produto)elemento;
             var produto = new Produto
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                Descricao = elemento.Descricao,
-                estoque = elemento.estoque,
-                Preco = elemento.Preco,
-                ElementosDependentes = elemento.elementosDependentes,
-                Despendentes = elemento.Dependentes,
-                Segmento = elemento.Segmento,
-                Codigo = elemento.Codigo
+                Descricao = p.Descricao,
+                estoque = p.estoque,
+                Preco = p.Preco,
+                ElementosDependentes = p.ElementosDependentes,
+                Despendentes = p.Despendentes,
+                Segmento = p.Segmento,
+                Codigo = p.Codigo
 
             };
             return produto;

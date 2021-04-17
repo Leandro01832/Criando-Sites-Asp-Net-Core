@@ -1,4 +1,4 @@
-﻿@model MeuProjetoAgora.Models.business.Elemento
+﻿@model MeuProjetoAgora.business.Elementos.Elemento
 
 @{
     ViewBag.Title = "Delete";
@@ -9,100 +9,6 @@
 <h3>Deseja realmente apagar este elemento?</h3>
 <div>
     <h4>Elemento</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayName("Nome do bloco")
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.div.Nome)
-        </dd>
-
-        @{
-            if (Model.carousel_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.carousel.Nome)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.carousel.Nome)
-                </dd>
-            }
-
-
-            if (Model.imagem_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.imagem.Arquivo)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.imagem.Arquivo)
-                </dd>
-            }
-
-
-            if (Model.texto_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.texto.Nome)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.texto.Nome)
-                </dd>
-            }
-
-            if (Model.video_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.video.IdVideo)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.video.IdVideo)
-                </dd>
-            }
-
-            if (Model.form_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.form.Nome)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.form.Nome)
-                </dd>
-            }
-
-            if (Model.table_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.form.Nome)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.form.Nome)
-                </dd>
-            }
-
-            if (Model.link_ > 0)
-            {
-                <dt>
-                    @Html.DisplayNameFor(model => model.link.IdLink)
-                </dt>
-
-                <dd>
-                    @Html.DisplayFor(model => model.link.IdLink)
-                </dd>
-            }
-
-        }
-
-
-    </dl>
 
     @using (Html.BeginForm("", "", FormMethod.Post))
     {

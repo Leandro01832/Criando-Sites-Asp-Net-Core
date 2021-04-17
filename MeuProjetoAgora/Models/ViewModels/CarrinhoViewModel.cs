@@ -1,4 +1,4 @@
-﻿using MeuProjetoAgora.Models.business;
+﻿using MeuProjetoAgora.business;
 using System;
 using System.Collections.Generic;
 using System.Linq;

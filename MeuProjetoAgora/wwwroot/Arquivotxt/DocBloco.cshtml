@@ -1,4 +1,6 @@
 
+
+
 #foreach($bloco in $divs)
 
 #if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao == false)
@@ -43,7 +45,7 @@
         grid-template-columns: ${bloco.Div.Colunas};
 
     padding: ${bloco.Div.Padding}%;
-    background-image: url($bloco.Div.Background.imagem.ArquivoImagem);
+    background-image: url($site$bloco.Div.Background.imagem.ArquivoImagem);
 
     border-radius: ${bloco.Div.BorderRadius}px;
 

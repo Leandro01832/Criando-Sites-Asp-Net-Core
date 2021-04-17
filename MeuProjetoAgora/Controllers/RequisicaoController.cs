@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using MeuProjetoAgora.Models.Repository;
 using MeuProjetoAgora.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;

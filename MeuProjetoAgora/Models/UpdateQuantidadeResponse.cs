@@ -1,5 +1,5 @@
 ﻿
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using MeuProjetoAgora.Models.ViewModels;
 using System;
 using System.Collections.Generic;

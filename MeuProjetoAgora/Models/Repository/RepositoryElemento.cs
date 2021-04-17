@@ -1,7 +1,7 @@
 ﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
-using MeuProjetoAgora.Models.Join;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Join;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -109,60 +109,7 @@ namespace MeuProjetoAgora.Models.Repository
             return $"Chave do elemento {elemento.IdElemento}";
         }
 
-        public Elemento Elemento(ViewModelElemento elemento)
-        {
-            if (elemento.elemento == "Imagem")
-            {
-                return RepositoryImagem.RetornaImagem(elemento);
-            }
-
-            if (elemento.elemento == "Carousel")
-            {
-                return RepositoryCarousel.RetornaCarousel(elemento);                
-            }
-
-            if (elemento.elemento == "CarouselPagina")
-            {
-                return RepositoryCarouselPaginaCarousel.RetornaCarouselPagina(elemento);                
-            }
-
-            if (elemento.elemento == "Table")
-            {
-                return RepositoryTable.RetornaTable(elemento);                
-            }
-
-            if (elemento.elemento == "Link")
-            {
-                return RepositoryLink.RetornaLink(elemento);                
-            }            
-
-            if (elemento.elemento == "Texto")
-            {
-                return RepositoryTexto.RetornaTexto(elemento);                
-            }
-
-            if (elemento.elemento == "Dropdown")
-            {
-                return RepositoryDropdown.RetornaDropdown(elemento);                
-            }
-
-            if (elemento.elemento == "Formulario")
-            {
-                return RepositoryForm.RetornaFormulario(elemento);                
-            }
-
-            if (elemento.elemento == "Produto")
-            {
-                return RepositoryProduto.RetornaProduto(elemento);                
-            }
-
-            if (elemento.elemento == "Campo")
-            {
-                return RepositoryCampo.RetornaCampo(elemento);                
-            }
-
-            return new Elemento();
-        }
+        
 
         private async Task elementosDependentes(string elementosDependentes, Elemento elemento)
         {
@@ -186,16 +133,10 @@ namespace MeuProjetoAgora.Models.Repository
 
             foreach (var id in listaString)
             {
-                Imagem imagem;
-                Campo campo;
-                Link link;
-                Produto produto;
-                Texto texto;
-                Table table;
-                Formulario formulario;
                 Pagina pag;
                 bool MesmoCliente = false;
                 Elemento elementoDepe;
+                Elemento ele;
 
                 try
                 {
@@ -220,9 +161,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Carousel")
                 {
-                    imagem = await RepositoryImagem.TestarImagem(id);
+                    ele =  await TestarElemento(id);
 
-                    if (imagem != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -274,9 +215,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Formulario")
                 {
-                    campo = await RepositoryCampo.TestarCampo(id);
+                    ele = await TestarElemento(id);
 
-                    if (campo != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -284,9 +225,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Dropdown")
                 {
-                    link = await RepositoryLink.TestarLink(id);
+                    ele = await TestarElemento(id);
 
-                    if (link != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -294,12 +235,12 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Table")
                 {
-                    produto = await RepositoryProduto.TestarProduto(id);
+                    ele = await TestarElemento(id);
 
                     bool verificaProdutoExistente = await RepositoryProduto
                             .VerificaExistenciaElementoDependente(id);
 
-                    if (produto != null && MesmoCliente && !verificaProdutoExistente && !elementosGravados.Contains(id))
+                    if (ele != null && MesmoCliente && !verificaProdutoExistente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -309,14 +250,14 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     if (id == listaString[listaString.Count - 1])
                     {
-                        formulario = await RepositoryForm.TestarForm(id);
+                        ele = await TestarElemento(id);
 
-                        if (formulario != null && MesmoCliente)
+                        if (ele != null && MesmoCliente)
                         {
-                            var ele = await contexto.Elemento.Include(e => e.Despendentes)
-                            .FirstAsync(e => e.IdElemento == formulario.IdElemento);
+                            var elem = await contexto.Elemento.Include(e => e.Despendentes)
+                            .FirstAsync(e => e.IdElemento == ele.IdElemento);
 
-                            ele.IncluiElemento(new ElementoDependente { Dependente = elemento });
+                            elem.IncluiElemento(new ElementoDependente { Dependente = elemento });
                             await contexto.SaveChangesAsync();
                         }
                     }
@@ -326,25 +267,25 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     if (id == listaString[listaString.Count - 1])
                     {
-                        table = await RepositoryTable.TestarTable(listaString[0]);
+                        ele = await TestarElemento(listaString[0]);
 
                         bool verificaProdutoExistente = await RepositoryProduto
                             .VerificaExistenciaElementoDependente(elemento.IdElemento.ToString());
 
-                        if (table != null && MesmoCliente && !verificaProdutoExistente)
+                        if (ele != null && MesmoCliente && !verificaProdutoExistente)
                         {
-                            var ele = await contexto.Elemento.Include(e => e.Despendentes)
-                            .FirstAsync(e => e.IdElemento == table.IdElemento);
+                            var elem = await contexto.Elemento.Include(e => e.Despendentes)
+                            .FirstAsync(e => e.IdElemento == ele.IdElemento);
 
-                            ele.IncluiElemento(new ElementoDependente { Dependente = elemento });
+                            elem.IncluiElemento(new ElementoDependente { Dependente = elemento });
                             await contexto.SaveChangesAsync();
                         }
                     }
 
-                    formulario = await RepositoryForm.TestarForm(id);
-                    table = await RepositoryTable.TestarTable(id);
-                    produto = await RepositoryProduto.TestarProduto(id);
-                    campo = await RepositoryCampo.TestarCampo(id);
+                   var formulario = (Formulario) await TestarElemento(id);
+                    var table = (Table)await TestarElemento(id);
+                    var produto = (Produto)await TestarElemento(id);
+                    var campo = (Campo)await TestarElemento(id);
 
                     //elemento dependente e possui elementos dependentes
                     if (table == null && formulario == null && campo == null
@@ -358,7 +299,8 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     Imagem imagemLink = new Imagem();
                     imagemLink = await RepositoryImagem.TestarImagem(listaString[1]);
-                    texto = await RepositoryTexto.TestarTexto(listaString[0]);
+                    imagemLink = (Imagem) await TestarElemento(listaString[1]);
+                    var texto = await TestarElemento(listaString[0]);
 
                     if (texto != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
@@ -436,6 +378,15 @@ namespace MeuProjetoAgora.Models.Repository
                 }
                 await contexto.SaveChangesAsync();
             }
+        }
+
+        private async Task<Elemento> TestarElemento(string id)
+        {
+            Elemento elemento = await contexto.
+                Elemento.
+                FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
+            
+            return elemento;
         }
 
         public IIncludableQueryable<Elemento, Elemento> includes()

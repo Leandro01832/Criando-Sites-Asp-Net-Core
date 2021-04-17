@@ -1,7 +1,6 @@
 ﻿
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryCampo
     {
         Task<Campo> TestarCampo(string id);
-        Campo RetornaCampo(ViewModelElemento elemento);
+        Campo RetornaCampo(Elemento elemento);
     }
 
 
@@ -30,18 +29,19 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Campo RetornaCampo(ViewModelElemento elemento)
+        public Campo RetornaCampo(Elemento elemento)
         {
+            var c = (Campo)elemento;
             var campo = new Campo
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                Placeholder = elemento.Placeholder,
-                TipoCampo = elemento.TipoCampo,
-                ElementosDependentes = elemento.elementosDependentes,
-                Despendentes = elemento.Dependentes
+                Placeholder = c.Placeholder,
+                TipoCampo = c.TipoCampo,
+                ElementosDependentes = c.ElementosDependentes,
+                Despendentes = c.Despendentes
 
             };
             return campo;

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;

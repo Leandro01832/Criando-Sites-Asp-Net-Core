@@ -1,7 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryTexto
     {
         Task<Texto> TestarTexto(string id);
-        Texto RetornaTexto(ViewModelElemento elemento);
+        Texto RetornaTexto(Elemento elemento);
     }
 
 
@@ -30,17 +30,18 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Texto RetornaTexto(ViewModelElemento elemento)
+        public Texto RetornaTexto(Elemento elemento)
         {
+            var t = (Texto)elemento;
             return new Texto
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                PalavrasTexto = elemento.PalavrasTexto,
-                ElementosDependentes = elemento.elementosDependentes,
-                Despendentes = elemento.Dependentes
+                PalavrasTexto = t.PalavrasTexto,
+                ElementosDependentes = elemento.ElementosDependentes,
+                Despendentes = elemento.Despendentes
             };
         }
 

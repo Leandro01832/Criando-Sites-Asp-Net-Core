@@ -7,10 +7,10 @@ using Newtonsoft.Json;
 using System.IO;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using MeuProjetoAgora.Models.Repository;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business.Elementos;
 
 namespace MeuProjetoAgora
 {

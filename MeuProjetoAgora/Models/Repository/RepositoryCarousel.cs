@@ -1,7 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +17,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryCarousel
     {
         Task<string> TestarCarousel(int id);
-        Carousel RetornaCarousel(ViewModelElemento elemento);
+        Carousel RetornaCarousel(Elemento elemento);
     }
 
 
@@ -30,7 +30,7 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Carousel RetornaCarousel(ViewModelElemento elemento)
+        public Carousel RetornaCarousel(Elemento elemento)
         {
             var carousel = new Carousel
             {
@@ -38,8 +38,8 @@ namespace MeuProjetoAgora.Models.Repository
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                ElementosDependentes = elemento.elementosDependentes,
-                Despendentes = elemento.Dependentes
+                ElementosDependentes = elemento.ElementosDependentes,
+                Despendentes = elemento.Despendentes
 
             };
             return carousel;

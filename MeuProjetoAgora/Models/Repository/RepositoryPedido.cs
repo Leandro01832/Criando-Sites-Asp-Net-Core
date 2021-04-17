@@ -1,6 +1,6 @@
-﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+﻿using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;

@@ -267,7 +267,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Div");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Elemento", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Elemento", b =>
                 {
                     b.Property<int>("IdElemento")
                         .ValueGeneratedOnAdd()
@@ -289,7 +289,7 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Elemento");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.ElementoDependente", b =>
                 {
                     b.Property<int>("IdElementoDependente")
                         .ValueGeneratedOnAdd()
@@ -304,7 +304,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("ElementoDependente");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.InfoEntrega", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.InfoEntrega", b =>
                 {
                     b.Property<int>("IdInfoEntrega")
                         .ValueGeneratedOnAdd()
@@ -326,7 +326,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("InfoEntrega");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.InfoVenda", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.InfoVenda", b =>
                 {
                     b.Property<int>("IdInfoVenda")
                         .ValueGeneratedOnAdd()
@@ -360,7 +360,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("InfoVenda");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.ItemRequisicao", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.ItemRequisicao", b =>
                 {
                     b.Property<int>("IdItem")
                         .ValueGeneratedOnAdd()
@@ -383,7 +383,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("ItemRequisicao");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.MensagemChat", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.MensagemChat", b =>
                 {
                     b.Property<int>("IdMensagem")
                         .ValueGeneratedOnAdd()
@@ -400,7 +400,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("MensagemChat");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Pagina", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Pagina", b =>
                 {
                     b.Property<int>("IdPagina")
                         .ValueGeneratedOnAdd()
@@ -438,7 +438,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Pagina");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.PastaImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.PastaImagem", b =>
                 {
                     b.Property<int>("IdPastaImagem")
                         .ValueGeneratedOnAdd()
@@ -455,7 +455,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("PastaImagem");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Pedido", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Pedido", b =>
                 {
                     b.Property<int>("IdPedido")
                         .ValueGeneratedOnAdd()
@@ -487,7 +487,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Pedido");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Permissao", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Permissao", b =>
                 {
                     b.Property<int>("IdPermissao")
                         .ValueGeneratedOnAdd()
@@ -504,7 +504,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Permissao");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Requisicao", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Requisicao", b =>
                 {
                     b.Property<int>("IdRequisicao");
 
@@ -522,7 +522,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Requisicao");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Rota", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Rota", b =>
                 {
                     b.Property<int>("IdRota")
                         .ValueGeneratedOnAdd()
@@ -535,7 +535,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Rota");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Servico", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Servico", b =>
                 {
                     b.Property<int>("IdServico");
 
@@ -546,7 +546,7 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("Servico");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Telefone", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Telefone", b =>
                 {
                     b.Property<int>("IdTelefone")
                         .ValueGeneratedOnAdd()
@@ -735,9 +735,9 @@ namespace MeuProjetoAgora.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Campo", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Campo", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("Placeholder");
 
@@ -748,41 +748,41 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Campo");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Carousel", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Carousel", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.ToTable("Carousel");
 
                     b.HasDiscriminator().HasValue("Carousel");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.CarouselPagina", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.CarouselPagina", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.HasDiscriminator().HasValue("CarouselPagina");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Dropdown", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Dropdown", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.HasDiscriminator().HasValue("Dropdown");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Formulario", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Formulario", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.ToTable("Formulario");
 
                     b.HasDiscriminator().HasValue("Formulario");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Imagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Imagem", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("ArquivoImagem");
 
@@ -797,9 +797,9 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Imagem");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Link", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Link", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<bool>("Menu");
 
@@ -816,9 +816,9 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Link");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Produto", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Produto", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("Codigo")
                         .IsRequired();
@@ -836,9 +836,9 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Produto");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Table", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Table", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("EstiloTabela");
 
@@ -847,9 +847,9 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Table");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Texto", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Texto", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("PalavrasTexto");
 
@@ -858,9 +858,9 @@ namespace MeuProjetoAgora.Migrations
                     b.HasDiscriminator().HasValue("Texto");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Video", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Video", b =>
                 {
-                    b.HasBaseType("MeuProjetoAgora.Models.business.Elemento.Elemento");
+                    b.HasBaseType("MeuProjetoAgora.business.Elementos.Elemento");
 
                     b.Property<string>("ArquivoVideo");
 
@@ -871,12 +871,12 @@ namespace MeuProjetoAgora.Migrations
 
             modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivElemento", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "Div")
+                    b.HasOne("MeuProjetoAgora.business.Div", "Div")
                         .WithMany("Elemento")
                         .HasForeignKey("DivId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Elemento")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.Elemento", "Elemento")
                         .WithMany("div")
                         .HasForeignKey("ElementoId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -884,12 +884,12 @@ namespace MeuProjetoAgora.Migrations
 
             modelBuilder.Entity("MeuProjetoAgora.Models.Join.DivPagina", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Div", "Div")
+                    b.HasOne("MeuProjetoAgora.business.Div", "Div")
                         .WithMany("Pagina")
                         .HasForeignKey("DivId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                    b.HasOne("MeuProjetoAgora.business.Pagina", "Pagina")
                         .WithMany("Div")
                         .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -897,12 +897,12 @@ namespace MeuProjetoAgora.Migrations
 
             modelBuilder.Entity("MeuProjetoAgora.Models.Join.ElementoDependenteElemento", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", "ElementoDependente")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.ElementoDependente", "ElementoDependente")
                         .WithMany("Elemento")
                         .HasForeignKey("ElementoDependenteId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Elemento")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.Elemento", "Elemento")
                         .WithMany("Despendentes")
                         .HasForeignKey("ElementoId")
                         .OnDelete(DeleteBehavior.Cascade);
@@ -910,102 +910,102 @@ namespace MeuProjetoAgora.Migrations
 
             modelBuilder.Entity("MeuProjetoAgora.Models.Join.PaginaCarouselPagina", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.CarouselPagina", "CarouselPagina")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.CarouselPagina", "CarouselPagina")
                         .WithMany("Paginas")
                         .HasForeignKey("CarouselPaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                    b.HasOne("MeuProjetoAgora.business.Pagina", "Pagina")
                         .WithMany("CarouselPagina")
                         .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Background", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Background", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                    b.HasOne("MeuProjetoAgora.business.Pagina", "Pagina")
                         .WithMany("Background")
                         .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Imagem", "imagem")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.Imagem", "imagem")
                         .WithMany("Backgrounds")
                         .HasForeignKey("imagem_");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.BackgroundGradiente", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.BackgroundGradiente", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Background", "Background")
+                    b.HasOne("MeuProjetoAgora.business.Background", "Background")
                         .WithOne("BackgroundGradiente")
-                        .HasForeignKey("MeuProjetoAgora.Models.business.BackgroundGradiente", "IdBackgroundGradiente")
+                        .HasForeignKey("MeuProjetoAgora.business.BackgroundGradiente", "IdBackgroundGradiente")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Cor", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Cor", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.BackgroundGradiente", "BackgroundGradiente")
+                    b.HasOne("MeuProjetoAgora.business.BackgroundGradiente", "BackgroundGradiente")
                         .WithMany("Cores")
                         .HasForeignKey("BackgroundGradienteId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Div", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Div", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Background", "Background")
+                    b.HasOne("MeuProjetoAgora.business.Background", "Background")
                         .WithMany("Div")
                         .HasForeignKey("background_")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.ElementoDependente", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.ElementoDependente", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Elemento", "Dependente")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.Elemento", "Dependente")
                         .WithMany()
                         .HasForeignKey("Elemento_");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.ItemRequisicao", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.ItemRequisicao", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Elemento.Produto", "produto")
+                    b.HasOne("MeuProjetoAgora.business.Elementos.Produto", "produto")
                         .WithMany("Itens")
                         .HasForeignKey("produto_")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("MeuProjetoAgora.Models.business.Requisicao", "Requisicao")
+                    b.HasOne("MeuProjetoAgora.business.Requisicao", "Requisicao")
                         .WithMany("ItemRequisicao")
                         .HasForeignKey("requisicao_")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Pagina", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Pagina", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pedido", "Pedido")
+                    b.HasOne("MeuProjetoAgora.business.Pedido", "Pedido")
                         .WithMany("Paginas")
                         .HasForeignKey("pedido_")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.PastaImagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.PastaImagem", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Pagina")
+                    b.HasOne("MeuProjetoAgora.business.Pagina", "Pagina")
                         .WithMany("Pastas")
                         .HasForeignKey("PaginaId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Requisicao", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Requisicao", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Cadastro", "Cadastro")
+                    b.HasOne("MeuProjetoAgora.business.Cadastro", "Cadastro")
                         .WithOne("Requisicao")
-                        .HasForeignKey("MeuProjetoAgora.Models.business.Requisicao", "IdRequisicao")
+                        .HasForeignKey("MeuProjetoAgora.business.Requisicao", "IdRequisicao")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Servico", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Servico", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pedido", "Pedido")
+                    b.HasOne("MeuProjetoAgora.business.Pedido", "Pedido")
                         .WithOne("Servico")
-                        .HasForeignKey("MeuProjetoAgora.Models.business.Servico", "IdServico")
+                        .HasForeignKey("MeuProjetoAgora.business.Servico", "IdServico")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -1054,16 +1054,16 @@ namespace MeuProjetoAgora.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Imagem", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Imagem", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.PastaImagem", "PastaImagem")
+                    b.HasOne("MeuProjetoAgora.business.PastaImagem", "PastaImagem")
                         .WithMany("Imagens")
                         .HasForeignKey("PastaImagemId");
                 });
 
-            modelBuilder.Entity("MeuProjetoAgora.Models.business.Elemento.Link", b =>
+            modelBuilder.Entity("MeuProjetoAgora.business.Elementos.Link", b =>
                 {
-                    b.HasOne("MeuProjetoAgora.Models.business.Pagina", "Destino")
+                    b.HasOne("MeuProjetoAgora.business.Pagina", "Destino")
                         .WithMany()
                         .HasForeignKey("paginaDestinoLink_");
                 });

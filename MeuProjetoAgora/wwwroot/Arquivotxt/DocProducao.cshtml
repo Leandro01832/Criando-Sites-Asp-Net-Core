@@ -1,4 +1,5 @@
-﻿
+﻿#set($site = 'http://www.siteprofissional.somee.com')
+
 <meta charset='UTF-8'>
 
 <div id='conteudo$model.Pagina.IdPagina' class='Conteudo'>
@@ -110,7 +111,7 @@
                                 #foreach($dependente in $element.Elemento.Despendentes)
 
                                 <div class='item'>
-                                    <img class='img-responsive minhaimg' src='$dependente.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
+                                    <img class='img-responsive minhaimg' src='$site$dependente.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
                                     <!-- <div class='carousel-caption'>
                                     </div>   -->
                                 </div>
@@ -140,7 +141,7 @@
                                             <div id='VideoCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
 
                                                 <video style='width:100%; height:100%' controls>
-                                                    <source src='$el.Elemento.ArquivoVideo' type='video/mp4' />
+                                                    <source src='$site$el.Elemento.ArquivoVideo' type='video/mp4' />
                                                 </video>
 
                                             </div>
@@ -171,7 +172,7 @@
                                                     #end
 
                                                     #if($linkIndice == 1)
-                                                    <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${el.ElementoDependente.Dependente.Width}%;' />
+                                                    <img class='img-responsive' src='$ site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${el.ElementoDependente.Dependente.Width}%;' />
                                                     #end
 
                                                     #set($linkIndice = $linkIndice + 1)
@@ -195,7 +196,7 @@
                                                     #end
 
                                                     #if($linkIndice == 1)
-                                                    <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                    <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
                                                     #end
 
                                                     #set($linkIndice = $linkIndice + 1)
@@ -211,7 +212,7 @@
                                             #if ($el.Elemento.tipo == 'Imagem')
 
                                             <div id='ImagemCarouselPagina${el.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='grid-item'>
-                                                <img class='img-responsive' src='$el.Elemento.ArquivoImagem' alt='imagem' style='width:${el.Elemento.Width}%;' />
+                                                <img class='img-responsive' src='$site$el.Elemento.ArquivoImagem' alt='imagem' style='width:${el.Elemento.Width}%;' />
                                             </div>
 
                                             #end
@@ -344,7 +345,7 @@
                     #if ($element.Elemento.tipo == 'Imagem')
 
                     <div id='Imagem${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
-                        <img class='img-responsive' src='$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
+                        <img class='img-responsive' src='$site$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
                     </div>
 
                     #end
@@ -364,7 +365,7 @@
                             #end
 
                             #if($linkIndice == 1)
-                            <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                            <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
                             #end
 
                             #set($linkIndice = $linkIndice + 1)
@@ -388,7 +389,7 @@
                             #end
 
                             #if($linkIndice == 1)
-                            <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                            <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
                             #end
 
                             #set($linkIndice = $linkIndice + 1)
@@ -429,7 +430,7 @@
 
 
                                     #if($imgIndice == 0)
-                                    <img src='$img.ElementoDependente.Dependente.ArquivoImagem' width='100' />
+                                    <img src='$site$img.ElementoDependente.Dependente.ArquivoImagem' width='100' />
                                     #end
 
                                     #set($imgIndice = $imgIndice + 1)
@@ -485,7 +486,7 @@
                     <div id='Video${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
 
                         <video style='width:100%; height:100%' controls>
-                            <source src='$element.Elemento.ArquivoVideo' type='video/mp4' />
+                            <source src='$site$element.Elemento.ArquivoVideo' type='video/mp4' />
                         </video>
 
                     </div>
@@ -509,7 +510,7 @@
                         #end
 
                         #if($linkIndice == 1)
-                        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
                         #end
 
                         #set($linkIndice = $linkIndice + 1)
@@ -533,7 +534,7 @@
                         #end
 
                         #if($linkIndice == 1)
-                        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
                         #end
 
                         #set($linkIndice = $linkIndice + 1)
@@ -673,11 +674,11 @@
 
 <style>
     .content {
-        background-image: url($model.background.imagem.ArquivoImagem);
+        background-image: url($site$model.background.imagem.ArquivoImagem);
     }
 
     #pagina$model.Pagina.IdPagina {
-        background-image: url($model.background.imagem.ArquivoImagem);
+        background-image: url($site$model.background.imagem.ArquivoImagem);
     }
 </style>
 
@@ -704,7 +705,7 @@
         margin: auto;
         position: relative;
         background-size: contain;
-        background-image: url($model.background_topo.imagem.ArquivoImagem);
+        background-image: url($site$model.background_topo.imagem.ArquivoImagem);
         background-repeat: $model.background_topo.Background_Repeat;
     }
 </style>
@@ -736,7 +737,7 @@
         padding-left: 20px;
         position: relative;
         background-size: contain;
-        background-image: url($model.background_menu.imagem.ArquivoImagem);
+        background-image: url($site$model.background_menu.imagem.ArquivoImagem);
         background-repeat: $model.background_menu.Background_Repeat;
     }
 </style>
@@ -764,7 +765,7 @@
 
 <style>
     #blocos$model.background_bloco.IdBackground {
-        background-image: url($model.background_bloco.imagem.ArquivoImagem);
+        background-image: url($site$model.background_bloco.imagem.ArquivoImagem);
         background-repeat: $model.background_bloco.Background_Repeat;
     }
 </style>

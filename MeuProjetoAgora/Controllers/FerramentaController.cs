@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
 using Microsoft.AspNetCore.Authorization;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 
 namespace MeuProjetoAgora.Controllers
 {

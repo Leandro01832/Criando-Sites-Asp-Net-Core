@@ -1,6 +1,6 @@
 ﻿
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -17,9 +17,9 @@ namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryVideo
     {
-        Task<string> salvarVideo(ViewModelElemento elemento);
-        Task editarVideo(ViewModelElemento elemento);
-        Task apagarVideo(ViewModelElemento elemento);
+        Task<string> salvarVideo(Elemento elemento);
+        Task editarVideo(Elemento elemento);
+        Task apagarVideo(Elemento elemento);
         string EnsureCorrectFilename(string filename, int Id);
     }
 
@@ -53,17 +53,17 @@ namespace MeuProjetoAgora.Models.Repository
             return path + filename;
         }
 
-        public Task apagarVideo(ViewModelElemento elemento)
+        public Task apagarVideo(Elemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task editarVideo(ViewModelElemento elemento)
+        public Task editarVideo(Elemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task<string> salvarVideo(ViewModelElemento elemento)
+        public Task<string> salvarVideo(Elemento elemento)
         {
             throw new NotImplementedException();
         }

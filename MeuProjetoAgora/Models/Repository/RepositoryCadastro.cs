@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MeuProjetoAgora.business;
 
 namespace MeuProjetoAgora.Models.Repository
 {

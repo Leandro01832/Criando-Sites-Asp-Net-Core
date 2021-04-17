@@ -1,5 +1,5 @@
 ﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

@@ -1,5 +1,4 @@
 ﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
 using ICSharpCode.SharpZipLib.Zip;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +12,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using MeuProjetoAgora.Models.Join;
-using MeuProjetoAgora.Models.business.Elemento;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.AspNetCore.Identity;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Join;
 
 namespace MeuProjetoAgora.Models.Repository
 {
@@ -201,19 +201,19 @@ namespace MeuProjetoAgora.Models.Repository
 
             foreach (var bloco in pagina.Div.Select(d => d.Div))
             {
-                if (bloco.Divisao == "col-md-12" || bloco.Divisao == "col-sm-12")
+                if (bloco.Divisao == "col-md-12" || bloco.Divisao == "col-xs-12")
                     espaco += 12;
 
-                if (bloco.Divisao == "col-md-6" || bloco.Divisao == "col-sm-6")
+                if (bloco.Divisao == "col-md-6" || bloco.Divisao == "col-xs-6")
                     espaco += 6;
 
-                if (bloco.Divisao == "col-md-4" || bloco.Divisao == "col-sm-4")
+                if (bloco.Divisao == "col-md-4" || bloco.Divisao == "col-xs-4")
                     espaco += 4;
 
-                if (bloco.Divisao == "col-md-3" || bloco.Divisao == "col-sm-3")
+                if (bloco.Divisao == "col-md-3" || bloco.Divisao == "col-xs-3")
                     espaco += 3;
 
-                if (bloco.Divisao == "col-md-2" || bloco.Divisao == "col-sm-2")
+                if (bloco.Divisao == "col-md-2" || bloco.Divisao == "col-xs-2")
                     espaco += 2;
 
 

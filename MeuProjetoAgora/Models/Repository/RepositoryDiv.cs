@@ -1,7 +1,7 @@
-﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
-using MeuProjetoAgora.Models.Join;
+﻿using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
+using MeuProjetoAgora.Join;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;

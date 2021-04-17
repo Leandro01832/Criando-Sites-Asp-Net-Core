@@ -6,9 +6,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using Microsoft.AspNetCore.Authorization;
-using MeuProjetoAgora.Models.Join;
+using MeuProjetoAgora.Join;
 using Microsoft.AspNetCore.Identity;
 
 namespace MeuProjetoAgora.Controllers

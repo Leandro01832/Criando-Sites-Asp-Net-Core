@@ -1,11 +1,11 @@
-﻿@model IEnumerable<MeuProjetoAgora.Models.Join.ElementoDependenteElemento>
+﻿@model IEnumerable<MeuProjetoAgora.Join.ElementoDependenteElemento>
 
 
 @foreach (var item in Model)
 {
     if (item.ElementoDependente.Dependente.GetType().Name == "Imagem")
     {
-        var imagem = (MeuProjetoAgora.Models.business.Elemento.Imagem)item.ElementoDependente.Dependente;
+        var imagem = (MeuProjetoAgora.business.Elementos.Imagem)item.ElementoDependente.Dependente;
         <div id="Imagem">
             <img class='img-responsive' src='@imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
         </div>
@@ -15,18 +15,18 @@
 
     if (item.ElementoDependente.Dependente.GetType().Name == "Link")
     {
-        var link = (MeuProjetoAgora.Models.business.Elemento.Link)item.ElementoDependente.Dependente;
+        var link = (MeuProjetoAgora.business.Elementos.Link)item.ElementoDependente.Dependente;
         <div id="Link">
             @if (link.UrlLink == false)
             {
-                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+                var ele = (MeuProjetoAgora.business.Elementos.Texto)link.Despendentes[0].ElementoDependente.Dependente;
 
                 <div id='Link@(link.IdElemento)' class='col-md-2'>
                     <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
 
                     @if (link.Despendentes.Count > 1)
                     {
-                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        var ele2 = (MeuProjetoAgora.business.Elementos.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
                         <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
                     }
 
@@ -37,13 +37,13 @@
             }
             else if (link.UrlLink == true)
             {
-                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+                var ele = (MeuProjetoAgora.business.Elementos.Texto)link.Despendentes[0].ElementoDependente.Dependente;
 
                 <div id='Link@(link.IdElemento)' class='col-md-2'>
                     <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
                     @if (link.Despendentes.Count > 1)
                     {
-                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                        var ele2 = (MeuProjetoAgora.business.Elementos.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
                         <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
                     }
 
@@ -57,7 +57,7 @@
 
     if (item.ElementoDependente.Dependente.GetType().Name == "Texto")
     {
-        var texto = (MeuProjetoAgora.Models.business.Elemento.Texto)item.ElementoDependente.Dependente;
+        var texto = (MeuProjetoAgora.business.Elementos.Texto)item.ElementoDependente.Dependente;
         <div id="Texto">
             @Html.Raw(texto.PalavrasTexto)
         </div>
@@ -67,7 +67,7 @@
 
     if (item.ElementoDependente.Dependente.GetType().Name == "Video")
     {
-        var video = (MeuProjetoAgora.Models.business.Elemento.Video)item.ElementoDependente.Dependente;
+        var video = (MeuProjetoAgora.business.Elementos.Video)item.ElementoDependente.Dependente;
         <div id="Video">
             <video style='width:100%; height:100%' controls>
                 <source src='@video.ArquivoVideo' type='video/mp4' />
@@ -80,14 +80,14 @@
 
     if (item.ElementoDependente.Dependente.GetType().Name == "Carousel")
     {
-        var carousel = (MeuProjetoAgora.Models.business.Elemento.Carousel)item.ElementoDependente.Dependente;
+        var carousel = (MeuProjetoAgora.business.Elementos.Carousel)item.ElementoDependente.Dependente;
         <div id="Carousel">
             <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
 
                 <div class='carousel-inner' role='listbox'>
                     @foreach (var dependente in carousel.Despendentes)
                     {
-                        var ele = (MeuProjetoAgora.Models.business.Elemento.Imagem)dependente.ElementoDependente.Dependente;
+                        var ele = (MeuProjetoAgora.business.Elementos.Imagem)dependente.ElementoDependente.Dependente;
                         <div class='item'>
                             <img class='img-responsive minhaimg' src='@ele.ArquivoImagem' alt='imagem' style='width:100%;' />
                         </div>
@@ -124,7 +124,7 @@
 
     if (item.ElementoDependente.Dependente.GetType().Name == "CarouselPagina")
     {
-        var carousel = (MeuProjetoAgora.Models.business.Elemento.CarouselPagina)item.ElementoDependente.Dependente;
+        var carousel = (MeuProjetoAgora.business.Elementos.CarouselPagina)item.ElementoDependente.Dependente;
         <div id="CarouselPagina">
             <div id='carouselsite@(carousel.IdElemento)' class="carousel" data-ride="carousel">
 
@@ -153,7 +153,7 @@
 
                                         if (el.Elemento.GetType().Name == "Texto")
                                         {
-                                            var texto = (MeuProjetoAgora.Models.business.Elemento.Texto)el.Elemento;
+                                            var texto = (MeuProjetoAgora.business.Elementos.Texto)el.Elemento;
                                             <div id='textoCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
 
                                                 <p>@(Html.Raw(texto.PalavrasTexto))</p>
@@ -162,17 +162,17 @@
 
                                         if (el.Elemento.GetType().Name == "Link")
                                         {
-                                            var link = (MeuProjetoAgora.Models.business.Elemento.Link)el.Elemento;
+                                            var link = (MeuProjetoAgora.business.Elementos.Link)el.Elemento;
                                             if (link.UrlLink == false)
                                             {
-                                                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+                                                var ele = (MeuProjetoAgora.business.Elementos.Texto)link.Despendentes[0].ElementoDependente.Dependente;
 
                                                 <div id='Link@(link.IdElemento)' class='col-md-2'>
                                                     <a href='/site/@link.Destino.Pedido.DominioTemporario/@link.Destino.Titulo.Replace(" ", "")'> @Html.Raw(ele.PalavrasTexto) </a>
 
                                                     @if (link.Despendentes.Count > 1)
                                                     {
-                                                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                        var ele2 = (MeuProjetoAgora.business.Elementos.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
                                                         <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
                                                     }
 
@@ -183,13 +183,13 @@
                                             }
                                             else
                                             {
-                                                var ele = (MeuProjetoAgora.Models.business.Elemento.Texto)link.Despendentes[0].ElementoDependente.Dependente;
+                                                var ele = (MeuProjetoAgora.business.Elementos.Texto)link.Despendentes[0].ElementoDependente.Dependente;
 
                                                 <div id='Link@(link.IdElemento)' class='col-md-2'>
                                                     <a href='@link.TextoLink'>@Html.Raw(ele.PalavrasTexto)</a>
                                                     @if (link.Despendentes.Count > 1)
                                                     {
-                                                        var ele2 = (MeuProjetoAgora.Models.business.Elemento.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
+                                                        var ele2 = (MeuProjetoAgora.business.Elementos.Imagem)link.Despendentes[1].ElementoDependente.Dependente;
                                                         <img class='img-responsive' src='@ele2.ArquivoImagem' alt='imagem' style='width:100%;' />
                                                     }
 
@@ -203,7 +203,7 @@
 
                                         if (el.Elemento.GetType().Name == "Imagem")
                                         {
-                                            var imagem = (MeuProjetoAgora.Models.business.Elemento.Imagem)el.Elemento;
+                                            var imagem = (MeuProjetoAgora.business.Elementos.Imagem)el.Elemento;
                                             <div id='ImagemCarouselPagina@(el.Elemento.IdElemento)' class='grid-item'>
                                                 <img class='img-responsive' src='@(imagem.ArquivoImagem)' alt='imagem' style='width:100%;' />
                                             </div>
@@ -211,13 +211,13 @@
 
                                         if (el.Elemento.GetType().Name == "Formulario")
                                         {
-                                            var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                            var formulario = (MeuProjetoAgora.business.Elementos.Formulario)el.Elemento;
                                             <div id='Form@(formulario.IdElemento)' class='col-md-2'>
                                                 <form>
 
                                                     @foreach (var depe in formulario.Despendentes)
                                                     {
-                                                        var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                        var campo = (MeuProjetoAgora.business.Elementos.Campo)depe.ElementoDependente.Dependente;
                                                         <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
                                                     }
 
@@ -232,13 +232,13 @@
 
                                         if (el.Elemento.GetType().Name == "Formulario")
                                         {
-                                            var formulario = (MeuProjetoAgora.Models.business.Elemento.Formulario)el.Elemento;
+                                            var formulario = (MeuProjetoAgora.business.Elementos.Formulario)el.Elemento;
                                             <div id='Form@(formulario.IdElemento)' class='col-md-2'>
                                                 <form>
 
                                                     @foreach (var depe in formulario.Despendentes)
                                                     {
-                                                        var campo = (MeuProjetoAgora.Models.business.Elemento.Campo)depe.ElementoDependente.Dependente;
+                                                        var campo = (MeuProjetoAgora.business.Elementos.Campo)depe.ElementoDependente.Dependente;
                                                         <input type="@campo.TipoCampo" placeholder="@campo.Placeholder" />
                                                     }
 

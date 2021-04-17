@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Diagnostics;

@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -14,7 +13,8 @@ using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Identity;
 using MeuProjetoAgora.Models;
 using System.Text.RegularExpressions;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.business;
 
 namespace MeuProjetoAgora.Controllers
 {
@@ -237,9 +237,9 @@ namespace MeuProjetoAgora.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<string> Create([FromBody] ViewModelElemento elemento)
+        public async Task<string> Create([FromBody] Elemento elemento)
         {
-            var v = await RepositoryElemento.salvar(RepositoryElemento.Elemento(elemento));
+            var v = await RepositoryElemento.salvar(elemento);
             return v;
         }
         
@@ -382,13 +382,13 @@ namespace MeuProjetoAgora.Controllers
         
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<string> Edit([FromBody] ViewModelElemento elemento)
+        public async Task<string> Edit([FromBody] Elemento elemento)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await RepositoryElemento.Editar(RepositoryElemento.Elemento(elemento));
+                    await RepositoryElemento.Editar(elemento);
                 }
                 catch (Exception ex)
                 {
@@ -397,7 +397,7 @@ namespace MeuProjetoAgora.Controllers
                 }
                 return "";
             }
-            ViewData["div_"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_);
+           // ViewData["div_"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_);
             return "";
         }
                 

@@ -6,7 +6,7 @@ using System.Net;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+using MeuProjetoAgora.business;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Threading.Tasks;

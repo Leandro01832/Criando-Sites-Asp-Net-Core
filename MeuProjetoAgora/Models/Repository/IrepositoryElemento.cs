@@ -1,5 +1,4 @@
-﻿using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+﻿using MeuProjetoAgora.business.Elementos;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,7 +15,6 @@ namespace MeuProjetoAgora.Models.Repository
         Task<string> salvar(Elemento elemento);
         Task Editar(Elemento elemento);
         Task<List<Elemento>> TodosElementos();
-        Elemento Elemento(ViewModelElemento elemento);
         IIncludableQueryable<Elemento, Elemento> includes();
     }
 }

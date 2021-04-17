@@ -1,5 +1,5 @@
-﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
+﻿using MeuProjetoAgora.business;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -164,7 +164,7 @@ namespace MeuProjetoAgora
             app.UseSignalR(Endpoint => Endpoint.MapHub<StreamingHub>("/streamingHub"));
 
             var dataService = serviceProvider.GetRequiredService<IDataService>();
-            dataService.InicializaDBAsync(serviceProvider).Wait();
+          //  dataService.InicializaDBAsync(serviceProvider).Wait();
             CreateRoles(serviceProvider, userHelper).Wait();
         }
 

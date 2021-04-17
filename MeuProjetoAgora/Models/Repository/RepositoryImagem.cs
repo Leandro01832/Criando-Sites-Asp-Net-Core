@@ -1,7 +1,7 @@
 ﻿
 using MeuProjetoAgora.Data;
-using MeuProjetoAgora.Models.business;
-using MeuProjetoAgora.Models.business.Elemento;
+using MeuProjetoAgora.business;
+using MeuProjetoAgora.business.Elementos;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +20,13 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryImagem
     {
         Task SaveImagems(List<Imagem> imagens);
-        Task<string> SaveImagem(ViewModelElemento elemento);
-        Task EditarImagem(ViewModelElemento elemento);
-        Task apagarImagem(ViewModelElemento elemento);
+        Task<string> SaveImagem(Elemento elemento);
+        Task EditarImagem(Elemento elemento);
+        Task apagarImagem(Elemento elemento);
         string EnsureCorrectFilename(string filename, int Id);
         string GetPathAndFilenameImagens(string filename, string pasta, int? Id);
         Task<Imagem> TestarImagem(string id);
-        Elemento RetornaImagem(ViewModelElemento elemento);
+        Elemento RetornaImagem(Elemento elemento);
     }
 
 
@@ -65,17 +65,17 @@ namespace MeuProjetoAgora.Models.Repository
             return Id + "-" + filename;
         }        
 
-        public Task<string> SaveImagem(ViewModelElemento elemento)
+        public Task<string> SaveImagem(Elemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task EditarImagem(ViewModelElemento elemento)
+        public Task EditarImagem(Elemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task apagarImagem(ViewModelElemento elemento)
+        public Task apagarImagem(Elemento elemento)
         {
             throw new NotImplementedException();
         }
@@ -95,18 +95,19 @@ namespace MeuProjetoAgora.Models.Repository
             return imagem;
         }
 
-        public Elemento RetornaImagem(ViewModelElemento elemento)
+        public Elemento RetornaImagem(Elemento elemento)
         {
+            var img = (Imagem)elemento;
             var imagem = new Imagem
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
-                ElementosDependentes = elemento.elementosDependentes,
-                Width = elemento.Width,
+                ElementosDependentes = img.ElementosDependentes,
+                Width = img.Width,
                 Ordem = elemento.Ordem,
-                ArquivoImagem = elemento.ArquivoImagem,
-                PastaImagemId = elemento.PastaImagemId
+                ArquivoImagem = img.ArquivoImagem,
+                PastaImagemId = img.PastaImagemId
 
             };
             return imagem;
