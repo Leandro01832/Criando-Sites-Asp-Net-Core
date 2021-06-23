@@ -8,22 +8,15 @@
 <script src="~/js/Jquery2.2.3.js"></script>
 
 <div class="content">
-
     @Html.Raw(ViewBag.html)
 </div>
 
 <script type='text/javascript'> 
-
-    $(document).ready(function () {
-
-        
+    $(document).ready(function () {        
             $('#PaginaInput').change(function () {
                 document.getElementById('acessoPaginaInput').href = '/site/@(Model.Pedido.DominioTemporario)/';
                 document.getElementById('acessoPaginaInput').href += $(this).val();
             });
-
         });
-    
-
 </script>
 

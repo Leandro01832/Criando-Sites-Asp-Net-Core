@@ -6,122 +6,6 @@
     $("#conteudomodal").load("/Ferramenta/ListaBackground/" + numero);
 });
 
-$("#selectCriar").change(function () {
-
-    switch ($(this).val()) {
-        case "Link":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarLink").fadeIn("slow");
-            
-            break;
-        case "Dropdown":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarDropdown").fadeIn("slow");
-
-            break;
-        case "Background":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarBackground").fadeIn("slow");
-
-            break;
-        case "Carousel":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarCarousel").fadeIn("slow");
-            
-            break;
-        case "CarouselPagina":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarCarouselPagina").fadeIn("slow");
-
-            break;
-        case "Imagem":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarImagem").fadeIn("slow");
-            
-            break;
-        case "Pasta":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarPasta").fadeIn("slow");
-
-            break;
-        case "Video":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarVideo").fadeIn("slow");
-            
-            break;
-        case "Musica":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarMusica").fadeIn("slow");
-            
-            break;
-        case "Formulario":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarFormulario").fadeIn("slow");
-            
-            break;
-        case "Bloco":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarBloco").fadeIn("slow");
-            
-            break;
-        case "Texto":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarTexto").fadeIn("slow");
-            
-            break;
-        case "Table":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarTable").fadeIn("slow");
-            
-            break;
-        case "Produto":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarProduto").fadeIn("slow");
-            
-            break;
-        case "Campo":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarCampo").fadeIn("slow");
-            
-            break;
-        case "Cor":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarCor").fadeIn("slow");
-            
-            break; 
-        case "Pagina":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarPagina").fadeIn("slow");
-            
-            break;
-        case "Site":
-
-            $(".BlocoCriar").fadeOut("slow");
-            $("#BlocoCriarSite").fadeIn("slow");
-            
-            break;
-    }
-
-
-});
-
 $("#GaleriaBloco").click(function () {
     var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
     numero = numero.replace('44398', '');
@@ -295,62 +179,62 @@ $(".Ferramenta").click(function () {
 
 
 
-$("#CriaBloco").click(function () {
+$("#BlocoCriarBloco").click(function () {
 
     $("#conteudomodal").load("/Elemento/CreateDiv");
 });
 
-$("#CriaTexto").click(function () {
+$("#BlocoCriarTexto").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Texto");
 });
 
-$("#CriaVideo").click(function () {
+$("#BlocoCriarVideo").click(function () {
 
     $("#conteudoVideo").load("/Elemento/Create/Video");
 });
 
-$("#CriaLink").click(function () {
+$("#BlocoCriarLink").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Link");
 });
 
-$("#CriaTable").click(function () {
+$("#BlocoCriarTable").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Table");
 });
 
-$("#CriaImagem").click(function () {
+$("#BlocoCriarImagem").click(function () {
 
     $("#conteudoImagem").load("/Elemento/Create/Imagem");
 });
 
-$("#CriaCarousel").click(function () {
+$("#BlocoCriarCarousel").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Carousel");
 });
 
-$("#CriaCarouselPagina").click(function () {
+$("#BlocoCriarCarouselPagina").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/CarouselPagina");
 });
 
-$("#CriaDropdown").click(function () {
+$("#BlocoCriarDropdown").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Dropdown");
 });
 
-$("#CriaProduto").click(function () {
+$("#BlocoCriarProduto").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Produto");
 });
 
-$("#CriaFormulario").click(function () {
+$("#BlocoCriarFormulario").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Formulario");
 });
 
-$("#CriaCampo").click(function () {
+$("#BlocoCriarCampo").click(function () {
 
     $("#conteudomodal").load("/Elemento/Create/Campo");
 });
