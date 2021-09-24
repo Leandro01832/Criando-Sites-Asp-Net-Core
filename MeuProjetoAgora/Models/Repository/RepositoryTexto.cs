@@ -1,7 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryTexto
     {
         Task<Texto> TestarTexto(string id);
-        Texto RetornaTexto(Elemento elemento);
+        Texto RetornaTexto(ViewModelElemento elemento);
     }
 
 
@@ -30,22 +29,21 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Texto RetornaTexto(Elemento elemento)
+        public Texto RetornaTexto(ViewModelElemento elemento)
         {
-            var t = (Texto)elemento;
             return new Texto
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                PalavrasTexto = t.PalavrasTexto,
-                ElementosDependentes = elemento.ElementosDependentes,
-                Despendentes = elemento.Despendentes
+                PalavrasTexto = elemento.PalavrasTexto,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
         }
 
-        public async  Task<Texto> TestarTexto(string id)
+        public async Task<Texto> TestarTexto(string id)
         {
             Texto texto;
             try

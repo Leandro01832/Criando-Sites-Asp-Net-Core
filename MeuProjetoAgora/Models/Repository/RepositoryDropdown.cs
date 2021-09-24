@@ -1,22 +1,13 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
-using MeuProjetoAgora.Models.Repository;
-using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
+using MeuProjetoAgora.Data;
 using Microsoft.Extensions.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MeuProjetoAgora.Models.Repository
 {
     public interface IRepositoryDropdown
     {
-        Dropdown RetornaDropdown(Elemento elemento);
+        Dropdown RetornaDropdown(ViewModelElemento elemento);
     }
 
 
@@ -29,7 +20,7 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Dropdown RetornaDropdown(Elemento elemento)
+        public Dropdown RetornaDropdown(ViewModelElemento elemento)
         {
             return new Dropdown
             {
@@ -37,8 +28,8 @@ namespace MeuProjetoAgora.Models.Repository
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                ElementosDependentes = elemento.ElementosDependentes,
-                Despendentes = elemento.Despendentes
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
         }
     }

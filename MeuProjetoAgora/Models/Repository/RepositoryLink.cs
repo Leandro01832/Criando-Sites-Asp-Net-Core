@@ -1,7 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -19,7 +18,7 @@ namespace MeuProjetoAgora.Models.Repository
     {
         IIncludableQueryable<Link, Elemento> includes();
         Task<Link> TestarLink(string id);
-        Link RetornaLink(Elemento elemento);
+        Link RetornaLink(ViewModelElemento elemento);
     }
 
 
@@ -50,21 +49,20 @@ namespace MeuProjetoAgora.Models.Repository
             return l2;
         }
 
-        public Link RetornaLink(Elemento elemento)
+        public Link RetornaLink(ViewModelElemento elemento)
         {
-            var l = (Link)elemento;
             var link = new Link
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                Menu = l.Menu,
-                paginaDestinoLink_ = l.paginaDestinoLink_,
-                TextoLink = l.TextoLink,
-                UrlLink = l.UrlLink,
-                ElementosDependentes = l.ElementosDependentes,
-                Despendentes = l.Despendentes
+                Menu = elemento.Menu,
+                paginaDestinoLink_ = elemento.paginaDestinoLink_,
+                TextoLink = elemento.TextoLink,
+                UrlLink = elemento.UrlLink,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
             return link;
         }

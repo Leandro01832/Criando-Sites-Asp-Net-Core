@@ -1,7 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -17,7 +16,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryForm
     {
         Task<Formulario> TestarForm(string id);
-        Formulario RetornaFormulario(Elemento elemento);
+        Formulario RetornaFormulario(ViewModelElemento elemento);
     }
 
 
@@ -30,7 +29,7 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Formulario RetornaFormulario(Elemento elemento)
+        public Formulario RetornaFormulario(ViewModelElemento elemento)
         {
             var formulario = new Formulario
             {
@@ -38,8 +37,8 @@ namespace MeuProjetoAgora.Models.Repository
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                ElementosDependentes = elemento.ElementosDependentes,
-                Despendentes = elemento.Despendentes
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
             return formulario;
         }

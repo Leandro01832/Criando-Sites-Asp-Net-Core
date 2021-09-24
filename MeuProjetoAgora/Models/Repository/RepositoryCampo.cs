@@ -16,7 +16,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryCampo
     {
         Task<Campo> TestarCampo(string id);
-        Campo RetornaCampo(Elemento elemento);
+        Campo RetornaCampo(ViewModelElemento elemento);
     }
 
 
@@ -29,19 +29,18 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Campo RetornaCampo(Elemento elemento)
+        public Campo RetornaCampo(ViewModelElemento elemento)
         {
-            var c = (Campo)elemento;
             var campo = new Campo
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                Placeholder = c.Placeholder,
-                TipoCampo = c.TipoCampo,
-                ElementosDependentes = c.ElementosDependentes,
-                Despendentes = c.Despendentes
+                Placeholder = elemento.Placeholder,
+                TipoCampo = elemento.TipoCampo,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
 
             };
             return campo;

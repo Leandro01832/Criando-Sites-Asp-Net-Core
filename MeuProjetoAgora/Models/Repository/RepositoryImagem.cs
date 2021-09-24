@@ -1,7 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -20,13 +19,13 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryImagem
     {
         Task SaveImagems(List<Imagem> imagens);
-        Task<string> SaveImagem(Elemento elemento);
-        Task EditarImagem(Elemento elemento);
-        Task apagarImagem(Elemento elemento);
+        Task<string> SaveImagem(ViewModelElemento elemento);
+        Task EditarImagem(ViewModelElemento elemento);
+        Task apagarImagem(ViewModelElemento elemento);
         string EnsureCorrectFilename(string filename, int Id);
         string GetPathAndFilenameImagens(string filename, string pasta, int? Id);
         Task<Imagem> TestarImagem(string id);
-        Elemento RetornaImagem(Elemento elemento);
+        Elemento RetornaImagem(ViewModelElemento elemento);
     }
 
 
@@ -63,19 +62,19 @@ namespace MeuProjetoAgora.Models.Repository
                 filename = filename.Substring(filename.LastIndexOf("\\") + 1);
 
             return Id + "-" + filename;
-        }        
+        }
 
-        public Task<string> SaveImagem(Elemento elemento)
+        public Task<string> SaveImagem(ViewModelElemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task EditarImagem(Elemento elemento)
+        public Task EditarImagem(ViewModelElemento elemento)
         {
             throw new NotImplementedException();
         }
 
-        public Task apagarImagem(Elemento elemento)
+        public Task apagarImagem(ViewModelElemento elemento)
         {
             throw new NotImplementedException();
         }
@@ -95,19 +94,18 @@ namespace MeuProjetoAgora.Models.Repository
             return imagem;
         }
 
-        public Elemento RetornaImagem(Elemento elemento)
+        public Elemento RetornaImagem(ViewModelElemento elemento)
         {
-            var img = (Imagem)elemento;
             var imagem = new Imagem
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
-                ElementosDependentes = img.ElementosDependentes,
-                Width = img.Width,
+                ElementosDependentes = elemento.elementosDependentes,
+                Width = elemento.Width,
                 Ordem = elemento.Ordem,
-                ArquivoImagem = img.ArquivoImagem,
-                PastaImagemId = img.PastaImagemId
+                ArquivoImagem = elemento.ArquivoImagem,
+                PastaImagemId = elemento.PastaImagemId
 
             };
             return imagem;

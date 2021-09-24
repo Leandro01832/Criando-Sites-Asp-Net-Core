@@ -1,9 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
-using MeuProjetoAgora.Models.Repository;
-using Microsoft.AspNetCore.Http;
+using MeuProjetoAgora.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -17,7 +14,7 @@ namespace MeuProjetoAgora.Models.Repository
     public interface IRepositoryTable
     {
         Task<Table> TestarTable(string id);
-        Table RetornaTable(Elemento elemento);
+        Table RetornaTable(ViewModelElemento elemento);
     }
 
 
@@ -30,18 +27,17 @@ namespace MeuProjetoAgora.Models.Repository
 
         }
 
-        public Table RetornaTable(Elemento elemento)
+        public Table RetornaTable(ViewModelElemento elemento)
         {
-            var t = (Table)elemento;
             var table = new Table
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                EstiloTabela = t.EstiloTabela,
-                ElementosDependentes = t.ElementosDependentes,
-                Despendentes = t.Despendentes
+                EstiloTabela = elemento.EstiloTabela,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
             };
             return table;
         }

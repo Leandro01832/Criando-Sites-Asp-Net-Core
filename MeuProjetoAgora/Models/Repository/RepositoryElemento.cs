@@ -1,10 +1,7 @@
-﻿using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
+﻿using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Join;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
@@ -65,7 +62,7 @@ namespace MeuProjetoAgora.Models.Repository
            .FirstAsync(e => e.IdElemento == elemento.IdElemento);
             elemento.Despendentes = ele.Despendentes;
 
-            if(elemento.GetType().Name == "CarouselPagina")
+            if (elemento.GetType().Name == "CarouselPagina")
             {
                 elemento = await contexto.CarouselPagina
                     .Include(e => e.Paginas)
@@ -75,7 +72,7 @@ namespace MeuProjetoAgora.Models.Repository
                     .Include(e => e.Despendentes)
                     .ThenInclude(e => e.Elemento)
                     .FirstAsync(e => e.IdElemento == elemento.IdElemento);
-                    elemento.Despendentes = ele.Despendentes;
+                elemento.Despendentes = ele.Despendentes;
             }
 
             await elementosDependentes(elemento.ElementosDependentes, elemento);
@@ -101,7 +98,7 @@ namespace MeuProjetoAgora.Models.Repository
         public async Task<string> salvar(Elemento elemento)
         {
             elemento.IdElemento = 0;
-            await dbSet.AddAsync(elemento);            
+            await dbSet.AddAsync(elemento);
             await contexto.SaveChangesAsync();
 
             await elementosDependentes(elemento.ElementosDependentes, elemento);
@@ -109,7 +106,60 @@ namespace MeuProjetoAgora.Models.Repository
             return $"Chave do elemento {elemento.IdElemento}";
         }
 
-        
+        public Elemento Elemento(ViewModelElemento elemento)
+        {
+            if (elemento.elemento == "Imagem")
+            {
+                return RepositoryImagem.RetornaImagem(elemento);
+            }
+
+            if (elemento.elemento == "Carousel")
+            {
+                return RepositoryCarousel.RetornaCarousel(elemento);
+            }
+
+            if (elemento.elemento == "CarouselPagina")
+            {
+                return RepositoryCarouselPaginaCarousel.RetornaCarouselPagina(elemento);
+            }
+
+            if (elemento.elemento == "Table")
+            {
+                return RepositoryTable.RetornaTable(elemento);
+            }
+
+            if (elemento.elemento == "Link")
+            {
+                return RepositoryLink.RetornaLink(elemento);
+            }
+
+            if (elemento.elemento == "Texto")
+            {
+                return RepositoryTexto.RetornaTexto(elemento);
+            }
+
+            if (elemento.elemento == "Dropdown")
+            {
+                return RepositoryDropdown.RetornaDropdown(elemento);
+            }
+
+            if (elemento.elemento == "Formulario")
+            {
+                return RepositoryForm.RetornaFormulario(elemento);
+            }
+
+            if (elemento.elemento == "Produto")
+            {
+                return RepositoryProduto.RetornaProduto(elemento);
+            }
+
+            if (elemento.elemento == "Campo")
+            {
+                return RepositoryCampo.RetornaCampo(elemento);
+            }
+
+            return new Elemento();
+        }
 
         private async Task elementosDependentes(string elementosDependentes, Elemento elemento)
         {
@@ -117,9 +167,9 @@ namespace MeuProjetoAgora.Models.Repository
             var site1 = await contexto.Pedido.FirstOrDefaultAsync(e => e.IdPedido == pagina1.pedido_);
             var cliente = site1.ClienteId;
 
-            var listaString = new List<string>();            
+            var listaString = new List<string>();
             string elementosGravados = "";
-            if(!string.IsNullOrEmpty(elementosDependentes))
+            if (!string.IsNullOrEmpty(elementosDependentes))
                 listaString = elementosDependentes.Replace(" ", "").Split(',').ToList();
 
             if (elemento.Despendentes != null)
@@ -133,14 +183,20 @@ namespace MeuProjetoAgora.Models.Repository
 
             foreach (var id in listaString)
             {
+                Imagem imagem;
+                Campo campo;
+                Link link;
+                Produto produto;
+                Texto texto;
+                Table table;
+                Formulario formulario;
                 Pagina pag;
                 bool MesmoCliente = false;
                 Elemento elementoDepe;
-                Elemento ele;
 
                 try
                 {
-                     elementoDepe = await contexto.Elemento.FirstOrDefaultAsync(d => d.IdElemento == int.Parse(id));
+                    elementoDepe = await contexto.Elemento.FirstOrDefaultAsync(d => d.IdElemento == int.Parse(id));
                 }
                 catch (Exception)
                 {
@@ -161,9 +217,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Carousel")
                 {
-                    ele =  await TestarElemento(id);
+                    imagem = await RepositoryImagem.TestarImagem(id);
 
-                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (imagem != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -197,17 +253,17 @@ namespace MeuProjetoAgora.Models.Repository
 
                     var paginasGravadas = "";
                     var carouselPagina = (CarouselPagina)elemento;
-                    
-                    if(carouselPagina.Paginas != null && MesmoClienteSite)
+
+                    if (carouselPagina.Paginas != null && MesmoClienteSite)
                     {
                         foreach (var item in carouselPagina.Paginas)
                         {
-                            paginasGravadas += item.Pagina.IdPagina.ToString() +  ", ";
+                            paginasGravadas += item.Pagina.IdPagina.ToString() + ", ";
                         }
                     }
-                    
 
-                    if (pag != null  && !paginasGravadas.Contains(id))
+
+                    if (pag != null && !paginasGravadas.Contains(id))
                     {
                         await salvarPaginaDependente(elemento, int.Parse(id));
                     }
@@ -215,9 +271,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Formulario")
                 {
-                    ele = await TestarElemento(id);
+                    campo = await RepositoryCampo.TestarCampo(id);
 
-                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (campo != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -225,9 +281,9 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Dropdown")
                 {
-                    ele = await TestarElemento(id);
+                    link = await RepositoryLink.TestarLink(id);
 
-                    if (ele != null && MesmoCliente && !elementosGravados.Contains(id))
+                    if (link != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -235,12 +291,12 @@ namespace MeuProjetoAgora.Models.Repository
 
                 if (elemento.GetType().Name == "Table")
                 {
-                    ele = await TestarElemento(id);
+                    produto = await RepositoryProduto.TestarProduto(id);
 
                     bool verificaProdutoExistente = await RepositoryProduto
                             .VerificaExistenciaElementoDependente(id);
 
-                    if (ele != null && MesmoCliente && !verificaProdutoExistente && !elementosGravados.Contains(id))
+                    if (produto != null && MesmoCliente && !verificaProdutoExistente && !elementosGravados.Contains(id))
                     {
                         await salvarElementoDependente(elemento, int.Parse(id));
                     }
@@ -250,14 +306,14 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     if (id == listaString[listaString.Count - 1])
                     {
-                        ele = await TestarElemento(id);
+                        formulario = await RepositoryForm.TestarForm(id);
 
-                        if (ele != null && MesmoCliente)
+                        if (formulario != null && MesmoCliente)
                         {
-                            var elem = await contexto.Elemento.Include(e => e.Despendentes)
-                            .FirstAsync(e => e.IdElemento == ele.IdElemento);
+                            var ele = await contexto.Elemento.Include(e => e.Despendentes)
+                            .FirstAsync(e => e.IdElemento == formulario.IdElemento);
 
-                            elem.IncluiElemento(new ElementoDependente { Dependente = elemento });
+                            ele.IncluiElemento(new ElementoDependente { Dependente = elemento });
                             await contexto.SaveChangesAsync();
                         }
                     }
@@ -267,25 +323,25 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     if (id == listaString[listaString.Count - 1])
                     {
-                        ele = await TestarElemento(listaString[0]);
+                        table = await RepositoryTable.TestarTable(listaString[0]);
 
                         bool verificaProdutoExistente = await RepositoryProduto
                             .VerificaExistenciaElementoDependente(elemento.IdElemento.ToString());
 
-                        if (ele != null && MesmoCliente && !verificaProdutoExistente)
+                        if (table != null && MesmoCliente && !verificaProdutoExistente)
                         {
-                            var elem = await contexto.Elemento.Include(e => e.Despendentes)
-                            .FirstAsync(e => e.IdElemento == ele.IdElemento);
+                            var ele = await contexto.Elemento.Include(e => e.Despendentes)
+                            .FirstAsync(e => e.IdElemento == table.IdElemento);
 
-                            elem.IncluiElemento(new ElementoDependente { Dependente = elemento });
+                            ele.IncluiElemento(new ElementoDependente { Dependente = elemento });
                             await contexto.SaveChangesAsync();
                         }
                     }
 
-                   var formulario = (Formulario) await TestarElemento(id);
-                    var table = (Table)await TestarElemento(id);
-                    var produto = (Produto)await TestarElemento(id);
-                    var campo = (Campo)await TestarElemento(id);
+                    formulario = await RepositoryForm.TestarForm(id);
+                    table = await RepositoryTable.TestarTable(id);
+                    produto = await RepositoryProduto.TestarProduto(id);
+                    campo = await RepositoryCampo.TestarCampo(id);
 
                     //elemento dependente e possui elementos dependentes
                     if (table == null && formulario == null && campo == null
@@ -299,8 +355,7 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     Imagem imagemLink = new Imagem();
                     imagemLink = await RepositoryImagem.TestarImagem(listaString[1]);
-                    imagemLink = (Imagem) await TestarElemento(listaString[1]);
-                    var texto = await TestarElemento(listaString[0]);
+                    texto = await RepositoryTexto.TestarTexto(listaString[0]);
 
                     if (texto != null && MesmoCliente && !elementosGravados.Contains(id))
                     {
@@ -316,7 +371,7 @@ namespace MeuProjetoAgora.Models.Repository
                 }
 
             }
-        }        
+        }
 
         private async Task salvarPaginaDependente(Elemento elemento, int v)
         {
@@ -361,7 +416,7 @@ namespace MeuProjetoAgora.Models.Repository
 
         private async Task ApagarPaginasDependentes(string elementosDependentes, Elemento elemento)
         {
-           var cp = (CarouselPagina) elemento;
+            var cp = (CarouselPagina)elemento;
             if (cp.Paginas != null)
             {
                 foreach (var dependente in cp.Paginas)
@@ -378,15 +433,6 @@ namespace MeuProjetoAgora.Models.Repository
                 }
                 await contexto.SaveChangesAsync();
             }
-        }
-
-        private async Task<Elemento> TestarElemento(string id)
-        {
-            Elemento elemento = await contexto.
-                Elemento.
-                FirstOrDefaultAsync(e => e.IdElemento == int.Parse(id));
-            
-            return elemento;
         }
 
         public IIncludableQueryable<Elemento, Elemento> includes()

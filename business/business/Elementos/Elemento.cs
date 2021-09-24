@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace MeuProjetoAgora.business.Elementos
 {
-   public abstract class  Elemento
+   public class  Elemento
     {
         [Key]
         public int IdElemento { get; set; }

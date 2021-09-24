@@ -10,11 +10,12 @@ using System.Threading.Tasks;
 
 namespace MeuProjetoAgora.Models.Repository
 {
-   public interface IRepositoryElemento
+    public interface IRepositoryElemento
     {
         Task<string> salvar(Elemento elemento);
         Task Editar(Elemento elemento);
         Task<List<Elemento>> TodosElementos();
+        Elemento Elemento(ViewModelElemento elemento);
         IIncludableQueryable<Elemento, Elemento> includes();
     }
 }

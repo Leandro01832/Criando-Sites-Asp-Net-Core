@@ -54,18 +54,18 @@ namespace MeuProjetoAgora.Controllers
             var pedido = await _context.Pedido.Include(p => p.Paginas)
             .FirstAsync(p => p.IdPedido == pagina.pedido_);
 
-            foreach(var page in pedido.Paginas)
+            foreach (var page in pedido.Paginas)
             {
                 var divs = await RepositoryDiv.includes()
                 .Where(d => d.Pagina_ == page.IdPagina).ToListAsync();
 
-                foreach(var d in divs)
+                foreach (var d in divs)
                 {
                     foreach (var el in d.Elemento)
                     {
-                        if(el.Elemento.GetType().Name == "CarouselPagina")
+                        if (el.Elemento.GetType().Name == "CarouselPagina")
                         {
-                            el.Elemento = await 
+                            el.Elemento = await
                                 RepositoryCarouselPaginaCarousel.includes()
                                 .FirstAsync(cp => cp.IdElemento == el.Elemento.IdElemento);
                         }
@@ -97,12 +97,12 @@ namespace MeuProjetoAgora.Controllers
 
             ViewBag.elemento = id.Replace(numero, "").Replace("GaleriaElemento", "");
 
-            if(condicao == 0)
+            if (condicao == 0)
             {
-                 lista = await l
-            .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+                lista = await l
+           .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
             }
-            else if(condicao == 1)
+            else if (condicao == 1)
             {
                 foreach (var page in pedido.Paginas)
                 {
@@ -115,11 +115,11 @@ namespace MeuProjetoAgora.Controllers
 
             if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 0)
             {
-                 listaLink = await l2
-                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
+                listaLink = await l2
+               .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
                 return PartialView(listaLink);
             }
-            else if(id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 1)
+            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 1)
             {
                 foreach (var page in pedido.Paginas)
                 {
@@ -132,7 +132,7 @@ namespace MeuProjetoAgora.Controllers
             else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "CarouselPagina" && condicao == 0)
             {
                 var itens = await l3
-                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();               
+                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
                 return PartialView(listaCarouselPagina);
             }
 
@@ -148,15 +148,15 @@ namespace MeuProjetoAgora.Controllers
             }
             return PartialView(lista);
         }
-        
-        [Authorize(Roles ="Div")]
+
+        [Authorize(Roles = "Div")]
         public IActionResult CreateDiv()
         {
             ViewBag.background_ = new SelectList(_context.Background, "IdBackground", "Nome");
             ViewBag.PaginaId = new SelectList(_context.Pagina, "IdPgina", "Titulo");
             return PartialView();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Div")]
@@ -193,7 +193,7 @@ namespace MeuProjetoAgora.Controllers
             ViewBag.selecionado = div.background_;
             return PartialView(div);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Div")]
@@ -217,11 +217,11 @@ namespace MeuProjetoAgora.Controllers
 
             var claims = User.Claims.ToList();
             var roles = "";
-            foreach(var v in claims)
+            foreach (var v in claims)
             {
                 roles += v.Value + ", ";
             }
-            
+
             bool permissao2 = await UserHelper.VerificarPermissao2(site, email, condicao, elemento);
             bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento);
 
@@ -229,20 +229,20 @@ namespace MeuProjetoAgora.Controllers
             {
                 return PartialView("NoPermission");
             }
-            
+
             if (!permissao) return PartialView("NoPermission");
 
             return PartialView();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<string> Create([FromBody] Elemento elemento)
+        public async Task<string> Create([FromBody] ViewModelElemento elemento)
         {
-            var v = await RepositoryElemento.salvar(elemento);
+            var v = await RepositoryElemento.salvar(RepositoryElemento.Elemento(elemento));
             return v;
         }
-        
+
         public async Task<IActionResult> Edit(int? id)
         {
             var usuario = await UserManager.GetUserAsync(this.User);
@@ -261,8 +261,8 @@ namespace MeuProjetoAgora.Controllers
 
             try
             {
-               elemento = await RepositoryElemento.includes()
-               .FirstAsync(e => e.IdElemento == id);
+                elemento = await RepositoryElemento.includes()
+                .FirstAsync(e => e.IdElemento == id);
             }
             catch (Exception)
             {
@@ -270,7 +270,7 @@ namespace MeuProjetoAgora.Controllers
             }
 
             var site = HttpHelper.GetPedidoId();
-            
+
             var email = usuario.UserName;
             var sites = await _context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
 
@@ -280,13 +280,13 @@ namespace MeuProjetoAgora.Controllers
             }
 
             bool permissao2 = await UserHelper.VerificarPermissao2(site, email, verifica, elemento.GetType().Name);
-            bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento.GetType().Name);            
+            bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento.GetType().Name);
 
             if (!permissao2)
             {
                 return PartialView("NoPermission");
             }
-            
+
             if (!permissao) return PartialView("NoPermission");
 
             string elementos = "";
@@ -312,7 +312,7 @@ namespace MeuProjetoAgora.Controllers
             if (elemento.GetType().Name == "Link")
             {
                 ViewBag.selecionadotexto = elemento.Despendentes[0].ElementoDependente.Dependente.IdElemento;
-                if(elemento.Despendentes.Count > 1)
+                if (elemento.Despendentes.Count > 1)
                 {
                     ViewBag.selecionadoimagem = elemento.Despendentes[1].ElementoDependente.Dependente.IdElemento;
                 }
@@ -321,10 +321,10 @@ namespace MeuProjetoAgora.Controllers
                 if (!link.UrlLink)
                 {
                     ViewBag.selecionadopagina = link.paginaDestinoLink_;
-                 //   ViewBag.selecionadopedido = link.div.Pagina.pedido_;
+                    //   ViewBag.selecionadopedido = link.div.Pagina.pedido_;
 
                 }
-                
+
             }
 
             if (elemento.GetType().Name == "Produto")
@@ -332,11 +332,11 @@ namespace MeuProjetoAgora.Controllers
                 ViewBag.selecionadoimagem = elemento.Despendentes[0].ElementoDependente.Dependente.IdElemento;
                 var tables = elements.OfType<Table>();
 
-                foreach(var table in tables)
+                foreach (var table in tables)
                 {
-                    foreach(var depe in table.Despendentes)
+                    foreach (var depe in table.Despendentes)
                     {
-                        if(depe.ElementoDependente.Dependente.IdElemento == elemento.IdElemento)
+                        if (depe.ElementoDependente.Dependente.IdElemento == elemento.IdElemento)
                         {
                             ViewBag.selecionadotable = depe.ElementoDependente.Dependente.IdElemento;
                         }
@@ -346,7 +346,7 @@ namespace MeuProjetoAgora.Controllers
 
             if (elemento.GetType().Name == "Campo")
             {
-                var formularios =  elements.OfType<Formulario>();
+                var formularios = elements.OfType<Formulario>();
 
                 foreach (var formulario in formularios)
                 {
@@ -375,32 +375,32 @@ namespace MeuProjetoAgora.Controllers
 
 
             ViewBag.elementos = elementos;
-           // ViewBag.selecioando = elemento.div_;
-            
+            // ViewBag.selecioando = elemento.div_;
+
             return PartialView(elemento);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<string> Edit([FromBody] Elemento elemento)
+        public async Task<string> Edit([FromBody] ViewModelElemento elemento)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-                    await RepositoryElemento.Editar(elemento);
+                    await RepositoryElemento.Editar(RepositoryElemento.Elemento(elemento));
                 }
                 catch (Exception ex)
                 {
-                        return "" + ex.Message;
-                    
+                    return "" + ex.Message;
+
                 }
                 return "";
             }
-           // ViewData["div_"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_);
+            ViewData["div_"] = new SelectList(_context.Div, "IdDiv", "Nome", elemento.div_);
             return "";
         }
-                
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Div")]
@@ -468,7 +468,7 @@ namespace MeuProjetoAgora.Controllers
             }
             return Json("valor");
         }
-        
+
         public IActionResult NoPermission()
         {
             return PartialView();

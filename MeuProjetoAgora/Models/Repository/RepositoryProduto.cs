@@ -1,7 +1,6 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Models.Repository;
 using MeuProjetoAgora.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
@@ -19,7 +18,7 @@ namespace MeuProjetoAgora.Models.Repository
     {
         Task<Produto> TestarProduto(string id);
         Task<BuscaProdutosViewModel> GetProdutosAsync(string pesquisa);
-        Produto RetornaProduto(Elemento elemento);
+        Produto RetornaProduto(ViewModelElemento elemento);
         Task<bool> VerificaExistenciaElementoDependente(string id);
     }
 
@@ -45,22 +44,21 @@ namespace MeuProjetoAgora.Models.Repository
             return new BuscaProdutosViewModel(await query.ToListAsync(), pesquisa);
         }
 
-        public Produto RetornaProduto(Elemento elemento)
+        public Produto RetornaProduto(ViewModelElemento elemento)
         {
-            var p = (Produto)elemento;
             var produto = new Produto
             {
                 Pagina_ = elemento.Pagina_,
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                Descricao = p.Descricao,
-                estoque = p.estoque,
-                Preco = p.Preco,
-                ElementosDependentes = p.ElementosDependentes,
-                Despendentes = p.Despendentes,
-                Segmento = p.Segmento,
-                Codigo = p.Codigo
+                Descricao = elemento.Descricao,
+                estoque = elemento.estoque,
+                Preco = elemento.Preco,
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes,
+                Segmento = elemento.Segmento,
+                Codigo = elemento.Codigo
 
             };
             return produto;
@@ -86,9 +84,9 @@ namespace MeuProjetoAgora.Models.Repository
             ElementoDependente elementoDependente;
             try
             {
-              elementoDependente = await contexto.ElementoDependente
-              .Include(e => e.Dependente)
-              .FirstOrDefaultAsync(e => e.Dependente.IdElemento == int.Parse(id));
+                elementoDependente = await contexto.ElementoDependente
+                .Include(e => e.Dependente)
+                .FirstOrDefaultAsync(e => e.Dependente.IdElemento == int.Parse(id));
             }
             catch (Exception)
             {
@@ -97,7 +95,7 @@ namespace MeuProjetoAgora.Models.Repository
 
             if (elementoDependente != null) return true;
             else
-            return false;
+                return false;
         }
     }
 }

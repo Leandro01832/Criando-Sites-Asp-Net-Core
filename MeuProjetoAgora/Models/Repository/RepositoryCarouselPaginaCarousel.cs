@@ -1,10 +1,7 @@
 ﻿
-using MeuProjetoAgora.Data;
-using MeuProjetoAgora.business;
 using MeuProjetoAgora.business.Elementos;
+using MeuProjetoAgora.Data;
 using MeuProjetoAgora.Join;
-using MeuProjetoAgora.Models.Repository;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
@@ -19,7 +16,7 @@ namespace MeuProjetoAgora.Models.Repository
     {
         Task<PaginaCarouselPagina> TestarCarouselPaginaCarousel(PaginaCarouselPagina dependente);
         IIncludableQueryable<CarouselPagina, Elemento> includes();
-        CarouselPagina RetornaCarouselPagina(Elemento elemento);
+        CarouselPagina RetornaCarouselPagina(ViewModelElemento elemento);
         Task<Elemento> IncluiPaginas(int idElemento);
     }
 
@@ -91,7 +88,7 @@ namespace MeuProjetoAgora.Models.Repository
             return CarouselPagina;
         }
 
-        public CarouselPagina RetornaCarouselPagina(Elemento elemento)
+        public CarouselPagina RetornaCarouselPagina(ViewModelElemento elemento)
         {
             var carousel = new CarouselPagina
             {
@@ -99,8 +96,8 @@ namespace MeuProjetoAgora.Models.Repository
                 IdElemento = elemento.IdElemento,
                 Nome = elemento.Nome,
                 Ordem = elemento.Ordem,
-                ElementosDependentes = elemento.ElementosDependentes,
-                Despendentes = elemento.Despendentes
+                ElementosDependentes = elemento.elementosDependentes,
+                Despendentes = elemento.Dependentes
 
             };
             return carousel;
