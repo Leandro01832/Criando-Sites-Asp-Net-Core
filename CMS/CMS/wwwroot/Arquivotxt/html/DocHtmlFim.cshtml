@@ -1,0 +1,308 @@
+﻿ </div>
+
+#elseif($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+
+#if($element.Elemento.UrlLink == false)
+
+<div id='Link${element.Elemento.IdElemento}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', '')'>
+
+        #set($linkIndice = 0)
+        #foreach($el in $element.Elemento.Despendentes)
+
+        #if($linkIndice == 0)
+        $el.ElementoDependente.Dependente.PalavrasTexto
+        #end
+
+        #if($linkIndice == 1)
+        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+        #end
+
+        #set($linkIndice = $linkIndice + 1)
+
+        #end
+
+
+    </a>
+</div>
+
+#else
+
+<div id='Link${element.Elemento.IdElemento}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <a href='$element.Elemento.TextoLink'>
+
+        #set($linkIndice = 0)
+        #foreach($el in $element.Elemento.Despendentes)
+
+        #if($linkIndice == 0)
+        $el.ElementoDependente.Dependente.PalavrasTexto
+        #end
+
+        #if($linkIndice == 1)
+        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+        #end
+
+        #set($linkIndice = $linkIndice + 1)
+
+        #end
+    </a>
+</div>
+
+#end
+
+
+#end
+
+                #end
+
+            </div>
+
+
+<!--<br />-->
+            #set ($bloco.Div.Desenhado = 1)
+
+            #end
+
+            #end
+
+
+        </div>
+
+        #end
+
+<br />
+<br />
+
+    </div>
+
+
+</div>
+
+<div id='bordaEsquerda$model.background_borda_esquerda.IdBackground' class='bordaEsquerda' data-value='$model.background_borda_esquerda.IdBackground'>
+
+</div>
+
+<div id='bordaDireita$model.background_borda_direita.IdBackground' class='bordaDireita' data-value='$model.background_borda_direita.IdBackground'>
+
+</div>
+
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+
+        jQuery(function () {
+
+            $('.item:first-child').addClass('active').show();
+        });
+
+    });
+
+</script>
+
+
+
+#if($model.Pagina.Margem)
+
+
+
+<style>
+
+    #bordaDireita$model.background_borda_direita.IdBackground {
+        display: block;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.IdBackground {
+        display: block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 60%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+</style>
+
+
+
+
+
+
+
+#else
+
+
+
+
+
+
+
+
+
+<style type='text/css'>
+
+
+    h1 {
+        text-align: center;
+    }
+
+
+
+    #menu a {
+        display: inline-block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 100%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+
+    #bordaDireita$model.background_borda_direita.IdBackground {
+        display: none;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.IdBackground {
+        display: none;
+    }
+</style>
+
+
+#if($model.background.backgroundImage)
+
+<style>
+    .content {
+        background-image: url($model.background.imagem.ArquivoImagem);
+    }
+
+    #pagina$model.Pagina.Id {
+        background-image: url($model.background.imagem.ArquivoImagem);
+    }
+</style>
+
+#else
+
+<style>
+    .content {
+        background-color: $model.background.Cor;
+    }
+
+    #pagina$model.Pagina.Id {
+        background-color: $model.background.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_topo.backgroundImage)
+
+<style>
+    #topo$model.background_topo.IdBackground {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-size: contain;
+        background-image: url($model.background_topo.imagem.ArquivoImagem);
+        background-repeat: $model.background_topo.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #topo$model.background_topo.IdBackground {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-color: $model.background_topo.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_menu.backgroundImage)
+
+<style>
+    #menu$model.background_menu.IdBackground {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-image: url($model.background_menu.imagem.ArquivoImagem);
+        background-repeat: $model.background_menu.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #menu$model.background_menu.IdBackground {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-color: $model.background_menu.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_bloco.backgroundImage)
+
+<style>
+    #blocos$model.background_bloco.IdBackground {
+        background-image: url($model.background_bloco.imagem.ArquivoImagem);
+        background-repeat: $model.background_bloco.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #blocos$model.background_bloco.IdBackground {
+        background-color: $model.background_bloco.Cor;
+    }
+</style>
+
+#end
+
+
+
+
+#end
+
+
+#foreach($bloco in $divs)
+#set($bloco.Div.Desenhado = 0)
+#end
+
+ #set ($valor = 0)
+#foreach($nunber in $model.Rows)
+
+<style>
+    #line$nunber {
+        top: 5px;
+    }
+</style>
+
+   #set ($valor = $valor + 10)
+#end

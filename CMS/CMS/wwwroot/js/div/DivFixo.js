@@ -1,0 +1,77 @@
+﻿class DivFixo {
+    Create() {
+        let data = this.getData();
+        this.postDiv(data);
+    }
+
+    Update() {
+        let data = this.getData();
+        this.editDiv(data);
+    }
+
+    getData() {
+
+        var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+        numero = numero.replace('44311', '');
+
+        var data = $("form#formulario").serializeArray();
+
+        var formdata = {};
+        $(data).each(function (index, obj) {
+            formdata[obj.name] = obj.value;
+        });
+
+        formdata["Pagina_"] = numero;
+        return formdata;
+    }
+
+    postDiv(data) {
+
+        let token = $('[name=__RequestVerificationToken]').val();
+
+        let headers = {};
+        headers['RequestVerificationToken'] = token;
+
+        $.ajax({
+            url: '/Elemento/_DivFixo',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            headers: headers
+        }).done(function (response) {
+
+            var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+            numero = numero.replace('44311', '');
+            $(".content").load("/Pagina/getview", { id: numero });
+
+            alert("Bloco criado com sucesso!!! " + response);
+            
+        });
+    }
+
+    editDiv(data) {
+
+        let token = $('[name=__RequestVerificationToken]').val();
+
+        let headers = {};
+        headers['RequestVerificationToken'] = token;
+
+        $.ajax({
+            url: '/Elemento/_DivFixo',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(data),
+            headers: headers
+        }).done(function (response) {
+
+            var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+            numero = numero.replace('44311', '');
+            $(".content").load("/Pagina/getview", { id: numero });
+
+        });
+    }
+}
+
+var div = new DivFixo();
+
+

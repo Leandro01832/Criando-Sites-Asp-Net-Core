@@ -1,0 +1,90 @@
+﻿@model business.div.DivFixo
+
+<h4>DivFixo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="_DivFixo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PosicaoFixacao" class="control-label"></label>
+                <input asp-for="PosicaoFixacao" class="form-control" />
+                <span asp-validation-for="PosicaoFixacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="InicioFixacao" class="control-label"></label>
+                <input asp-for="InicioFixacao" class="form-control" />
+                <span asp-validation-for="InicioFixacao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EixoYBlocoFixado" class="control-label"></label>
+                <input asp-for="EixoYBlocoFixado" class="form-control" />
+                <span asp-validation-for="EixoYBlocoFixado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="EixoXBlocoFixado" class="control-label"></label>
+                <input asp-for="EixoXBlocoFixado" class="form-control" />
+                <span asp-validation-for="EixoXBlocoFixado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Padding" class="control-label"></label>
+                <input asp-for="Padding" class="form-control" />
+                <span asp-validation-for="Padding" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Height" class="control-label"></label>
+                <input asp-for="Height" class="form-control" />
+                <span asp-validation-for="Height" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Colunas" class="control-label"></label>
+                <input asp-for="Colunas" class="form-control" />
+                <span asp-validation-for="Colunas" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Desenhado" class="control-label"></label>
+                <input asp-for="Desenhado" class="form-control" />
+                <span asp-validation-for="Desenhado" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Divisao" class="control-label"></label>
+                <input asp-for="Divisao" class="form-control" />
+                <span asp-validation-for="Divisao" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BorderRadius" class="control-label"></label>
+                <input asp-for="BorderRadius" class="form-control" />
+                <span asp-validation-for="BorderRadius" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ordem" class="control-label"></label>
+                <input asp-for="Ordem" class="form-control" />
+                <span asp-validation-for="Ordem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="BackgroundId" class="control-label"></label>
+                <select asp-for="BackgroundId" class="form-control" asp-items="ViewBag.BackgroundId"></select>
+                <span asp-validation-for="BackgroundId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pagina_" class="control-label"></label>
+                <input asp-for="Pagina_" class="form-control" />
+                <span asp-validation-for="Pagina_" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            @{
+                if (Model.Id == 0)
+                {
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                }
+            }
+        </form>
+    </div>
+</div>

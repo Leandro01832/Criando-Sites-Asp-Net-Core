@@ -1,0 +1,55 @@
+﻿#if($element.Elemento.tipo == 'Formulario')
+
+<div id='Form${element.Elemento.IdElemento}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+
+    <form>
+        #foreach($el in $element.Elemento.Despendentes)
+        
+        <label>$el.ElementoDependente.Dependente.Nome</label>
+        <input class='CampoFormulario$element.Elemento.IdElemento' id='Campo$el.ElementoDependente.Dependente.IdElemento' name='Campo$el.ElementoDependente.Dependente.IdElemento' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' />
+         <br />
+        
+        #end
+        <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+    </form>
+
+</div>
+
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+
+        $('#SalvarDadosFormulario').click(function () {
+
+            var Arquivos = $('.CampoFormulario');
+            var formData = new FormData();
+
+            let token = $('[name=__RequestVerificationToken]').val();  
+            let headers = {};
+            headers['RequestVerificationToken'] = token;
+
+            for (var i = 0; i !== Arquivos.length; i++) {
+                formData.append('valores', document.getElementsByClassName('CampoFormulario$element.Elemento.IdElemento')[i].value);
+                formData.append('Formulario', $element.Elemento.IdElemento); 
+            }
+
+            jQuery.ajax({
+                url: '/Formulario/SalvarDados',
+                data: formData,
+                processData: !1,
+                contentType: !1,
+                type: 'POST',
+                headers: headers,
+                success: function (data) {
+                    alert('dados salvos com sucesso!' + data);
+                }
+            });
+
+
+        });
+
+    });
+
+</script>
+
+#end

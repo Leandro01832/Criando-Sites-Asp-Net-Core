@@ -1,0 +1,48 @@
+﻿@model business.ecommerce.InfoEntrega
+
+<h4>InfoEntrega</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="CadastrarInfoEntrega">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+
+                        
+                <div class="form-group">
+                    <label asp-for="LarguraCaixa" class="control-label"></label>
+                    <input asp-for="LarguraCaixa" class="form-control" />
+                    <span asp-validation-for="LarguraCaixa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="AlturaCaixa" class="control-label"></label>
+                    <input asp-for="AlturaCaixa" class="form-control" />
+                    <span asp-validation-for="AlturaCaixa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="PesoCaixa" class="control-label"></label>
+                    <input asp-for="PesoCaixa" class="form-control" />
+                    <span asp-validation-for="PesoCaixa" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ComprimentoCaixa" class="control-label"></label>
+                    <input asp-for="ComprimentoCaixa" class="form-control" />
+                    <span asp-validation-for="ComprimentoCaixa" class="text-danger"></span>
+                </div>
+                            
+                <div class="form-group">
+                    <input asp-for="ClienteId" type="hidden" />
+                </div>
+                <div class="form-group">
+                    <input type="button" value="Salvar" id="InfomarEntrega" onclick="ScriptInfoEntrega.Create();" class="btn btn-default" />
+                </div>
+        </form>
+    </div>
+</div>
+
+
+
+<div>
+    <script src="~/js/InfoEntrega.js"></script> 
+</div>
+

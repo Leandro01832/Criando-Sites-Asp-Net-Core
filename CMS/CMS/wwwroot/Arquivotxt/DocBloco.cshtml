@@ -1,0 +1,214 @@
+
+#foreach($bloco in $divs)
+
+#if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao == false)
+
+<style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} 
+    {
+        display: none;
+        position: fixed; 
+        right: ${bloco.Div.EixoXBlocoFixado}%;
+        top: ${bloco.Div.EixoYBlocoFixado}%;
+    }
+</style>
+
+#elseif($bloco.Div.Fixado)
+
+<style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} 
+    {
+        display: none;
+    }
+</style>
+
+#else
+
+<style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} 
+    {
+       position: relative;
+       display: grid;
+    }
+</style>
+
+#end
+
+#if($bloco.Div.Background.backgroundImage)
+<style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
+
+      background-repeat: ${bloco.Div.Background.Background_Repeat};
+        
+        grid-template-columns: ${bloco.Div.Colunas};
+
+    padding: ${bloco.Div.Padding}%;
+    background-image: url($site$bloco.Div.Background.imagem.ArquivoImagem);
+
+    border-radius: ${bloco.Div.BorderRadius}px;
+
+    min-height: ${bloco.Div.Height}px;
+    height: auto;
+    
+    
+    }
+</style>
+
+#elseif($bloco.Div.Background.Gradiente)
+
+  <style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
+
+        #set($um = 1)
+         #foreach($Cores in $bloco.Div.Background.BackgroundGradiente.Cores)
+         #if($um == 1)
+        #set($back = $Cores.HexToColor($Cores.CorBackground))
+        background: rgb($back); 
+        #end
+        #set($um = $um + 1)        
+         #end
+
+
+         #set($quantidade = $bloco.Div.Background.BackgroundGradiente.Cores.Count())
+        background: -moz-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+         #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+            #if($velocityCount == $quantidade)
+             );
+        #else
+            ,
+            #end
+
+        #end  
+
+        background: -webkit-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+        #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+        #if($velocityCount == $quantidade)
+             );
+        #else
+            ,
+            #end
+
+        #end  
+
+        background: linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+        #set($Transparencia = $Cor.Transparencia / 10)
+        rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
+
+            #if($velocityCount == $quantidade)
+             );
+        #else
+             ,
+            #end
+
+        #end  
+
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#09e718',endColorstr='#1c8ea5',GradientType=1);
+
+
+        
+        grid-template-columns: ${bloco.Div.Colunas};
+
+    padding: ${bloco.Div.Padding}%;    
+    border-radius: ${bloco.Div.BorderRadius}px; 
+    min-height: ${bloco.Div.Height}px;
+    height: auto;
+     
+    
+    }
+</style>
+
+#else
+
+<style>
+    #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
+        
+        grid-template-columns: ${bloco.Div.Colunas};
+
+    padding: ${bloco.Div.Padding}%;
+    background-color: $bloco.Div.Background.Cor;
+
+    border-radius: ${bloco.Div.BorderRadius}px;
+
+    min-height: ${bloco.Div.Height}px;
+    height: auto;
+    
+    
+    }
+</style>
+#end
+
+#end
+
+<div>
+    <script type='text/javascript'>
+        jQuery(function () {
+
+                $('#Ocultar').click(function () {
+
+                    #foreach($bloco in $divs)
+                    $('#DIV${bloco.Div.Id}Pagina${model.Pagina.Id}').css('display', 'block');
+                    #end
+
+                });
+
+            $('.Ferramenta').click(function () {
+
+                    #foreach($bloco in $divs)
+                    #if($bloco.Div.Fixado)
+                        $('#DIV${bloco.Div.Id}Pagina${model.Pagina.Id}').css('display', 'none');
+                    #end
+                    #end
+
+            });
+
+
+                    #foreach($bloco in $divs) 
+                    #if ($bloco.Div.Fixado && $bloco.Div.EscolherPosicao)
+
+                        var header = $('#DIV${bloco.Div.Id}Pagina${model.Pagina.Id}');
+                    var sticky = header[0].offsetTop;
+
+                        window.onscroll = function () {
+                            if (window.pageYOffset + ${bloco.Div.InicioFixacao} > sticky) {
+
+                        header.addClass('stickyDIV${bloco.Div.Id}Pagina${model.Pagina.Id}');
+                    } else
+                    {
+                        header.removeClass('stickyDIV${bloco.Div.Id}Pagina${model.Pagina.Id}');
+                    }
+                }
+        #end
+        #end
+
+        });
+    </script>
+</div>
+
+
+#foreach($bloco in $divs)
+
+#if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao)
+
+<style>
+    .stickyDIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
+        position: fixed;
+        top: ${bloco.Div.PosicaoFixacao}%;
+        
+    }
+</style>
+
+#end
+#end
+
+
+
+
+
+

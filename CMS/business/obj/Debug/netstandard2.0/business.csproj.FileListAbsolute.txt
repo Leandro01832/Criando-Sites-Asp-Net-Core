@@ -1,0 +1,14 @@
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\business.deps.json
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\business.dll
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\business.pdb
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\Microsoft.AspNetCore.SignalR.Core.dll
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\Microsoft.AspNetCore.SignalR.Core.xml
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.csproj.CoreCompileInputs.cache
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.AssemblyInfoInputs.cache
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.AssemblyInfo.cs
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.csproj.CopyComplete
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.dll
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.pdb
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\System.ComponentModel.Annotations.dll
+D:\cms-clean\CMS\business\bin\Debug\netstandard2.0\System.ComponentModel.Annotations.xml
+D:\cms-clean\CMS\business\obj\Debug\netstandard2.0\business.csprojAssemblyReference.cache

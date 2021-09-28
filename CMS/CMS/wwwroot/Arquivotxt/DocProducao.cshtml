@@ -1,0 +1,710 @@
+﻿#set($site = '')
+
+<meta charset='UTF-8'>
+
+<div id='conteudo$model.Pagina.Id' class='Conteudo'>
+
+    <div id='corpo' data-value='$model.background.Id' class='Corpo'>
+
+    </div>
+
+    #if($model.Pagina.Topo)
+    <div id='topo$model.background_topo.Id' class='Topo' data-value='$model.background_topo.Id'>
+        <h1>$model.titulo</h1>
+    </div>
+    #end
+
+    #if($model.Pagina.Menu)
+    <div id='menu$model.background_menu.Id' class='Menu' data-value='$model.background_menu.Id'>
+        <p>menu</p>
+        <br />
+        #if ($model.facebook != 'vazio' && $model.facebook != '')
+        <a href='$model.facebook' target='_blank'>
+            <img class='img-responsive' src='/imagem/facebook.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+        #if ($model.twiter != 'vazio' && $model.twiter != '')
+        <a href='$model.twiter' target='_blank'>
+            <img class='img-responsive' src='/imagem/twitter.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+        #if ($model.instagram != 'vazio' && $model.instagram != '')
+        <a href='$model.instagram' target='_blank'>
+            <img class='img-responsive' src='/imagem/instagram.png' alt='imagem' style='width:50px;' />
+        </a>
+        #end
+
+
+
+
+
+        #if($model.Pedidos)
+
+        <a href='/Requisicao/IndexPedido' target='_blank'>
+            Pedidos
+        </a>
+
+        #end
+
+
+    </div>
+    #end
+
+    <div id='blocos$model.background_bloco.Id' class='bloco' data-value='$model.background_bloco.Id'>
+
+        #foreach($nunber in $model.Rows)
+
+
+
+        #set ($condicao = 0)
+        #set ($espacamento = 0)
+        <div class='row linha' id='line$nunber'>
+
+
+            #foreach($bloco in $divs)
+
+            #if ($bloco.Div.Divisao == 'col-md-12' && $bloco.Div.Desenhado == 0 || $bloco.Div.Divisao == 'col-sm-12' && $bloco.Div.Desenhado == 0)
+            #set($espacamento = $espacamento + 12)
+            #end
+
+            #if ($bloco.Div.Divisao == 'col-md-6' && $bloco.Div.Desenhado == 0 || $bloco.Div.Divisao == 'col-sm-6' && $bloco.Div.Desenhado == 0)
+            #set($espacamento = $espacamento + 6)
+            #end
+
+            #if ($bloco.Div.Divisao == 'col-md-4' && $bloco.Div.Desenhado == 0 || $bloco.Div.Divisao == 'col-sm-4' && $bloco.Div.Desenhado == 0)
+            #set($espacamento = $espacamento + 4)
+            #end
+
+            #if ($bloco.Div.Divisao == 'col-md-3' && $bloco.Div.Desenhado == 0 || $bloco.Div.Divisao == 'col-sm-3' && $bloco.Div.Desenhado == 0)
+            #set($espacamento = $espacamento + 3)
+            #end
+
+            #if ($bloco.Div.Divisao == 'col-md-2' && $bloco.Div.Desenhado == 0 || $bloco.Div.Divisao == 'col-sm-2' && $bloco.Div.Desenhado == 0)
+            #set($espacamento = $espacamento + 2)
+            #end
+
+            #if ($espacamento > 12)
+            #set($condicao = 1)
+
+            #end
+
+            #if ($condicao == 0 && $bloco.Div.Desenhado == 0)
+
+            <div id='DIV${bloco.Div.Id}Pagina${model.Pagina.Id}' class='ClassDiv $bloco.Div.Divisao grid-container' data-value='$bloco.Div.Id'>
+
+
+
+                #foreach($element in $bloco.Div.Elemento)
+
+                #if($element.Elemento.tipo != 'Link' && $element.Elemento.tipo != 'Dropdown')
+
+                <div id='elemento${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento grid-item' data-value='$element.Elemento.Id'>
+                    <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
+                        #if ($element.Elemento.tipo == 'Carousel')
+                            <div id='carouselsite$element.Elemento.Id' class='carousel' data-ride='carousel'>
+                                <div class='carousel-inner' role='listbox'>
+                                    #foreach($dependente in $element.Elemento.Despendentes)
+                                    <div class='item'>
+                                        <img class='img-responsive minhaimg' src='$site$dependente.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
+                                        <!-- <div class='carousel-caption'>
+                                        </div>   -->
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        #end
+
+                        #if($element.Elemento.tipo == 'CarouselPagina')
+                            <div id='carouselsiteCarouselPagina$element.Elemento.Id' class='carousel' data-ride='carousel'>
+                                <div class='carousel-inner' role='listbox'>
+                                    #foreach($Page in $element.Elemento.Paginas)
+                                    <div id='Page$Page.Pagina.Id' class='item'>
+                                        #foreach($bl in $Page.Pagina.Div)
+                                        <div id='BlocoCarouselPagina$bl.Div.Id' class='BlocoCarouselPagina $bl.Div.Divisao'>
+
+                                            #foreach($el in $bl.Div.Elemento)
+
+                                            <div id='ElementoCarouselPagina$el.Elemento.Id'>
+
+                                                #if ($el.Elemento.tipo == 'Video')
+
+                                                <div id='VideoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <video style='width:100%; height:100%' controls>
+                                                        <source src='$site$el.Elemento.ArquivoVideo' type='video/mp4' />
+                                                    </video>
+
+                                                </div>
+
+                                                #end
+
+                                                #if ($el.Elemento.tipo == 'Texto')
+
+                                                <div id='textoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <p>$el.Elemento.PalavrasTexto</p>
+                                                </div>
+
+                                                #end
+
+                                                #if($el.Elemento.tipo == 'Link')
+
+                                                #if($el.Elemento.UrlLink == false)
+
+                                                <div id='LinkCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+                                                    <a href='/site/$el.Elemento.Destino.Pedido.DominioTemporario/$el.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+
+                                                        #set($linkIndice = 0)
+                                                        #foreach($el in $el.Elemento.Despendentes)
+
+                                                        #if($linkIndice == 0)
+                                                        $el.ElementoDependente.Dependente.PalavrasTexto
+                                                        #end
+
+                                                        #if($linkIndice == 1)
+                                                        <img class='img-responsive' src='$ site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${el.ElementoDependente.Dependente.Width}%;' />
+                                                        #end
+
+                                                        #set($linkIndice = $linkIndice + 1)
+
+                                                        #end
+
+
+                                                    </a>
+                                                </div>
+
+                                                #else
+
+                                                <div id='LinkCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+                                                    <a href='$el.Elemento.TextoLink'>
+
+                                                        #set($linkIndice = 0)
+                                                        #foreach($el in $el.Elemento.Despendentes)
+
+                                                        #if($linkIndice == 0)
+                                                        $el.ElementoDependente.Dependente.PalavrasTexto
+                                                        #end
+
+                                                        #if($linkIndice == 1)
+                                                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                                        #end
+
+                                                        #set($linkIndice = $linkIndice + 1)
+
+                                                        #end
+                                                    </a>
+                                                </div>
+
+                                                #end
+                                                #end
+
+
+                                                #if ($el.Elemento.tipo == 'Imagem')
+
+                                                <div id='ImagemCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+                                                    <img class='img-responsive' src='$site$el.Elemento.ArquivoImagem' alt='imagem' style='width:${el.Elemento.Width}%;' />
+                                                </div>
+
+                                                #end
+
+                                                #if($el.Elemento.tipo == 'Formulario')
+
+                                                <div id='FormCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <form>
+                                                        #foreach($el in $el.Elemento.Despendentes)
+
+                                                        <label>$el.ElementoDependente.Dependente.Nome</label>
+                                                        <input class='CampoFormulario$el.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' value='$el.ElementoDependente.Dependente.ValorCampo' />
+                                                        <br />
+
+                                                        #end
+                                                        <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+                                                    </form>
+
+                                                </div>
+
+                                                <script type='text/javascript'>
+
+                                                    $(document).ready(function () {
+
+                                                        $('#SalvarDadosFormulario').click(function () {
+
+                                                            var Arquivos = $('.CampoFormulario');
+                                                            var formData = new FormData();
+
+                                                            let token = $('[name=__RequestVerificationToken]').val();
+                                                            let headers = {};
+                                                            headers['RequestVerificationToken'] = token;
+
+                                                            for (var i = 0; i !== Arquivos.length; i++) {
+                                                                formData.append('valores', document.getElementsByClassName('CampoFormulario$el.Elemento.Id')[i].value);
+                                                                formData.append('Formulario', $el.Elemento.Id);
+                                                            }
+
+                                                            jQuery.ajax({
+                                                                url: '/Formulario/SalvarDados',
+                                                                data: formData,
+                                                                processData: !1,
+                                                                contentType: !1,
+                                                                type: 'POST',
+                                                                headers: headers,
+                                                                success: function (data) {
+                                                                    alert('dados salvos com sucesso!' + data);
+                                                                }
+                                                            });
+
+
+                                                        });
+                                                    });
+                                                </script>
+                                                #end
+                                            </div>
+                                            #end
+                                        </div>
+                                        #end
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        #end
+
+                        #if($element.Elemento.tipo == 'Formulario')
+                            <form>
+                                #foreach($el in $element.Elemento.Despendentes)
+
+                                <label>$el.ElementoDependente.Dependente.Nome</label>
+                                <input class='CampoFormulario$element.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' />
+                                <br />
+
+                                #end
+                                <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+                            </form>
+
+                        <script type='text/javascript'>
+
+                            $(document).ready(function () {
+
+                                $('#SalvarDadosFormulario').click(function () {
+
+                                    var Arquivos = $('.CampoFormulario');
+                                    var formData = new FormData();
+
+                                    let token = $('[name=__RequestVerificationToken]').val();
+                                    let headers = {};
+                                    headers['RequestVerificationToken'] = token;
+
+                                    for (var i = 0; i !== Arquivos.length; i++) {
+                                        formData.append('valores', document.getElementsByClassName('CampoFormulario$element.Elemento.Id')[i].value);
+                                        formData.append('Formulario', $element.Elemento.Id);
+                                    }
+
+                                    jQuery.ajax({
+                                        url: '/Formulario/SalvarDados',
+                                        data: formData,
+                                        processData: !1,
+                                        contentType: !1,
+                                        type: 'POST',
+                                        headers: headers,
+                                        success: function (data) {
+                                            alert('dados salvos com sucesso!' + data);
+                                        }
+                                    });
+
+
+                                });
+
+                            });
+
+                        </script>
+
+                        #end
+
+                        #if ($element.Elemento.tipo == 'Imagem')
+                        <img class='img-responsive' src='$site$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
+                        #end
+
+                        #if($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+
+                        #if($element.Elemento.UrlLink == false)
+                            <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+
+                                #set($linkIndice = 0)
+                                #foreach($el in $element.Elemento.Despendentes)
+
+                                #if($linkIndice == 0)
+                                $el.ElementoDependente.Dependente.PalavrasTexto
+                                #end
+
+                                #if($linkIndice == 1)
+                                <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                #end
+
+                                #set($linkIndice = $linkIndice + 1)
+
+                                #end
+                            </a>
+                        
+
+                        #else
+                            <a href='$element.Elemento.TextoLink'>
+
+                                #set($linkIndice = 0)
+                                #foreach($el in $element.Elemento.Despendentes)
+
+                                #if($linkIndice == 0)
+                                $el.ElementoDependente.Dependente.PalavrasTexto
+                                #end
+
+                                #if($linkIndice == 1)
+                                <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                                #end
+
+                                #set($linkIndice = $linkIndice + 1)
+
+                                #end
+                            </a>
+                        #end
+                        #end
+
+                        #if($element.Elemento.tipo == 'Table')
+                            <table class='$element.Elemento.EstiloTabela'>
+
+                                <tr>
+                                    <th>
+                                        <label>Nome</label>
+                                    </th>
+                                    <th>
+                                        <label>Imagem</label>
+                                    </th>
+                                    <th></th>
+
+                                </tr>
+
+                                #foreach($prod in $element.Elemento.Despendentes)
+                                <tr class='linhaProduto' id='Produto$prod.ElementoDependente.Dependente.Id' data-value='$prod.ElementoDependente.Dependente.Id'>
+                                    <th>
+                                        <label>$prod.ElementoDependente.Dependente.Nome</label>
+                                    </th>
+                                    <th>
+                                        #set($imgIndice = 0)
+                                        #foreach($img in $prod.ElementoDependente.Dependente.Despendentes)
+
+
+                                        #if($imgIndice == 0)
+                                        <img src='$site$img.ElementoDependente.Dependente.ArquivoImagem' width='100' />
+                                        #end
+
+                                        #set($imgIndice = $imgIndice + 1)
+
+                                        #end
+                                    </th>
+
+
+                                    <th>
+                                        <div id='LinksTabela'>
+                                            <a href='#' data-value='$prod.ElementoDependente.Dependente.Id' class='btn btn-danger botaoDetalhesProduto'>  Detalhes </a>
+                                        </div>
+
+                                        <div>
+                                            <script type='text/javascript'>
+
+                                                jQuery(function () {
+
+                                                    if ($('.bloco')[0].baseURI.includes('https')) {
+                                                        document.getElementById('LinksTabela').innerHTML += '<button href=# ' +
+                                                            'data-value=$prod.ElementoDependente.Dependente.Id class=botaoAdicionarCarrinho ' +
+                                                            '> Adicionar ao carrinho </button> ';
+                                                    }
+
+                                                });
+
+                                            </script>
+
+                                        </div>
+                                    </th>
+                                </tr>
+                                #end
+                            </table>
+                        #end
+
+                        #if ($element.Elemento.tipo == 'Texto')
+                            <p>$element.Elemento.PalavrasTexto</p>
+                        #end
+
+                        #if ($element.Elemento.tipo == 'Video')
+                            <video style='width:100%; height:100%' controls>
+                                <source src='$site$element.Elemento.ArquivoVideo' type='video/mp4' />
+                            </video>
+                        #end
+
+                    </div>
+
+                </div>
+
+                #elseif($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+                #if($element.Elemento.UrlLink == false)
+                <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
+                    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+
+                        #set($linkIndice = 0)
+                        #foreach($el in $element.Elemento.Despendentes)
+
+                        #if($linkIndice == 0)
+                        $el.ElementoDependente.Dependente.PalavrasTexto
+                        #end
+
+                        #if($linkIndice == 1)
+                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        #end
+
+                        #set($linkIndice = $linkIndice + 1)
+
+                        #end
+
+
+                    </a>
+                </div>
+                #else
+                <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
+                    <a href='$element.Elemento.TextoLink'>
+
+                        #set($linkIndice = 0)
+                        #foreach($el in $element.Elemento.Despendentes)
+
+                        #if($linkIndice == 0)
+                        $el.ElementoDependente.Dependente.PalavrasTexto
+                        #end
+
+                        #if($linkIndice == 1)
+                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+                        #end
+
+                        #set($linkIndice = $linkIndice + 1)
+
+                        #end
+                    </a>
+                </div>
+                #end
+                #end
+                #end
+            </div>
+            <!--<br />-->
+            #set ($bloco.Div.Desenhado = 1)
+            #end
+            #end
+        </div>
+        #end
+        <br />
+        <br />
+    </div>
+</div>
+
+<div id='bordaEsquerda$model.background_borda_esquerda.Id' class='bordaEsquerda' data-value='$model.background_borda_esquerda.Id'>
+
+</div>
+
+<div id='bordaDireita$model.background_borda_direita.Id' class='bordaDireita' data-value='$model.background_borda_direita.Id'>
+
+</div>
+
+<script type='text/javascript'>
+
+    $(document).ready(function () {
+
+        jQuery(function () {
+
+            $('.item:first-child').addClass('active').show();
+        });
+
+    });
+
+</script>
+
+#if($model.Pagina.Margem)
+
+<style>
+
+    #bordaDireita$model.background_borda_direita.Id {
+        display: block;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.Id {
+        display: block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 60%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+</style>
+
+#else
+
+<style type='text/css'>
+
+
+    h1 {
+        text-align: center;
+    }
+
+
+
+    #menu a {
+        display: inline-block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 100%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+
+    #bordaDireita$model.background_borda_direita.Id {
+        display: none;
+    }
+
+    #bordaEsquerda$model.background_borda_esquerda.Id {
+        display: none;
+    }
+</style>
+
+
+#if($model.background.backgroundImage)
+
+<style>
+    .content {
+        background-image: url($site$model.background.imagem.ArquivoImagem);
+    }
+
+    #pagina$model.Pagina.Id {
+        background-image: url($site$model.background.imagem.ArquivoImagem);
+    }
+</style>
+
+#else
+
+<style>
+    .content {
+        background-color: $model.background.Cor;
+    }
+
+    #pagina$model.Pagina.Id {
+        background-color: $model.background.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_topo.backgroundImage)
+
+<style>
+    #topo$model.background_topo.Id {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-size: contain;
+        background-image: url($site$model.background_topo.imagem.ArquivoImagem);
+        background-repeat: $model.background_topo.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #topo$model.background_topo.Id {
+        width: 60%;
+        height: 110px;
+        margin: auto;
+        position: relative;
+        background-color: $model.background_topo.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_menu.backgroundImage)
+
+<style>
+    #menu$model.background_menu.Id {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-image: url($site$model.background_menu.imagem.ArquivoImagem);
+        background-repeat: $model.background_menu.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #menu$model.background_menu.Id {
+        width: 60%;
+        height: auto;
+        min-height: 55px;
+        margin: auto;
+        margin-top: 10px;
+        padding-top: 20px;
+        padding-left: 20px;
+        position: relative;
+        background-size: contain;
+        background-color: $model.background_menu.Cor;
+    }
+</style>
+
+#end
+
+#if($model.background_bloco.backgroundImage)
+
+<style>
+    #blocos$model.background_bloco.Id {
+        background-image: url($site$model.background_bloco.imagem.ArquivoImagem);
+        background-repeat: $model.background_bloco.Background_Repeat;
+    }
+</style>
+
+#else
+
+<style>
+    #blocos$model.background_bloco.Id {
+        background-color: $model.background_bloco.Cor;
+    }
+</style>
+
+#end
+
+#end
+
+#foreach($bloco in $divs)
+#set($bloco.Div.Desenhado = 0)
+#end
+
+ #set ($valor = 0)
+#foreach($nunber in $model.Rows)
+
+<style>
+    #line$nunber {
+        top: 5px;
+    }
+</style>
+
+   #set ($valor = $valor + 10)
+#end

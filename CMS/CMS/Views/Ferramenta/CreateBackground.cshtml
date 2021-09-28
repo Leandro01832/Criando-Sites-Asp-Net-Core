@@ -1,0 +1,19 @@
+﻿@model business.Back.Background
+
+@{
+    ViewData["Title"] = "CreateBackground";
+}
+
+<h1>Criar Background</h1>
+
+<h4>Background</h4>
+
+@{ 
+    if (Model is business.Back.BackgroundGradiente) { <partial name="_BackgroundGradiente" model="Model" /> }
+   else if (Model is business.Back.BackgroundImagem) { <partial name="_BackgroundImagem" model="Model" /> }
+   else if (Model is business.Back.BackgroundCor) { <partial name="_BackgroundCor" model="Model" /> }
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

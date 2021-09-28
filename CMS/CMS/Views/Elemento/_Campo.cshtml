@@ -1,0 +1,45 @@
+﻿@model business.business.Elementos.Campo
+
+<h4>Campo</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="_Campo">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Placeholder" class="control-label"></label>
+                <input asp-for="Placeholder" class="form-control" />
+                <span asp-validation-for="Placeholder" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TipoCampo" class="control-label"></label>
+                <input asp-for="TipoCampo" class="form-control" />
+                <span asp-validation-for="TipoCampo" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Nome" class="control-label"></label>
+                <input asp-for="Nome" class="form-control" />
+                <span asp-validation-for="Nome" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Ordem" class="control-label"></label>
+                <input asp-for="Ordem" class="form-control" />
+                <span asp-validation-for="Ordem" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Pagina_" class="control-label"></label>
+                <input asp-for="Pagina_" class="form-control" />
+                <span asp-validation-for="Pagina_" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" />
+            @{
+                if (Model.Id == 0)
+                {
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-primary" />
+                    </div>
+                }
+            }
+        </form>
+    </div>
+</div>

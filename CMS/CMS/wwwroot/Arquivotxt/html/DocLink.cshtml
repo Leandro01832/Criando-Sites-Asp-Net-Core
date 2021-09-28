@@ -1,0 +1,50 @@
+﻿#if($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+
+#if($element.Elemento.UrlLink == false)
+
+<div id='Link${element.Elemento.IdElemento}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', '')'>
+
+        #set($linkIndice = 0)
+        #foreach($el in $element.Elemento.Despendentes)
+
+        #if($linkIndice == 0)
+        $el.ElementoDependente.Dependente.PalavrasTexto
+        #end
+
+        #if($linkIndice == 1)
+        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+        #end
+
+        #set($linkIndice = $linkIndice + 1)
+
+        #end
+
+
+    </a>
+</div>
+
+#else
+
+<div id='Link${element.Elemento.IdElemento}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
+    <a href='$element.Elemento.TextoLink'>
+
+        #set($linkIndice = 0)
+        #foreach($el in $element.Elemento.Despendentes)
+
+        #if($linkIndice == 0)
+        $el.ElementoDependente.Dependente.PalavrasTexto
+        #end
+
+        #if($linkIndice == 1)
+        <img class='img-responsive' src='$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
+        #end
+
+        #set($linkIndice = $linkIndice + 1)
+
+        #end
+    </a>
+</div>
+
+#end
+#end

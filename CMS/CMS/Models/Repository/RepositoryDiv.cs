@@ -1,0 +1,203 @@
+﻿using business.Back;
+using business.business.Elementos.element;
+using business.div;
+using business.Join;
+using CMS.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace CMS.Models.Repository
+{
+    public interface IRepositoryDiv
+    {
+        Task<string> SalvarBloco(Div div);
+        Task<string> EditarBloco(Div div);
+        Task ElementosBloco(Div div);
+        IIncludableQueryable<Div, Background> includes();
+        Task<bool> VerificarExistenciaTable(string id);
+    }
+
+    public class RepositoryDiv : BaseRepository<Div>, IRepositoryDiv
+    {
+        public RepositoryDiv(IConfiguration configuration, ApplicationDbContext contexto) : base(configuration, contexto)
+        {
+        }
+
+        
+
+        public async Task<string> EditarBloco(Div div)
+        {
+            contexto.Update(div);
+            await contexto.SaveChangesAsync();
+
+            var Div = await contexto.Div
+                .Include(d => d.Elemento)
+                .ThenInclude(d => d.Div)
+                .Include(d => d.Elemento)
+                .ThenInclude(d => d.Elemento)
+                .FirstAsync(d => d.Id == div.Id);
+            Div.Elementos = div.Elementos;
+
+            await ElementosBloco(Div);
+
+            return "";
+
+        }
+
+        public async Task<string> SalvarBloco(Div div)
+        {
+            Div Div = new DivComum();
+                Div.Nome         = div.Nome;
+                Div.BackgroundId  = div.BackgroundId;
+                Div.Colunas      = "auto";
+                Div.Height       = 200;
+                Div.Divisao      = "col-md-12";
+                Div.BorderRadius = 0;
+                Div.Padding      = 5;
+                Div.Desenhado    = 0;
+
+            try
+            {
+                div.Id = 0;
+                await dbSet.AddAsync(div);
+                await contexto.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return "";
+            }
+
+            await ElementosBloco(div);
+
+            return $"Chave do Bloco: {div.Id}";
+        }
+
+        public async Task ElementosBloco(Div div)
+        {
+            var pagina1 = await contexto.Pagina.FirstAsync(p => p.Id == div.Pagina_);
+            var site1 = await contexto.Pedido.FirstAsync(p => p.Id == pagina1.PedidoId);
+            var cliente = site1.ClienteId;
+
+            string elementosGravados = "";
+            var array = div.Elementos.Replace(" ", "").Split(',');
+
+            if (div.Elemento != null)
+            {
+
+                foreach (var elemento in div.Elemento)
+                {
+                    elementosGravados += elemento.Elemento.Id + ", ";
+                    if (!div.Elementos.Contains(elemento.ElementoId.ToString()))
+                    {
+                        DivElemento ele;
+                        try
+                        {
+                            ele = await contexto.DivElemento
+                            .Include(de => de.Elemento)
+                            .Include(de => de.Div)
+                            .FirstOrDefaultAsync(e => e.Elemento.Id == elemento.Elemento.Id &&
+                            e.Div.Id == elemento.Div.Id);
+                        }
+                        catch (Exception)
+                        {
+                            ele = null;
+                        }
+                        if (ele != null)
+                        {
+                            contexto.DivElemento.Remove(ele);
+                        }
+                    }
+                }
+                await contexto.SaveChangesAsync();
+            }
+
+            foreach (var id in array)
+            {
+                var Div = await contexto.Div.Include(d => d.Elemento).FirstAsync(d => d.Id == div.Id);
+                Elemento ele;
+                bool MesmoCliente = false;               
+
+                try
+                {
+                    ele = await contexto.Elemento.FirstOrDefaultAsync(d => d.Id == int.Parse(id));
+                    if (ele != null)
+                    {
+                        var paginaElementoDepe = contexto.Pagina.First(p => p.Id == ele.Pagina_);
+                        var site = contexto.Pedido.First(p => p.Id == paginaElementoDepe.PedidoId);
+                        if (site.ClienteId == cliente)
+                        {
+                            MesmoCliente = true;
+                        }
+                    }
+                }
+                catch (Exception)
+                {
+                    ele = null;
+                }
+
+                bool VerificaBloco = await VerificaVariosBlocoComTable(Div, ele);
+
+                if (ele != null && MesmoCliente && !elementosGravados.Contains(id) && !VerificaBloco)
+                {
+                    Div.IncluiElemento(ele);
+                    await contexto.SaveChangesAsync();
+                }
+                    
+            }
+        }
+
+        private async Task<bool> VerificaVariosBlocoComTable(Div div, Elemento ele)
+        {
+            var blocos = await contexto.DivPagina.Include(d => d.Div).Where(d => d.DivId == div.Id).ToListAsync();
+
+            if (blocos.Count > 1 && ele.GetType().Name == "Table") return true;
+            else
+                return false;
+        }
+
+        public IIncludableQueryable<Div, Background> includes()
+        {
+            var divs = contexto.Div
+                .Include(p => p.Elemento)
+                .ThenInclude(p => p.Elemento)
+                .Include(p => p.Background);
+            return divs;
+        }
+
+        public async Task<bool> VerificarExistenciaTable(string id)
+        {
+            Div div;
+            bool condicao = false;
+            try
+            {
+                div = await contexto.Div
+                     .Include(d => d.Elemento)
+                     .ThenInclude(d => d.Elemento)
+                     .FirstOrDefaultAsync(d => d.Id == int.Parse(id));
+
+                if(div != null)
+                {
+                    foreach(var elemento in div.Elemento)
+                    {
+                        if(elemento.Elemento.GetType().Name == "Table")
+                        {
+                            condicao = true;
+                        }
+                    }
+                }
+
+
+            }
+            catch(Exception)
+            {
+                return true;
+            }
+
+                return condicao;
+        }
+    }
+}

@@ -1,9 +1,0 @@
-﻿#set($site = 'http://www.siteprofissional.somee.com')
-
-#if ($element.Elemento.tipo == 'Imagem')
-
-<div id='Imagem${element.Elemento.IdElemento}Pagina${model.Pagina.IdPagina}' class='Elemento$element.Elemento.IdElemento grid-item' data-value='$element.Elemento.IdElemento' data-id='$element.Elemento.IdElemento'>
-    <img class='img-responsive' src='${site}' alt='imagem' style='width:${element.Elemento.Width}%;' />
-</div>
-
-#end

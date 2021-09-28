@@ -1,0 +1,49 @@
+﻿@model IEnumerable<business.Back.Cor>  
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CorBackground)
+            </th>             
+            <th>
+                @Html.DisplayName("Background")
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <input type="color" value="@item.CorBackground" />
+            </td>             
+            <td>
+                @Html.DisplayFor(modelItem => item.BackgroundGradiente.Nome)
+            </td>
+            <td>
+                <a class="EditarCor" data-value="@item.Id">Editar</a> |
+                <a class="ApagarCor" data-value="@item.Id">Apagar</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".EditarCor").click(function () {
+                var id = $(this).data("value"); 
+                $("#conteudomodal").load("/Ferramenta/EditCor/" + id);
+            });
+
+            $(".ApagarCor").click(function () {
+                var id = $(this).data("value");
+                $("#conteudomodal").load("/Ferramenta/DeleteCor/" + id);
+            });
+
+        });
+    </script>
+</div>

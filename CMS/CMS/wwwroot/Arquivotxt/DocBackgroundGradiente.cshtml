@@ -1,0 +1,30 @@
+<style>
+
+
+
+
+    body {
+        background: rgb(9,231,24);
+        background: -moz-linear-gradient(49deg, rgba(rgb(9,231,24),0.7456116235556722) 21%, rgba(28,142,165,0.4711018196341037) 77%);
+        background: -webkit-linear-gradient(49deg, rgba(9,231,24,0.7456116235556722) 21%, rgba(28,142,165,0.4711018196341037) 77%);
+        background: linear-gradient(49deg, rgba(9,231,24,0.7456116235556722) 21%, rgba(28,142,165,0.4711018196341037) 77%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#09e718",endColorstr="#1c8ea5",GradientType=1);
+    }
+</style>
+
+
+
+#else
+
+<style>
+    .content {
+        background-color: $model.background.Cor;
+    }
+
+    #pagina$model.Pagina.Id {
+        background-color: $model.background.Cor;
+    }
+</style>
+
+#end
+

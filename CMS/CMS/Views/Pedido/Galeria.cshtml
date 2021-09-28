@@ -1,0 +1,39 @@
+﻿@model IEnumerable<business.business.Pagina>
+
+@{
+    ViewBag.Title = "Galeria";
+}
+
+<h2>Galeria</h2>
+<a asp-action="CreatePagina" class="btn btn-primary">Criar nova pagina</a>
+
+
+<table class="table">
+    <tr>         
+        <th>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </th>
+        <th>
+            @Html.DisplayName("Preview dinâminco")
+        </th>
+
+        
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        
+        <td>
+            @Html.DisplayFor(modelItem => item.Titulo)
+        </td>
+
+        <td>
+           
+            <a href="/Pagina/@item.Id" target="_blank" class="btn btn-warning">Mostrar Pagina</a>
+        </td>
+
+        
+    </tr>
+}
+
+</table>

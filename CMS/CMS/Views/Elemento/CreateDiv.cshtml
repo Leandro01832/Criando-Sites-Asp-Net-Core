@@ -1,0 +1,18 @@
+﻿@model business.div.Div
+
+@{
+    ViewData["Title"] = "CreateDiv";
+}
+
+<h1>Criar bloco</h1>
+
+<h4>bloco</h4>
+
+@{ 
+    if (Model is business.div.DivComum) { <partial name="_DivComum" model="Model" /> }
+   else if (Model is business.div.DivFixo) { <partial name="_DivFixo" model="Model" /> }
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
