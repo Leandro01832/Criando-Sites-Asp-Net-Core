@@ -138,26 +138,26 @@ namespace CMS.Data
 
         public DbSet<business.business.Elementos.produto.Acessorio> Acessorio { get; set; }
 
-        public DbSet<business.business.Elementos.produto.Alimenticio> Alimenticio { get; set; }
-
-        public DbSet<business.business.Elementos.produto.Calcado> Calcado { get; set; }
-
-        public DbSet<business.business.Elementos.produto.Roupa> Roupa { get; set; }
-
-        public DbSet<business.business.link.LinkBody> LinkBody { get; set; }
-
-        public DbSet<business.business.link.LinkMenu> LinkMenu { get; set; }
-
-        public DbSet<business.business.carousel.CarouselImg> CarouselImg { get; set; }
-
-        public DbSet<business.business.Elementos.produto.Show> Show { get; set; }
-
-        public DbSet<business.div.DivComum> DivComum { get; set; }
-
-        public DbSet<business.div.DivFixo> DivFixo { get; set; }
-
-        public DbSet<business.Back.BackgroundImagem> BackgroundImagem { get; set; }
-
-        public DbSet<business.Back.BackgroundCor> BackgroundCor { get; set; }
+        public DbSet<Alimenticio> Alimenticio { get; set; }
+                     
+        public DbSet<Calcado> Calcado { get; set; }
+                     
+        public DbSet<Roupa> Roupa { get; set; }
+                     
+        public DbSet<LinkBody> LinkBody { get; set; }
+                     
+        public DbSet<LinkMenu> LinkMenu { get; set; }
+                     
+        public DbSet<CarouselImg> CarouselImg { get; set; }
+                     
+        public DbSet<Show> Show { get; set; }
+                     
+        public DbSet<DivComum> DivComum { get; set; }
+                     
+        public DbSet<DivFixo> DivFixo { get; set; }
+                     
+        public DbSet<BackgroundImagem> BackgroundImagem { get; set; }
+                     
+        public DbSet<BackgroundCor> BackgroundCor { get; set; }
     }
 }

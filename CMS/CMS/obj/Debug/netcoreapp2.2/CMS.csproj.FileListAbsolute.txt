@@ -128,3 +128,5 @@ D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\SuperAdmin\Index.g.csht
 D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\SuperAdmin\IndexUsers.g.cshtml.cs
 D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\SuperAdmin\Rotas.g.cshtml.cs
 D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Shared\_Render.g.cshtml.cs
+D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_ImagemDependente.g.cshtml.cs
+D:\cms-clean\CMS\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_TextoDependente.g.cshtml.cs

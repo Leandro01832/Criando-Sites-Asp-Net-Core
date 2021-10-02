@@ -1,5 +1,7 @@
-﻿using business.business.element;
+﻿using business.Back;
+using business.business.element;
 using Newtonsoft.Json;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace business.business.Elementos.imagem

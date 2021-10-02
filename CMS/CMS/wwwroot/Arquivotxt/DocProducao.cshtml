@@ -4,18 +4,18 @@
 
 <div id='conteudo$model.Pagina.Id' class='Conteudo'>
 
-    <div id='corpo' data-value='$model.background.Id' class='Corpo'>
+    <div id='corpo' data-value='$model.Div1.DivId' class='Corpo'>
 
     </div>
 
     #if($model.Pagina.Topo)
-    <div id='topo$model.background_topo.Id' class='Topo' data-value='$model.background_topo.Id'>
+    <div id='$model.Div2.DivId' class='Topo' data-value='$model.Div2.DivId'>
         <h1>$model.titulo</h1>
     </div>
     #end
 
     #if($model.Pagina.Menu)
-    <div id='menu$model.background_menu.Id' class='Menu' data-value='$model.background_menu.Id'>
+    <div id='$model.Div3.DivId' class='Menu' data-value='$model.Div3.DivId'>
         <p>menu</p>
         <br />
         #if ($model.facebook != 'vazio' && $model.facebook != '')
@@ -52,7 +52,7 @@
     </div>
     #end
 
-    <div id='blocos$model.background_bloco.Id' class='bloco' data-value='$model.background_bloco.Id'>
+    <div id='blocos$model.Div4.DivId' class='bloco' data-value='$model.Div4.DivId'>
 
         #foreach($nunber in $model.Rows)
 
@@ -98,7 +98,7 @@
 
                 #foreach($element in $bloco.Div.Elemento)
 
-                #if($element.Elemento.tipo != 'Link' && $element.Elemento.tipo != 'Dropdown')
+                #if($element.Elemento.Tipo != 'LinkBody' && $element.Elemento.Tipo != 'Dropdown')
 
                 <div id='elemento${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento grid-item' data-value='$element.Elemento.Id'>
                     <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
@@ -444,10 +444,10 @@
 
                 </div>
 
-                #elseif($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+                #elseif($element.Elemento.Tipo == 'LinkBody' && $elemen)
                 #if($element.Elemento.UrlLink == false)
                 <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
-                    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+                    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Pagina.Titulo.Replace(' ', '')'>
 
                         #set($linkIndice = 0)
                         #foreach($el in $element.Elemento.Despendentes)
@@ -502,11 +502,11 @@
     </div>
 </div>
 
-<div id='bordaEsquerda$model.background_borda_esquerda.Id' class='bordaEsquerda' data-value='$model.background_borda_esquerda.Id'>
+<div id='bordaEsquerda$model.Div5.DivId' class='bordaEsquerda' data-value='$model.Div5.DivId'>
 
 </div>
 
-<div id='bordaDireita$model.background_borda_direita.Id' class='bordaDireita' data-value='$model.background_borda_direita.Id'>
+<div id='bordaDireita$model.Div6.DivId' class='bordaDireita' data-value='$model.Div6.DivId'>
 
 </div>
 
@@ -527,11 +527,11 @@
 
 <style>
 
-    #bordaDireita$model.background_borda_direita.Id {
+    #bordaDireita$model.Div6.Div.Id {
         display: block;
     }
 
-    #bordaEsquerda$model.background_borda_esquerda.Id {
+    #bordaEsquerda$model.Div5.Div.Id {
         display: block;
     }
 
@@ -571,125 +571,17 @@
         background-size: contain;
     }
 
-    #bordaDireita$model.background_borda_direita.Id {
+    #bordaDireita$model.Div6.Div.Id {
         display: none;
     }
 
-    #bordaEsquerda$model.background_borda_esquerda.Id {
+    #bordaEsquerda$model.Div5.Div.Id {
         display: none;
     }
 </style>
 
 
-#if($model.background.backgroundImage)
 
-<style>
-    .content {
-        background-image: url($site$model.background.imagem.ArquivoImagem);
-    }
-
-    #pagina$model.Pagina.Id {
-        background-image: url($site$model.background.imagem.ArquivoImagem);
-    }
-</style>
-
-#else
-
-<style>
-    .content {
-        background-color: $model.background.Cor;
-    }
-
-    #pagina$model.Pagina.Id {
-        background-color: $model.background.Cor;
-    }
-</style>
-
-#end
-
-#if($model.background_topo.backgroundImage)
-
-<style>
-    #topo$model.background_topo.Id {
-        width: 60%;
-        height: 110px;
-        margin: auto;
-        position: relative;
-        background-size: contain;
-        background-image: url($site$model.background_topo.imagem.ArquivoImagem);
-        background-repeat: $model.background_topo.Background_Repeat;
-    }
-</style>
-
-#else
-
-<style>
-    #topo$model.background_topo.Id {
-        width: 60%;
-        height: 110px;
-        margin: auto;
-        position: relative;
-        background-color: $model.background_topo.Cor;
-    }
-</style>
-
-#end
-
-#if($model.background_menu.backgroundImage)
-
-<style>
-    #menu$model.background_menu.Id {
-        width: 60%;
-        height: auto;
-        min-height: 55px;
-        margin: auto;
-        margin-top: 10px;
-        padding-top: 20px;
-        padding-left: 20px;
-        position: relative;
-        background-size: contain;
-        background-image: url($site$model.background_menu.imagem.ArquivoImagem);
-        background-repeat: $model.background_menu.Background_Repeat;
-    }
-</style>
-
-#else
-
-<style>
-    #menu$model.background_menu.Id {
-        width: 60%;
-        height: auto;
-        min-height: 55px;
-        margin: auto;
-        margin-top: 10px;
-        padding-top: 20px;
-        padding-left: 20px;
-        position: relative;
-        background-size: contain;
-        background-color: $model.background_menu.Cor;
-    }
-</style>
-
-#end
-
-#if($model.background_bloco.backgroundImage)
-
-<style>
-    #blocos$model.background_bloco.Id {
-        background-image: url($site$model.background_bloco.imagem.ArquivoImagem);
-        background-repeat: $model.background_bloco.Background_Repeat;
-    }
-</style>
-
-#else
-
-<style>
-    #blocos$model.background_bloco.Id {
-        background-color: $model.background_bloco.Cor;
-    }
-</style>
-
-#end
 
 #end
 

@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CMS
@@ -72,9 +73,7 @@ namespace CMS
             {
                 backgroundTransparente = true,
                 Cor = "",
-                Nome = "Default",
-                PaginaId = pagina.Id        
-
+                Nome = "Default"
             };
 
             await contexto.Background.AddAsync(Background);
@@ -82,7 +81,6 @@ namespace CMS
 
             var Div = new DivComum
             {
-                BackgroundId = Background.Id,
                 BorderRadius = 0,
                 Colunas = "auto",
                 Desenhado = 1,
@@ -96,25 +94,37 @@ namespace CMS
             await contexto.Div.AddAsync(Div);
             await contexto.SaveChangesAsync();
 
+            PastaImagem pastaSistema = new PastaImagem
+            {
+                Nome = "imagens do sistema",
+                PaginaId = pagina.Id
+            };
+
+            await contexto.PastaImagem.AddAsync(pastaSistema);
+            await contexto.SaveChangesAsync();
+
             var listaImagens = new List<Imagem>()
             {
                 new Imagem
                 {
                      ArquivoImagem = "/ImagensGaleria/1.jpg",
                        Nome = "Default",
-                        Width = 100
+                        Width = 100,
+                        PastaImagemId = pastaSistema.Id
                 },
                 new Imagem
                 {
                      ArquivoImagem = "/ImagensGaleria/2.jpg",
                        Nome = "Default",
-                        Width = 100
+                        Width = 100,
+                        PastaImagemId = pastaSistema.Id
                 },
                 new Imagem
                 {
                      ArquivoImagem = "/ImagensGaleria/3.jpg",
                        Nome = "Default",
-                        Width = 100
+                        Width = 100,
+                        PastaImagemId = pastaSistema.Id
                 }
             };
 

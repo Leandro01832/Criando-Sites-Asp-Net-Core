@@ -8,6 +8,9 @@ namespace business.business.Elementos.produto
 {
     public abstract class ProdutoDependente : ElementoDependente
     {
+        [Display(Name = "Tabela do produto")]
+        public int? TableId { get; set; }
+        public Table Table { get; set; }
         [Display(Name = "Descrição")]
         public string Descricao { get; set; }
         [Display(Name = "Preço")]

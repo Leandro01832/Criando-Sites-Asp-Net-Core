@@ -28,8 +28,8 @@ function ElementoGaleria(Elemento) {
 }
 
 $(".imagemBackPagina").click(function () {
-    var id = $("#corpo").data("value");
-    $("#conteudomodal").load("/Ferramenta/EditBackground/" + id);
+    var id = $("#corpo")[0].data("value");
+    $("#conteudomodal").load("/Elemento/EditDiv/" + id);
 });
 
 $("#CreatePath").click(function () {

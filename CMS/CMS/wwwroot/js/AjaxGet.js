@@ -11,50 +11,30 @@ for (var i = 0; i < selects.length; i++) {
 
     var ele_selecionado = selects[i].className;
 
-    if (ele_selecionado.includes("Texto"))
-        buscar("Texto");
-
-    if (ele_selecionado.includes("Carrossel"))
-        buscar("Carrossel");
-
-    if (ele_selecionado.includes("Imagem"))
-        buscar("Imagem");
-
-    if (ele_selecionado.includes("Form"))
-        buscar("Form");
-
-    if (ele_selecionado.includes("link"))
-        buscar("link");
-
-    if (ele_selecionado.includes("Video"))
-        buscar("Video");
-
-    if (ele_selecionado.includes("Table"))
-        buscar("Table");
-
-    if (ele_selecionado.includes("Produto"))
-        buscar("Produto");
-
-    if (ele_selecionado.includes("Campo"))
-        buscar("Campo");
-
-    if (ele_selecionado.includes("Elementos"))
-        buscar("Elementos");
+    if (ele_selecionado.includes("Texto") || ele_selecionado.includes("TextoDependente") ||
+        ele_selecionado.includes("Imagem") || ele_selecionado.includes("ImagemDependente") ||
+        ele_selecionado.includes("LinkBody") || ele_selecionado.includes("LinkMenu") ||
+        ele_selecionado.includes("Video") || ele_selecionado.includes("Table") ||
+        ele_selecionado.includes("Campo") || ele_selecionado.includes("Calcado") ||
+        ele_selecionado.includes("Roupa") || ele_selecionado.includes("Alimenticio") ||
+        ele_selecionado.includes("Show") || ele_selecionado.includes("Acessorio") ||
+        ele_selecionado.includes("CarrosselPagina") || ele_selecionado.includes("CarrosselImg"))
+        buscar();    
 }
 
-function buscar(elemento)
+function buscar()
 {
     $.ajax({
         type: 'POST',
         url: '/AjaxGet/Elementos',
         dataType: 'json',
-        data: { Pagina: numero, Tipo: elemento },
+        data: { Pagina: numero },
         success: function (data) {
 
-            $("." + elemento).empty();
+            $("." + data.tipo).empty();
 
-            if ($("#selecionado" + elemento).val() === "") {
-                $("." + elemento).append('<option value="">Escolher ' + elemento + '...</option>');
+            if ($("#selecionado" + data.tipo).val() === "") {
+                $("." + data.tipo).append('<option value="">Escolher ' + data.tipo + '...</option>');
             }
 
 
@@ -62,16 +42,16 @@ function buscar(elemento)
 
                 if (i === data.length / 2) return false;
 
-                if ($("#selecionado" + elemento).val() !== "" &&
-                    parseInt($("#selecionado" + elemento).val()) === data[i]) {
-                    $("." + elemento).append('<option value="'
-                        + data[i] + '" ' + '" selected =' + "selected" + '> ' + data[data.length / 2 + i] +
-                        ' - Chave: '  + data[i]
+                if ($("#selecionado" + data.tipo).val() !== "" &&
+                    parseInt($("#selecionado" + data.tipo).val()) === data.id) {
+                    $("." + data.tipo).append('<option value="'
+                        + data.id + '" ' + '" selected =' + "selected" + '> ' + data.nome +
+                        ' - Chave: '  + data.id
                         + '</option>');
                 }
                 else {
-                    $("." + elemento).append('<option value="' + data[i] + '" > ' + data[data.length / 2 + i] +
-                        ' - Chave: ' + data[i]
+                    $("." + data.tipo).append('<option value="' + data.id + '" > ' + data.nome +
+                        ' - Chave: ' + data.id
                         + '</option>');
                 }
             });
@@ -115,7 +95,7 @@ $.ajax({
 
         $.each(response, function (i, response) {
             $(".pastas").append('<option  value="' +
-                response.idPastaImagem + '">' + response.nome + ' - Chave: ' + response.idPastaImagem +'</option>');
+                response.id + '">' + response.nome + ' - Chave: ' + response.id +'</option>');
         });
 
     });
@@ -132,8 +112,8 @@ $.ajax({
         $(".background").empty();
         $.each(obj, function (i, obj) {            
             $(".background").append('<option value="'
-                + obj.idBackground + '">'
-                + obj.nome + ' - Chave: ' + obj.idBackground +'</option>');
+                + obj.id + '">'
+                + obj.nome + ' - Chave: ' + obj.id +'</option>');
 
         });
 
@@ -141,7 +121,7 @@ $.ajax({
 
 $.ajax({
     type: 'POST',
-    url: '/AjaxGet/GetSelectedBackgrounds',
+    url: '/AjaxGet/GetBackgrounds',
     dataType: 'json',
     data: { PaginaId: numero  }
 })
@@ -150,16 +130,16 @@ $.ajax({
         $(".backgroundSelected").empty();
         $.each(obj, function (i, obj) {
 
-            if (parseInt($("#selecionado").val()) === obj.idBackground) {
+            if (parseInt($("#selecionado").val()) === obj.id) {
                 $(".backgroundSelected").append('<option value="'
-                    + obj.idBackground + '" selected =' + "selected" + '>'
-                    + obj.nome + ' - Chave: ' + obj.idBackground + '</option>');
+                    + obj.id + '" selected =' + "selected" + '>'
+                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
 
             }
             else {
                 $(".backgroundSelected").append('<option value="'
-                    + obj.idBackground + '">'
-                    + obj.nome + ' - Chave: ' + obj.idBackground + '</option>');
+                    + obj.id + '">'
+                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
             }
 
             
@@ -171,17 +151,21 @@ $.ajax({
 
 $.ajax({
     type: 'POST',
-    url: '/AjaxGet/GetBackgroundsGradiente',
+    url: '/AjaxGet/GetBackgrounds',
     dataType: 'json',
     data: { PaginaId: numero }
 })
     .done(function (response) {
         var obj = response;
         $(".backgroundGradiente").empty();
+
+        
         $.each(obj, function (i, obj) {
+
+            if (obj.tipo === "BackgroundGradiente")
             $(".backgroundGradiente").append('<option value="'
-                + obj.idBackground + '">'
-                + obj.nome + ' - Chave: ' + obj.idBackground +'</option>');
+                + obj.id + '">'
+                + obj.nome + ' - Chave: ' + obj.id +'</option>');
 
         });
 
@@ -198,8 +182,8 @@ $(".backgroundGradiente").click(function () {
             $(".CoresBackground").empty();
             $.each(data, function (i, data) {                
                 $(".CoresBackground").append('<option value="'
-                    + data.idCor + '">'
-                    + data.corBackground + ' - Chave: '+ data.idCor +'</option>');
+                    + data.id + '">'
+                    + data.corBackground + ' - Chave: '+ data.id +'</option>');
             });
         },
         error: function (ex) {
@@ -269,13 +253,13 @@ $.ajax({
             if ($("#selecionadoPagina").val() !== "" &&
                 parseInt($("#selecionadoPagina").val()) === data[i]) {
                 $(".pagina").append('<option value="'
-                    + data.idPagina + '" ' + '" selected =' + "selected" + '>'
-                    + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
+                    + data.id + '" ' + '" selected =' + "selected" + '>'
+                    + data.titulo + ' - Chave: ' + data.id + '</option>');
             }
             else {
                 $(".pagina").append('<option value="'
-                    + data.idPagina + '" ' +  ' >'
-                    + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
+                    + data.id + '" ' +  ' >'
+                    + data.titulo + ' - Chave: ' + data.id + '</option>');
             }
 
             
@@ -304,13 +288,13 @@ $.ajax({
             if ($("#selecionadoPedido").val() !== "" &&
                 parseInt($("#selecionadoPedido").val()) === data[i]) {
                 $(".site").append('<option value="'
-                    + data.idPedido + '" ' + '" selected =' + "selected" + ' >'
-                    + data.nome + ' - Chave: ' + data.idPedido + '</option>');
+                    + data.id + '" ' + '" selected =' + "selected" + ' >'
+                    + data.nome + ' - Chave: ' + data.id + '</option>');
             }
             else {
                 $(".site").append('<option value="'
-                    + data.idPedido + '" ' + ' >'
-                    + data.nome + ' - Chave: ' + data.idPedido + '</option>');
+                    + data.id + '" ' + ' >'
+                    + data.nome + ' - Chave: ' + data.id + '</option>');
             }
 
         });
@@ -337,8 +321,8 @@ $(".site").change(function () {
             $.each(data, function (i, data) {
 
                 $(".pagina").append('<option value="'
-                    + data.idPagina + '">'
-                    + data.titulo + ' - Chave: ' + data.idPagina + '</option>');
+                    + data.id + '">'
+                    + data.titulo + ' - Chave: ' + data.id + '</option>');
             });
         },
         error: function (ex) {
@@ -362,8 +346,8 @@ $(".pagina").change(function () {
             $.each(data, function (i, data) {                
                 
                 $(".div").append('<option value="'
-                    + data.idDiv + '">'
-                    + data.nome + ' - Chave: ' + data.idDiv + '</option>');
+                    + data.id + '">'
+                    + data.nome + ' - Chave: ' + data.id + '</option>');
             });
         },
         error: function (ex) {

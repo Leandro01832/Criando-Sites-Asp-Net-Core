@@ -12,9 +12,9 @@ namespace business.business.element
         public string ElementosDependentes { get; set; }
 
 
-        public void IncluiElemento(ElementoDependente elemento)
+        public void IncluiElemento(Elemento elemento)
         {
-            this.Dependentes.Add(new ElementoDependenteElemento { ElementoDependente = elemento });
+            this.Dependentes.Add(new ElementoDependenteElemento { Elemento = elemento });
         }
 
     }

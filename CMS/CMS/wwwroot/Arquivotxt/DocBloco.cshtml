@@ -1,7 +1,7 @@
 
 #foreach($bloco in $divs)
 
-#if($bloco.Div.Fixado && $bloco.Div.EscolherPosicao == false)
+#if($bloco.Div.Tipo == "DivFixo" && $bloco.Div.EscolherPosicao == false)
 
 <style>
     #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} 
@@ -13,7 +13,7 @@
     }
 </style>
 
-#elseif($bloco.Div.Fixado)
+#elseif($bloco.Div.Tipo == "DivFixo")
 
 <style>
     #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} 
@@ -34,7 +34,7 @@
 
 #end
 
-#if($bloco.Div.Background.backgroundImage)
+#if($bloco.Div.Background.Tipo == "BackgroundImagem")
 <style>
     #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
 
@@ -43,7 +43,7 @@
         grid-template-columns: ${bloco.Div.Colunas};
 
     padding: ${bloco.Div.Padding}%;
-    background-image: url($site$bloco.Div.Background.imagem.ArquivoImagem);
+    background-image: url($site$bloco.Div.Background.Imagem.ArquivoImagem);
 
     border-radius: ${bloco.Div.BorderRadius}px;
 
@@ -54,13 +54,13 @@
     }
 </style>
 
-#elseif($bloco.Div.Background.Gradiente)
+#elseif($bloco.Div.Background.Tipo == "BackgroundGradiente")
 
   <style>
     #DIV${bloco.Div.Id}Pagina${model.Pagina.Id} {
 
         #set($um = 1)
-         #foreach($Cores in $bloco.Div.Background.BackgroundGradiente.Cores)
+         #foreach($Cores in $bloco.Div.Background.Cores)
          #if($um == 1)
         #set($back = $Cores.HexToColor($Cores.CorBackground))
         background: rgb($back); 
@@ -69,9 +69,9 @@
          #end
 
 
-         #set($quantidade = $bloco.Div.Background.BackgroundGradiente.Cores.Count())
-        background: -moz-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+         #set($quantidade = $bloco.Div.Background.Cores.Count())
+        background: -moz-linear-gradient(${bloco.Div.Background.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.Cores)
          #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -83,8 +83,8 @@
 
         #end  
 
-        background: -webkit-linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+        background: -webkit-linear-gradient(${bloco.Div.Background.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -96,8 +96,8 @@
 
         #end  
 
-        background: linear-gradient(${bloco.Div.background.BackgroundGradiente.Grau}deg,
-        #foreach($Cor in $bloco.Div.Background.BackgroundGradiente.Cores)
+        background: linear-gradient(${bloco.Div.Background.Grau}deg,
+        #foreach($Cor in $bloco.Div.Background.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 

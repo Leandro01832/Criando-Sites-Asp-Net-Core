@@ -52,7 +52,6 @@ namespace CMS.Models.Repository
         {
             Div Div = new DivComum();
                 Div.Nome         = div.Nome;
-                Div.BackgroundId  = div.BackgroundId;
                 Div.Colunas      = "auto";
                 Div.Height       = 200;
                 Div.Divisao      = "col-md-12";

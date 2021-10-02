@@ -64,27 +64,26 @@ namespace CMS.Models.Repository
             if (elemento is ElementoDependente)
             {
                 var depe = (ElementoDependente)elemento;
-                var ele = await contexto.ElementoDependente.Include(e => e.Dependentes)
-                   .ThenInclude(e => e.ElementoDependente)
-                   .Include(e => e.Dependentes)
-                   .ThenInclude(e => e.Elemento)
-                   .FirstAsync(e => e.Id == elemento.Id);
-                depe.Dependentes = ele.Dependentes;
 
-                if (elemento.GetType().Name == "CarouselPagina")
-                {
-                    elemento = await contexto.CarouselPagina
-                        .Include(e => e.Paginas)
-                        .Include(e => e.Dependentes)
-                        .ThenInclude(e => e.ElementoDependente)
-                        .Include(e => e.Dependentes)
-                        .ThenInclude(e => e.Elemento)
-                        .FirstAsync(e => e.Id == elemento.Id);
-                    depe.Dependentes = ele.Dependentes;
-                } 
+                var arr = depe.ElementosDependentes.Replace(" ", "").Split(',');
+
+                depe = dbSet.OfType<ElementoDependente>().Include(e => e.Dependentes).First(e => e.Id == elemento.Id);
+
+                foreach (var item in arr)
+                    if (depe.Dependentes.FirstOrDefault(d => d.ElementoId == elemento.Id &&
+                     d.ElementoDependenteId == int.Parse(item)) == null)
+                        depe.IncluiElemento(dbSet.First(e => e.Id == int.Parse(item)));
+
+                await contexto.SaveChangesAsync();
+
+                foreach (var item in depe.Dependentes)
+                    if (!arr.Contains(item.ElementoDependenteId.ToString()))
+                    {
+                        contexto.ElementoDependenteElemento.Remove(item);
+                        await contexto.SaveChangesAsync();
+                    }
             }
-
-            await elementosDependentes((ElementoDependente)elemento);
+            
 
             return "";
         }
@@ -95,169 +94,23 @@ namespace CMS.Models.Repository
             await dbSet.AddAsync(elemento);
             await contexto.SaveChangesAsync();
 
+            if (elemento is ElementoDependente)
+            {
+                var depe = (ElementoDependente)elemento;
+                depe.Dependentes = new List<ElementoDependenteElemento>();
 
-            await elementosDependentes((ElementoDependente)elemento);
+                var arr = depe.ElementosDependentes.Replace(" ", "").Split(',');
+
+                foreach (var item in arr)
+                    depe.IncluiElemento(dbSet.First(e => e.Id == int.Parse(item)));
+
+                await contexto.SaveChangesAsync();
+
+            }
 
             return $"Chave do elemento {elemento.Id}";
         }
-
-        private async Task elementosDependentes(ElementoDependente elemento)
-        {
-            var pagina1 = await contexto.Pagina.FirstAsync(e => e.Id == elemento.Pagina_);
-            var site1 = await contexto.Pedido.FirstOrDefaultAsync(e => e.Id == pagina1.PedidoId);
-            var cliente = site1.ClienteId;
-
-            var listaString = new List<string>();
-            string elementosGravados = "";
-            if (!string.IsNullOrEmpty(elemento.ElementosDependentes))
-                listaString = elemento.ElementosDependentes.Replace(" ", "").Split(',').ToList();
-
-            if (elemento.Dependentes != null)
-            {
-                foreach (var dependente in elemento.Dependentes)
-                {
-                    elementosGravados += dependente.ElementoDependente.Id + ", ";
-                }
-            }
-            await ApagarElementosDependentes(elemento);
-
-            foreach (var id in listaString)
-            {
-                LinkDependente    LinkDependente; 
-                CarouselImg       CarouselImg    ; 
-                Campo             Campo          ; 
-                Dropdown          Dropdown       ; 
-                Table             Table          ;
-                TextoDependente   textoDependente; 
-                ImagemDependente ImagemDependente;
-                ProdutoDependente ProdutoDependente;
-
-
-                bool MesmoCliente = false;
-                Elemento elementoDepe;
-
-                try
-                {
-                    elementoDepe = await contexto.Elemento.FirstOrDefaultAsync(d => d.Id == int.Parse(id));
-                }
-                catch (Exception)
-                {
-                    elementoDepe = null;
-                }
-                if (elementoDepe != null)
-                {
-                    var paginaElementoDepe = await contexto.Pagina.FirstOrDefaultAsync(p => p.Id == elementoDepe.Pagina_);
-                    if (paginaElementoDepe != null && paginaElementoDepe.PedidoId == site1.Id)
-                    {
-                        var site = await contexto.Pedido.FirstOrDefaultAsync(p => p.Id == paginaElementoDepe.PedidoId);
-                        if (site.ClienteId == cliente)
-                        {
-                            MesmoCliente = true;
-                        }
-                    }
-                }
-
-                if (elemento is Dropdown)
-                {
-                    LinkDependente = (LinkDependente) await RepositoryLink.TestarLink(id);
-
-                    if (LinkDependente != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-                }
-
-                if (elemento is Formulario)
-                {
-                    Campo = (Campo) await RepositoryCampo.TestarCampo(id);
-
-                    if (Campo != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-                }
-                
-                if (elemento is Carousel)
-                {
-                    if (elemento is CarouselPagina)
-                    {
-                        Pagina pagina = await RepositoryPagina.TestarPagina(id);
-
-                        if (pagina != null && MesmoCliente && !elementosGravados.Contains(id))
-                        {
-                            await salvarElementoDependente(elemento);
-                        }
-                    }
-                    else
-                    {
-                        ImagemDependente = (ImagemDependente) await RepositoryImagem.TestarImagem(id);
-
-                        if (ImagemDependente != null && MesmoCliente && !elementosGravados.Contains(id))
-                        {
-                            await salvarElementoDependente(elemento);
-                        }
-                    }
-
-                }
-
-                if (elemento is ImagemDependente)
-                {
-                    CarouselImg = (CarouselImg) await RepositoryCarousel.TestarCarousel(id);
-                    ProdutoDependente = (ProdutoDependente)await RepositoryProduto.TestarProduto(id);
-
-                    if (CarouselImg != null && MesmoCliente && !elementosGravados.Contains(id) ||
-                        ProdutoDependente != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-                }
-
-                if (elemento is ProdutoDependente)
-                {
-                    ImagemDependente = (ImagemDependente)await RepositoryImagem.TestarImagem(id);
-                    Table = (Table)await RepositoryTable.TestarTable(id);
-
-                    if (ImagemDependente != null && MesmoCliente && !elementosGravados.Contains(id) ||
-                        Table != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-                }
-
-                if (elemento is Table)
-                {
-                    ProdutoDependente = (ProdutoDependente)await RepositoryProduto.TestarProduto(id);                    
-
-                    if (ProdutoDependente != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-                }
-                
-                if (elemento is LinkDependente)
-                {
-                    ImagemDependente imagemLink = new ImagemDependente();
-                    imagemLink = (ImagemDependente) await RepositoryImagem.TestarImagem(listaString[1]);
-                    textoDependente = (TextoDependente) await RepositoryTexto.TestarTexto(listaString[0]);
-                    Dropdown = (Dropdown)await RepositoryDropdown.TestarDropdown(id);
-
-                    if (textoDependente != null && MesmoCliente && !elementosGravados.Contains(id) ||
-                        Dropdown != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-
-                    if (imagemLink != null && MesmoCliente && !elementosGravados.Contains(id) ||
-                        Dropdown != null && MesmoCliente && !elementosGravados.Contains(id))
-                    {
-                        await salvarElementoDependente(elemento);
-                    }
-
-                    break;
-                }
-
-            }
-        }
+        
 
         private async Task salvarPaginaDependente(Elemento elemento, int v)
         {

@@ -14,10 +14,7 @@ namespace business.business.Elementos.element
         public virtual List<DivElemento> div { get; set; }
 
         public int Pagina_ { get; set; }
-
-        [NotMapped]
-        public string tipo { get; set; }
-
+        
         public bool Renderizar;
 
 

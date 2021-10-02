@@ -1,4 +1,7 @@
-﻿using business.business;
+﻿using business.Back;
+using business.business;
+using business.div;
+using business.Join;
 using CMS.Data;
 using CMS.Models.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -272,9 +275,50 @@ namespace CMS.Controllers
                 pagina.Margem = true;
                 pagina.Rotas = "";
               await  Context.Pagina.AddAsync(pagina);
-                await  Context.SaveChangesAsync();
+                await  Context.SaveChangesAsync();                
 
-               await RepositoryBackground.CriarBackground(pagina, await Context.Imagem.Where(i => i.Id <= 3).ToListAsync());              
+               await RepositoryBackground.CriarBackground(pagina, await Context.Imagem.Where(i => i.Id <= 3).ToListAsync());
+
+
+                Pedido ped = await Context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
+
+                for (int i = 0; i <= 5; i++)
+                {
+                    var idPagina = ped.Paginas.OrderBy(pagi => pagi.Id).ToList()[0].Id;
+                    DivComum div = new DivComum();
+                    div.Nome = $"bloco-{i}";
+                    div.Ordem = 1;
+                    div.Padding = 5;
+                    div.Height = 200;
+                    div.BorderRadius = 0;
+                    div.Desenhado = 0;
+                    div.Colunas = "1";
+                    div.Divisao = "col-md-12";
+                    div.Elementos = "";
+                    div.Pagina_ = pagina.Id;
+                    if(i < 3)
+                    div.Background = new BackgroundImagem
+                    {
+                        Background_Position = "",
+                        Background_Repeat = "repeat",
+                        Imagem = Context.Imagem.ToList()[i],
+                        ImagemId = Context.Imagem.ToList()[i].Id,
+                        Nome = $"plano de fundo {i}"
+                    };
+                    else
+                   div.Background = new BackgroundCor
+                   {
+                       backgroundTransparente = true,
+                       Cor = "transparent",
+                       Nome = $"blocos {i}"
+                   };
+
+                    await Context.Div.AddAsync(div);
+                    await Context.SaveChangesAsync();
+
+                    Context.DivPagina.Add(new DivPagina { DivId = div.Id, PaginaId = pagina.Id });
+                    await Context.SaveChangesAsync();
+                }
 
                 return RedirectToAction("Galeria", new { id = pagina.PedidoId });
             }

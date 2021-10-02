@@ -8,7 +8,8 @@ namespace business.business.link
 {
     public abstract class Link : ElementoComum
     {
-        public int TextoId { get; set; }
+        [Display(Name = "Qual é o texto do Link?")]
+        public int? TextoId { get; set; }
         public Texto Texto { get; set; }
 
         [Display(Name = "Qual é a pagina de destino?")]

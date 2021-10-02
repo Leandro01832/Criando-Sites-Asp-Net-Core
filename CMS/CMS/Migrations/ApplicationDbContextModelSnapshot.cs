@@ -186,9 +186,7 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.Back.Background", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                    b.Property<int>("Id");
 
                     b.Property<string>("Discriminator")
                         .IsRequired();
@@ -198,13 +196,9 @@ namespace CMS.Migrations
                     b.Property<string>("Nome")
                         .IsRequired();
 
-                    b.Property<int>("PaginaId");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ImagemId1");
-
-                    b.HasIndex("PaginaId");
 
                     b.ToTable("Background");
 
@@ -234,9 +228,9 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.Join.DivElemento", b =>
                 {
-                    b.Property<int>("DivId");
+                    b.Property<int?>("DivId");
 
-                    b.Property<int>("ElementoId");
+                    b.Property<int?>("ElementoId");
 
                     b.HasKey("DivId", "ElementoId");
 
@@ -247,9 +241,9 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.Join.DivPagina", b =>
                 {
-                    b.Property<int>("DivId");
+                    b.Property<int?>("DivId");
 
-                    b.Property<int>("PaginaId");
+                    b.Property<int?>("PaginaId");
 
                     b.HasKey("DivId", "PaginaId");
 
@@ -262,7 +256,7 @@ namespace CMS.Migrations
                 {
                     b.Property<int>("ElementoDependenteId");
 
-                    b.Property<int>("ElementoId");
+                    b.Property<int?>("ElementoId");
 
                     b.HasKey("ElementoDependenteId", "ElementoId");
 
@@ -273,9 +267,9 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.Join.PaginaCarouselPagina", b =>
                 {
-                    b.Property<int>("CarouselPaginaId");
+                    b.Property<int?>("CarouselPaginaId");
 
-                    b.Property<int>("PaginaId");
+                    b.Property<int?>("PaginaId");
 
                     b.HasKey("CarouselPaginaId", "PaginaId");
 
@@ -498,8 +492,6 @@ namespace CMS.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("BackgroundId");
-
                     b.Property<int>("BorderRadius");
 
                     b.Property<string>("Colunas");
@@ -523,8 +515,6 @@ namespace CMS.Migrations
                     b.Property<int>("Pagina_");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("BackgroundId");
 
                     b.ToTable("Div");
 
@@ -792,13 +782,13 @@ namespace CMS.Migrations
                 {
                     b.HasBaseType("business.business.Elementos.element.ElementoComum");
 
-                    b.Property<string>("Placeholder");
+                    b.Property<int?>("FormularioId");
 
-                    b.Property<int>("TableId");
+                    b.Property<string>("Placeholder");
 
                     b.Property<string>("TipoCampo");
 
-                    b.HasIndex("TableId");
+                    b.HasIndex("FormularioId");
 
                     b.ToTable("Campo");
 
@@ -871,7 +861,8 @@ namespace CMS.Migrations
                     b.Property<int?>("PaginaId")
                         .HasColumnName("Link_PaginaId");
 
-                    b.Property<int>("TextoId");
+                    b.Property<int?>("TextoId")
+                        .HasColumnName("Link_TextoId");
 
                     b.HasIndex("PaginaId");
 
@@ -937,9 +928,11 @@ namespace CMS.Migrations
 
                     b.Property<int?>("PaginaId");
 
-                    b.Property<string>("TextoLink");
+                    b.Property<int?>("TextoId");
 
                     b.HasIndex("PaginaId");
+
+                    b.HasIndex("TextoId");
 
                     b.ToTable("LinkDependente");
 
@@ -963,8 +956,12 @@ namespace CMS.Migrations
                     b.Property<string>("Segmento")
                         .HasColumnName("ProdutoDependente_Segmento");
 
+                    b.Property<int?>("TableId");
+
                     b.Property<long?>("estoque")
                         .HasColumnName("ProdutoDependente_estoque");
+
+                    b.HasIndex("TableId");
 
                     b.ToTable("ProdutoDependente");
 
@@ -1118,14 +1115,14 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.Back.Background", b =>
                 {
+                    b.HasOne("business.div.Div", "Div")
+                        .WithOne("Background")
+                        .HasForeignKey("business.Back.Background", "Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+
                     b.HasOne("business.business.Elementos.imagem.Imagem")
                         .WithMany("Backgrounds")
                         .HasForeignKey("ImagemId1");
-
-                    b.HasOne("business.business.Pagina", "Pagina")
-                        .WithMany("Background")
-                        .HasForeignKey("PaginaId")
-                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("business.Back.Cor", b =>
@@ -1212,14 +1209,6 @@ namespace CMS.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("business.div.Div", b =>
-                {
-                    b.HasOne("business.Back.Background", "Background")
-                        .WithMany("Div")
-                        .HasForeignKey("BackgroundId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
             modelBuilder.Entity("business.ecommerce.ItemRequisicao", b =>
                 {
                     b.HasOne("business.business.Elementos.element.Elemento", "Elemento")
@@ -1259,10 +1248,9 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.business.Elementos.Campo", b =>
                 {
-                    b.HasOne("business.business.Elementos.Table", "Table")
+                    b.HasOne("business.business.Elementos.Formulario", "Formulario")
                         .WithMany()
-                        .HasForeignKey("TableId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("FormularioId");
                 });
 
             modelBuilder.Entity("business.business.Elementos.imagem.Imagem", b =>
@@ -1280,8 +1268,7 @@ namespace CMS.Migrations
 
                     b.HasOne("business.business.Elementos.texto.Texto", "Texto")
                         .WithMany()
-                        .HasForeignKey("TextoId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("TextoId");
                 });
 
             modelBuilder.Entity("business.business.Elementos.imagem.ImagemDependente", b =>
@@ -1296,6 +1283,17 @@ namespace CMS.Migrations
                     b.HasOne("business.business.Pagina", "Pagina")
                         .WithMany()
                         .HasForeignKey("PaginaId");
+
+                    b.HasOne("business.business.Elementos.texto.Texto", "Texto")
+                        .WithMany()
+                        .HasForeignKey("TextoId");
+                });
+
+            modelBuilder.Entity("business.business.Elementos.produto.ProdutoDependente", b =>
+                {
+                    b.HasOne("business.business.Elementos.Table", "Table")
+                        .WithMany()
+                        .HasForeignKey("TableId");
                 });
 #pragma warning restore 612, 618
         }

@@ -123,7 +123,8 @@
                     $("#conteudomodal").load("/Elemento/EditDiv/" + id);
                 }
 
-                if (x === "Topo" || x === "Menu" || x === "bloco" || x === "bordaEsquerda" || x === "bordaDireita") {
+                if (x === "Topo" || x === "Menu" || x === "bloco" || x === "bordaEsquerda" || x === "bordaDireita" ||
+                x === "Corpo") {
                      id = $("#" + y.id).data("value");
                     $("#" + y.id).css("border-style", "solid");
                     $("#" + y.id).css("border-width", "5px");
@@ -131,7 +132,7 @@
                     $("#" + y.parentElement.id).css("border-width", "5px");
                     condicao = 0;
 
-                    $("#conteudomodal").load("/Ferramenta/EditBackground/" + id);
+                    $("#conteudomodal").load("/Elemento/EditDiv/" + id);
                 }
 
                 if (x === ""

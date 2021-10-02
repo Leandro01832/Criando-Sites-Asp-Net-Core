@@ -4,8 +4,9 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="_DivComum">
+        <form asp-action="_DivComum" id="formulario">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
                 <input asp-for="Nome" class="form-control" />
@@ -13,56 +14,80 @@
             </div>
             <div class="form-group">
                 <label asp-for="Padding" class="control-label"></label>
-                <input asp-for="Padding" class="form-control" />
+                <input asp-for="Padding" type="range" max="95" min="5" value="5" class="form-control" />
                 <span asp-validation-for="Padding" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Height" class="control-label"></label>
-                <input asp-for="Height" class="form-control" />
+                <input asp-for="Height" type="range" max="2000" min="0" value="200" class="form-control" />
                 <span asp-validation-for="Height" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Colunas" class="control-label"></label>
-                <input asp-for="Colunas" class="form-control" />
+                <select asp-for="Colunas" class="form-control">
+                    <option value="auto">1 coluna</option>
+                    <option value="auto auto">2 colunas</option>
+                    <option value="auto auto auto">3 colunas</option>
+                    <option value="auto auto auto auto">4 colunas</option>
+                    <option value="auto auto auto auto auto">5 colunas</option>
+                    <option value="auto auto auto auto auto auto">6 colunas</option>
+                    <option value="auto auto auto auto auto auto auto">7 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto">8 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto">9 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto">10 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto auto">11 colunas</option>
+                    <option value="auto auto auto auto auto auto auto auto auto auto auto auto">12 colunas</option>
+                </select>
                 <span asp-validation-for="Colunas" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Desenhado" class="control-label"></label>
-                <input asp-for="Desenhado" class="form-control" />
-                <span asp-validation-for="Desenhado" class="text-danger"></span>
-            </div>
+
+            <input asp-for="Desenhado" type="hidden" value="0" />
+
             <div class="form-group">
                 <label asp-for="Divisao" class="control-label"></label>
-                <input asp-for="Divisao" class="form-control" />
+                @*<input asp-for="Divisao" class="form-control" />*@
+                <select asp-for="Divisao" class="form-control">
+                    <option value="col-md-12">inteiro</option>
+                    <option value="col-md-11">11 partes</option>
+                    <option value="col-md-10">10 partes</option>
+                    <option value="col-md-8">8 partes</option>
+                    <option value="col-md-2">1/6 da linha</option>
+                    <option value="col-md-3">1/4 da linha</option>
+                    <option value="col-md-4">1/3 da linha</option>
+                    <option value="col-md-6">1/2 da linha</option>
+                    <option value="col-md-1">12 partes</option>
+                    <option value="col-xs-12">inteiro (para celular)</option>
+                    <option value="col-xs-11">11 partes (para celular)</option>
+                    <option value="col-xs-10">10 partes (para celular)</option>
+                    <option value="col-xs-8">8 partes (para celular)</option>
+                    <option value="col-xs-2">1/6 da linha (para celular)</option>
+                    <option value="col-xs-3">1/4 da linha (para celular)</option>
+                    <option value="col-xs-4">1/3 da linha (para celular)</option>
+                    <option value="col-xs-6">1/2 da linha (para celular)</option>
+                    <option value="col-xs-1">12 partes</option>
+                </select>
                 <span asp-validation-for="Divisao" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="BorderRadius" class="control-label"></label>
-                <input asp-for="BorderRadius" class="form-control" />
+                <input asp-for="BorderRadius" type="range" max="200" min="0" value="0" class="form-control" />
                 <span asp-validation-for="BorderRadius" class="text-danger"></span>
             </div>
+
+            <input asp-for="Ordem" type="hidden" value="0" />
+
             <div class="form-group">
-                <label asp-for="Ordem" class="control-label"></label>
-                <input asp-for="Ordem" class="form-control" />
-                <span asp-validation-for="Ordem" class="text-danger"></span>
+                <label class="control-label">Elementos do bloco</label>
+                <input asp-for="Elementos" type="text" value="@ViewBag.elementos" />
             </div>
-            <div class="form-group">
-                <label asp-for="BackgroundId" class="control-label"></label>
-                <select asp-for="BackgroundId" class="form-control" asp-items="ViewBag.BackgroundId"></select>
-                <span asp-validation-for="BackgroundId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Pagina_" class="control-label"></label>
-                <input asp-for="Pagina_" class="form-control" />
-                <span asp-validation-for="Pagina_" class="text-danger"></span>
-            </div>
+
             <input type="hidden" asp-for="Id" />
 
-            @{ 
+            @{
                 if (Model.Id == 0)
                 {
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <input type="button" value="Save" onclick="div.Create()" class="btn btn-primary" />
                     </div>
                 }
             }
@@ -71,7 +96,18 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <script src="~/js/div/DivComum.js"></script>
+
+    <script src="~/js/AjaxGet.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input, select").change(function () {
+                debugger;
+                div.Update();
+            });
+        });
+    </script>
 </div>
 
 @section Scripts {

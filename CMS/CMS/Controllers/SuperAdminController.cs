@@ -40,7 +40,7 @@ namespace CMS.Controllers
         }
         public async Task<IActionResult> IndexBackground()
         {
-            var applicationDbContext = _context.Background.Include(b => b.Pagina);
+            var applicationDbContext = _context.Background;
             return View(await applicationDbContext.ToListAsync());
         }
         public async Task<IActionResult> IndexElementoDependente()
@@ -72,7 +72,6 @@ namespace CMS.Controllers
             }
 
             var background = await _context.Background
-                .Include(b => b.Pagina)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (background == null)
             {

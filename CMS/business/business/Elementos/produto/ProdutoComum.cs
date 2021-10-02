@@ -10,6 +10,7 @@ namespace business.business.Elementos.produto
 {
    public abstract class ProdutoComum : ElementoComum
     {
+        
         [Display(Name = "Descrição")]
         public string Descricao { get; set; }
         [Display(Name = "Preço")]

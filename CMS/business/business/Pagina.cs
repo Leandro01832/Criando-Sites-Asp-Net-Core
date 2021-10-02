@@ -43,9 +43,7 @@ namespace business.business
         public bool Menu { get; set; }
 
         public bool Exibicao { get; set; }
-
-        [JsonIgnore]
-        public virtual List<Background> Background { get; set; }
+        
         [JsonIgnore]
         public virtual List<PastaImagem> Pastas { get; set; }
         [JsonIgnore]

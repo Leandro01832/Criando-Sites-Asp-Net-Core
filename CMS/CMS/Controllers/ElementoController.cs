@@ -1,5 +1,6 @@
-﻿using business.business.carousel;
-using business.business.element;
+﻿using business.Back;
+using business.business;
+using business.business.carousel;
 using business.business.Elementos;
 using business.business.Elementos.element;
 using business.business.Elementos.imagem;
@@ -53,29 +54,14 @@ namespace CMS.Controllers
         public async Task<IActionResult> ListaBlocos(int id)
         {
             List<Div> lista = new List<Div>();
-
-            var pagina = await _context.Pagina.FirstAsync(p => p.Id == id);
+            
             var pedido = await _context.Pedido.Include(p => p.Paginas)
-            .FirstAsync(p => p.Id == pagina.PedidoId);
+            .FirstAsync(p => p.Id == HttpHelper.GetPedidoId());
 
             foreach (var page in pedido.Paginas)
             {
                 var divs = await RepositoryDiv.includes()
                 .Where(d => d.Pagina_ == page.Id).ToListAsync();
-
-                foreach (var d in divs)
-                {
-                    foreach (var el in d.Elemento)
-                    {
-                        if (el.Elemento.GetType().Name == "CarouselPagina")
-                        {
-                            el.Elemento = await
-                                RepositoryCarouselPaginaCarousel.includes()
-                                .FirstAsync(cp => cp.Id == el.Elemento.Id);
-                        }
-                    }
-                }
-
                 lista.AddRange(divs);
             }
 
@@ -88,81 +74,36 @@ namespace CMS.Controllers
         {
             var numero = Regex.Match(id, @"\d+").Value;
             List<Elemento> lista = new List<Elemento>();
-            var listaLink = new List<Link>();
-            var listaCarouselPagina = new List<CarouselPagina>();
-            var pagina = await _context.Pagina.FirstAsync(p => p.Id == int.Parse(numero));
-            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
+            var ped = HttpHelper.GetPedidoId();
+            var pedido = await _context.Pedido.FindAsync(ped);
 
-            var l = RepositoryElemento.includes();
+            if (condicao == 0)            
+                lista = await _context.Elemento
+                .Where(e => e.Pagina_ == int.Parse(numero))
+                .Cast<Elemento>().ToListAsync();            
 
-            var l2 = RepositoryLink.includes();
-
-            var l3 = RepositoryCarouselPaginaCarousel.includes();
-
-            ViewBag.elemento = id.Replace(numero, "").Replace("GaleriaElemento", "");
-
-            if (condicao == 0)
-            {
-                lista = await l
-           .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
-            }
             else if (condicao == 1)
-            {
-                foreach (var page in pedido.Paginas)
-                {
-                    var itens = await l
-                    .Where(e => e.Pagina_ == page.Id).ToListAsync();
+            foreach (var page in pedido.Paginas)
+            lista.AddRange(await _context.Elemento
+            .Where(e => e.Pagina_ == page.Id)
+            .Cast<Elemento>().ToListAsync());           
 
-                    lista.AddRange(itens);
-                }
-            }
-
-            if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 0)
-            {
-                listaLink = await l2
-               .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
-                return PartialView(listaLink);
-            }
-            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "Link" && condicao == 1)
-            {
-                foreach (var page in pedido.Paginas)
-                {
-                    var itens = await l2
-                    .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
-                    listaLink.AddRange(itens);
-                }
-                return PartialView(listaLink);
-            }
-            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "CarouselPagina" && condicao == 0)
-            {
-                var itens = await l3
-                .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
-                return PartialView(listaCarouselPagina);
-            }
-
-            else if (id.Replace(numero, "").Replace("GaleriaElemento", "") == "CarouselPagina" && condicao == 1)
-            {
-                foreach (var page in pedido.Paginas)
-                {
-                    var itens = await l3
-                    .Where(e => e.Pagina_ == int.Parse(numero)).ToListAsync();
-                    listaCarouselPagina.AddRange(itens);
-                }
-                return PartialView(listaCarouselPagina);
-            }
             return PartialView(lista);
         }
 
         [Authorize(Roles = "Div")]
-        [Route("Elemento/Create/{div}")]
-        public IActionResult CreateDiv(string div)
+        [Route("Elemento/CreateDiv/{div}")]
+        public async Task<IActionResult> CreateDiv(string div)
         {
             Div bloco = null;
             if (div == "DivComum") bloco = new DivComum();
             if (div == "DivFixo") bloco = new DivFixo();
 
-            ViewBag.background_ = new SelectList(_context.Background, "Id", "Nome");
-            ViewBag.PaginaId = new SelectList(_context.Pagina, "Id", "Titulo");
+            var backgrounds = new List<Background>();
+            var site = HttpHelper.GetPedidoId();
+            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
+            
+            
             return PartialView(bloco);
         }
 
@@ -186,9 +127,12 @@ namespace CMS.Controllers
             {
                 elements += el.Elemento.Id + ", ";
             }
+            
+            var site = HttpHelper.GetPedidoId();
+            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
+            
 
             ViewBag.elementos = elements;
-            ViewBag.selecionado = div.BackgroundId;
             return PartialView(div);
         }
 
@@ -314,6 +258,28 @@ namespace CMS.Controllers
                 return NotFound();
             }
 
+            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
+
+            var elementos = new List<Elemento>();
+            foreach (var item in pedido.Paginas)
+            {
+                var pag = await _context.Pagina.Include(p => p.Div)
+                    .ThenInclude(p => p.Div)
+                    .ThenInclude(p => p.Elemento)
+                    .FirstAsync(p => p.Id == item.Id);
+                foreach (var item2 in pag.Div)
+                    foreach (var item3 in item2.Div.Elemento)
+                        elementos.Add(item3.Elemento);
+
+            }
+
+            var pastas = new List<PastaImagem>();
+            foreach (var item in pedido.Paginas)
+            {
+                var pag = await _context.Pagina.Include(p => p.Pastas ).FirstAsync(p => p.Id == item.Id);
+                pastas.AddRange(pag.Pastas);
+            }
+
             bool permissao2 = await UserHelper.VerificarPermissao2(site, email, verifica, elemento.GetType().Name);
             bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento.GetType().Name);
 
@@ -323,8 +289,39 @@ namespace CMS.Controllers
             }
 
             if (!permissao) return PartialView("NoPermission");
-               
+
             
+             if (elemento is LinkBody)
+            {
+               var link = (LinkBody)elemento;
+                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "Nome", link.PaginaId); 
+                ViewBag.TextoId = new SelectList(elementos, "Id", "Nome", link.TextoId);
+            }    
+             else if (elemento is LinkMenu)
+            {
+                var link = (LinkMenu)elemento;
+                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "Nome", link.PaginaId);
+                ViewBag.TextoId = new SelectList(elementos, "Id", "Nome", link.TextoId);
+            }
+
+             if(elemento is Imagem)
+            {
+                var imagem = (Imagem)elemento;
+                ViewBag.PastaImagemId = new SelectList(pastas, "Id", "Nome", imagem.PastaImagemId);
+            }
+
+            if (elemento  is Campo)
+            {
+                var c = (Campo)elemento;
+                ViewBag.FormularioId = new SelectList(elementos, "Id", "Nome", c.FormularioId);
+            }
+
+            if (elemento  is ProdutoDependente)
+            {
+                var c = (ProdutoDependente)elemento;
+                ViewBag.FormularioId = new SelectList(elementos, "Id", "Nome", c.TableId);
+            }
+
             return PartialView(elemento);
         }
 

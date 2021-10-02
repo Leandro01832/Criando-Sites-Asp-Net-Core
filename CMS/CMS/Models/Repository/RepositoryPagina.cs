@@ -1,6 +1,5 @@
 ﻿using business.Back;
 using business.business;
-using business.business.element;
 using business.business.Elementos;
 using business.business.Elementos.imagem;
 using business.div;
@@ -30,7 +29,6 @@ namespace CMS.Models.Repository
         Task<string> renderizarPagina(Pagina pagina);
         Task<string> renderizarPaginaComMenuDropDown(Pagina pagina);
         Task<bool> verificaTable(Pagina pagina);
-        void verificaBackground(Pagina pagina);
         int[] criarRows(Pagina pagina);
         void CriarBackgrounds(Pagina pag, List<Imagem> imagens);
         Pagina LinksPagina(Pagina pagina);
@@ -130,20 +128,6 @@ namespace CMS.Models.Repository
                 foreach (var div in pag.Div)
                 {
                     div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
-
-                    foreach (var elemento in div.Div.Elemento)
-                    {
-                        elemento.Elemento.tipo = elemento.Elemento.GetType().Name;
-                        if(elemento.Elemento is ElementoDependente)
-                        {
-                            var depe = (ElementoDependente)elemento.Elemento;
-                            foreach (var dependente in depe.Dependentes)
-                            {
-                                dependente.ElementoDependente.tipo =
-                                dependente.ElementoDependente.GetType().Name;
-                            }
-                        }
-                    }
                 }
             }
 
@@ -163,30 +147,7 @@ namespace CMS.Models.Repository
                + CodigoCss2 + CodigoProducao + CodigoMusic  + CodigoModal);
             return resultado;
         }
-
-        public void verificaBackground(Pagina pagina)
-        {
-            foreach (var fundo in pagina.Background)
-            {
-                if (fundo is BackgroundCor)
-                {
-                    var f = (BackgroundCor)fundo;
-                    if(f.backgroundTransparente)
-                    f.Cor = "transparent";
-                }
-            }
-
-            foreach (var dp in pagina.Div)
-            {
-                if (dp.Div.Background is BackgroundCor)
-                {
-                    var f = (BackgroundCor)dp.Div.Background;
-                    if (f.backgroundTransparente)
-                        f.Cor = "transparent";
-                }
-                    
-            }
-        }
+        
 
         public async Task<bool> verificaTable(Pagina pagina)
         {
@@ -460,7 +421,8 @@ namespace CMS.Models.Repository
 
             pagina = LinksPagina(pagina);
 
-            verificaBackground(pagina);
+            var site = await contexto.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
+            
 
             var condicao = await verificaTable(pagina);
 
@@ -481,13 +443,13 @@ namespace CMS.Models.Repository
                 facebook = pagina.Facebook,
                 twiter = pagina.Twiter,
                 instagram = pagina.Instagram,
-                background = pagina.Background.OrderBy(b => b.Id).ToList()[0],
-                background_topo = pagina.Background.OrderBy(b => b.Id).ToList()[1],
-                background_menu = pagina.Background.OrderBy(b => b.Id).ToList()[2],
-                background_borda_esquerda = pagina.Background.OrderBy(b => b.Id).ToList()[3],
-                background_borda_direita = pagina.Background.OrderBy(b => b.Id).ToList()[4],
-                background_bloco = pagina.Background.OrderBy(b => b.Id).ToList()[5],
-                divs = pagina.Div.OrderBy(d => d.Div.Ordem).ToList(),
+                Div1 = pagina.Div.OrderBy(d => d.Div.Ordem).ToList().First(),
+                Div2 = pagina.Div.Skip(1).OrderBy(d => d.Div.Id).ToList().First(),
+                Div3 = pagina.Div.Skip(2).OrderBy(d => d.Div.Id).ToList().First(),
+                Div4 = pagina.Div.Skip(3).OrderBy(d => d.Div.Id).ToList().First(),
+                Div5 = pagina.Div.Skip(4).OrderBy(d => d.Div.Id).ToList().First(),
+                Div6 = pagina.Div.Skip(5).OrderBy(d => d.Div.Id).ToList().First(),
+                divs = pagina.Div.Skip(6).OrderBy(d => d.Div.Ordem).ToList(),
                 Rows = numero,
                 espacamento = 0,
                 indice = 1
@@ -496,7 +458,7 @@ namespace CMS.Models.Repository
 
             var velocitycontext = new VelocityContext();
             velocitycontext.Put("model", Modelo);
-            velocitycontext.Put("divs", pagina.Div.OrderBy(d => d.Div.Ordem).ToList());
+            velocitycontext.Put("divs", pagina.Div.Skip(6).OrderBy(d => d.Div.Ordem).ToList());
             var html = new StringBuilder();
             bool result = Velocity.Evaluate(velocitycontext, new StringWriter(html), "NomeParaCapturarLogError",
             new StringReader(TextoHtml));
@@ -522,7 +484,6 @@ namespace CMS.Models.Repository
         {
             var include = dbSet
             .Include(p => p.Pastas)
-            .Include(p => p.Background)
             .Include(p => p.Pedido)
             .ThenInclude(p => p.Paginas)
             .ThenInclude(p => p.Div)

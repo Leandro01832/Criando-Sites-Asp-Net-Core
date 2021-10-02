@@ -35,8 +35,6 @@ namespace business.div
 
         public int Ordem { get; set; }
         
-        [Display(Name = "Qual plano de fundo do bloco?")]
-        public int BackgroundId { get; set; }
         [JsonIgnore]
         public virtual Background Background { get; set; }
         [JsonIgnore]

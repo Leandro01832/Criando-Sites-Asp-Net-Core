@@ -93,8 +93,7 @@ namespace CMS.Models.Repository
                         div = imagem.div,
                         Nome = imagem.Nome,
                         Ordem = imagem.Ordem,
-                        Pagina_ = imagem.Pagina_,
-                        tipo = imagem.tipo
+                        Pagina_ = imagem.Pagina_
                     };
                    await contexto.ImagemDependente.AddAsync(img);
                     await contexto.SaveChangesAsync();

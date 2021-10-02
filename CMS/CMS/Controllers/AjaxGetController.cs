@@ -85,35 +85,22 @@ namespace CMS.Controllers
 
         public async Task<JsonResult> GetBackgrounds(int PaginaId)
         {
-            var background = await db.Background.Where(b => b.PaginaId == PaginaId).ToListAsync();
+            var pagina = await db.Pagina.Include(d => d.Div).ThenInclude(d => d.Div)
+                .ThenInclude(d => d.Background).FirstAsync(b => b.Id == PaginaId);
+                var background = new List<Background>();
+                foreach (var item in pagina.Div)
+                background.Add(item.Div.Background);
 
             return Json(background.AsQueryable());
         }
 
-        public async Task<JsonResult> GetSelectedBackgrounds(int PaginaId)
-        {
-            // selected = "selected"
-            var background = await db.Background.Where(b => b.PaginaId == PaginaId).ToListAsync();
-
-            return Json(background.AsQueryable());
-        }
-
-        public JsonResult GetBackgroundsGradiente(int PaginaId)
-        {
-            // db.Configuration.ProxyCreationEnabled = false;
-            var backgrounds = db.Background.OfType<BackgroundGradiente>().Where(m => m.PaginaId == PaginaId);
-
-            return Json(backgrounds);
-        }
-
-        public async Task<JsonResult> Elementos(int Pagina, string Tipo)
+        public async Task<JsonResult> Elementos(int Pagina)
         {
             var pagina = await db.Pagina.FirstAsync(p => p.Id == Pagina);
             var PedidoId = pagina.PedidoId;
             var pedido = await db.Pedido.Include(p => p.Paginas)
                 .FirstAsync(m => m.Id == PedidoId);
-
-            List<string> result = new List<string>();
+            
 
             List<Elemento> elementos = new List<Elemento>();
 
@@ -127,139 +114,7 @@ namespace CMS.Controllers
                 elementos.AddRange(elements);
             }
 
-            if (Tipo == "Table")
-            {
-                foreach (var item in elementos.OfType<Table>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Table>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Carrossel")
-            {
-                foreach (var item in elementos.OfType<Carousel>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Carousel>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Imagem")
-            {
-                foreach (var item in elementos.OfType<Imagem>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Imagem>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Video")
-            {
-                foreach (var item in elementos.OfType<Video>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Video>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Texto")
-            {
-                foreach (var item in elementos.OfType<Texto>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Texto>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "ProdutoDependente")
-            {
-                foreach (var item in elementos.OfType<ProdutoDependente>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<ProdutoDependente>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "ProdutoComum")
-            {
-                foreach (var item in elementos.OfType<ProdutoComum>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<ProdutoComum>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Form")
-            {
-                foreach (var item in elementos.OfType<Formulario>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Formulario>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Campo")
-            {
-                foreach (var item in elementos.OfType<Campo>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Campo>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Link")
-            {
-                foreach (var item in elementos.OfType<Link>())
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos.OfType<Link>())
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            if (Tipo == "Elementos")
-            {
-                foreach (var item in elementos)
-                {
-                    result.Add(item.Id.ToString());
-                }
-                foreach (var item in elementos)
-                {
-                    result.Add(item.Nome);
-                }
-            }
-
-            return Json(result);
+            return Json(elementos);
         }
     }
 }

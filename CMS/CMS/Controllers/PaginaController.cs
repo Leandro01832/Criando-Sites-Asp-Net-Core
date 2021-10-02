@@ -242,20 +242,6 @@ namespace CMS.Controllers
                 foreach (var div in pag.Div)
                 {
                     div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
-
-                    foreach (var elemento in div.Div.Elemento)
-                    {
-                        elemento.Elemento.tipo = elemento.Elemento.GetType().Name;
-
-                        if(elemento.Elemento is ElementoDependente)
-                        {
-                            var depe = (ElementoDependente)elemento.Elemento;
-                            foreach (var dependente in depe.Dependentes)
-                            {
-                                dependente.Elemento.tipo = dependente.Elemento.GetType().Name;
-                            }
-                        }
-                    }
                 }
             }
 

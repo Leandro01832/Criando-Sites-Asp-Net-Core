@@ -35,12 +35,22 @@ namespace CMS.Controllers
 
             foreach (var page in pedido.Paginas)
             {
-                var cores = await _context.Cor
-                .Include(p => p.BackgroundGradiente)
-                .ThenInclude(p => p.Pagina)
-                .Where(d => d.BackgroundGradiente.PaginaId == page.Id).ToListAsync();
+                var pagin = await _context.Pagina.Include(p => p.Div)
+                    .ThenInclude(p => p.Div).ThenInclude(p => p.Background).FirstAsync(p => p.Id == page.Id);
 
-                lista.AddRange(cores);
+                foreach(var item in pagin.Div)
+                {
+                    if(item.Div.Background is BackgroundGradiente)
+                    {
+                        var backcolor = await _context.BackgroundGradiente.Include(b => b.Cores)
+                        .FirstAsync(b => b.Id == item.Div.Background.Id);
+                        lista.AddRange(backcolor.Cores);
+                    }
+                }
+
+                
+
+                
             }
 
             return PartialView(lista);
@@ -50,12 +60,17 @@ namespace CMS.Controllers
         public async Task<IActionResult> ListaBackground(int? id)
         {
             List<Background> lista = new List<Background>();
-            
-            var backgroud = await _context.Background
-            .Include(p => p.Pagina)
-            .Where(d => d.PaginaId == id).ToListAsync();
+            Pagina pagina = await _context.Pagina.FirstAsync(p => p.Id == id);
+            Pedido ped = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
 
-            lista.AddRange(backgroud);
+            foreach(var item in ped.Paginas)
+            {
+                Pagina pag = await _context.Pagina.Include(p => p.Div)
+                    .ThenInclude(p => p.Div).ThenInclude(p => p.Background).FirstAsync(p => p.Id == item.Id);
+
+                foreach (var item2 in pag.Div)
+                    lista.Add(item2.Div.Background);
+            }
             return PartialView(lista);
         }
 
@@ -169,6 +184,8 @@ namespace CMS.Controllers
         [Authorize(Roles = "Background")]
         public async Task<string> _BackgroundCor([FromBody]BackgroundCor background)
         {
+            if (background.backgroundTransparente)
+                background.Cor = "transparent";
             if(background.Id == 0)
             {
                 _context.Add(background); await _context.SaveChangesAsync();
@@ -224,7 +241,6 @@ namespace CMS.Controllers
             }
 
             var background = await _context.Background
-                .Include(b => b.Pagina)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (background == null)
             {

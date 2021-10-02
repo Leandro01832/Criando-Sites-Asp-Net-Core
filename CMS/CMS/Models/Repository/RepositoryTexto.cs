@@ -57,8 +57,7 @@ namespace CMS.Models.Repository
                         div = elemento.div,
                         Nome = elemento.Nome,
                         Ordem = elemento.Ordem,
-                        Pagina_ = elemento.Pagina_,
-                        tipo = elemento.tipo
+                        Pagina_ = elemento.Pagina_
                     };
                     await contexto.TextoDependente.AddAsync(texto);
                     await contexto.SaveChangesAsync();

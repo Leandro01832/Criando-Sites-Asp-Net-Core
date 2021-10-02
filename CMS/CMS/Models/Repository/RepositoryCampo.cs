@@ -37,9 +37,9 @@ namespace CMS.Models.Repository
                 Ordem = elemento.Ordem,
                 Placeholder = c.Placeholder,
                 TipoCampo = c.TipoCampo,
-                TableId = c.TableId,
+                FormularioId = c.FormularioId,
                 div = c.div,
-                Table = c.Table
+                Formulario = c.Formulario
             };
             return campo;
         }
