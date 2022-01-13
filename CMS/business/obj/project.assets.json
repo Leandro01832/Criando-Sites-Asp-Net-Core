@@ -3125,11 +3125,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\cms-clean\\CMS\\business\\business.csproj",
+      "projectUniqueName": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\business\\business.csproj",
       "projectName": "business",
-      "projectPath": "D:\\cms-clean\\CMS\\business\\business.csproj",
+      "projectPath": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\business\\business.csproj",
       "packagesPath": "C:\\Users\\leand\\.nuget\\packages\\",
-      "outputPath": "D:\\cms-clean\\CMS\\business\\obj\\",
+      "outputPath": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\business\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

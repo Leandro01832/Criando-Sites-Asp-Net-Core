@@ -3540,11 +3540,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\cms-clean\\CMS\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectUniqueName": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\ConsoleApp1\\ConsoleApp1.csproj",
       "projectName": "ConsoleApp1",
-      "projectPath": "D:\\cms-clean\\CMS\\ConsoleApp1\\ConsoleApp1.csproj",
+      "projectPath": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\ConsoleApp1\\ConsoleApp1.csproj",
       "packagesPath": "C:\\Users\\leand\\.nuget\\packages\\",
-      "outputPath": "D:\\cms-clean\\CMS\\ConsoleApp1\\obj\\",
+      "outputPath": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\ConsoleApp1\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -3563,8 +3563,8 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "D:\\cms-clean\\CMS\\business\\business.csproj": {
-              "projectPath": "D:\\cms-clean\\CMS\\business\\business.csproj"
+            "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\business\\business.csproj": {
+              "projectPath": "C:\\Users\\leand\\Documents\\Visual Studio 2017\\C#\\cms-clean\\CMS\\business\\business.csproj"
             }
           }
         }
