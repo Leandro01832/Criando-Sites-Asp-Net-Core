@@ -11,16 +11,24 @@ using MeuProjetoAgora.business;
 using MeuProjetoAgora.Models.Repository;
 using MeuProjetoAgora.Data;
 using MeuProjetoAgora.business.Elementos;
+using Microsoft.EntityFrameworkCore.Query;
 
 namespace MeuProjetoAgora
 {
     public class DataService : IDataService
     {
+        public IRepositoryCarouselPaginaCarousel RepositoryCarouselPaginaCarousel { get; }
+
+        public DataService(IRepositoryCarouselPaginaCarousel repositoryCarouselPaginaCarousel)
+        {
+            RepositoryCarouselPaginaCarousel = repositoryCarouselPaginaCarousel;
+        }
+
         public async Task InicializaDBAsync(IServiceProvider provider)
         {
             var contexto = provider.GetService<ApplicationDbContext>();
 
-            await contexto.Database.MigrateAsync();
+            // await contexto.Database.MigrateAsync();
 
             if (await contexto.Set<Imagem>().AnyAsync())
             {
@@ -33,7 +41,7 @@ namespace MeuProjetoAgora
             await imagemRepositorty.SaveImagems(lista);
             
         }
-
+        
         private async Task<List<Imagem>> ListaImagens(IServiceProvider provider)
         {
             var contexto = provider.GetService<ApplicationDbContext>();

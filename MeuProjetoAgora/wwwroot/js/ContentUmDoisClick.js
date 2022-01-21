@@ -32,8 +32,9 @@
         y = event.target;
         x = event.target.className;
 
-        if (x !== "" && condicao === 4) {
+        if (x !== "" && condicao === 4 && javascriptAtivado) {
             y = z;
+            
             
             if (y.tagName === "DIV" && x.includes(substring)) {
                 $(".Elemento").css("border", "none");
@@ -58,7 +59,7 @@
                     var arr = x.split(" ");
 
                     for (var i = 0; i <= arr.length; i++) {
-                        if (arr[i] === "ClassDiv") {
+                        if (arr[i] === "ClassDiv" && javascriptAtivado) {
                             $(".ClassDiv").css("border", "none");
                             valor = y.id.replace("DIV", "").replace("Pagina" + numero, "");
                             $("#" + y.id).css("display", "block");
@@ -87,9 +88,9 @@
         x = event.target.className;
 
 
-        if (y.className === "content" ||
-            y.className === "bloco" ||
-            y.className === "Conteudo") {
+        if (y.className === "content" && javascriptAtivado ||
+            y.className === "bloco" && javascriptAtivado ||
+            y.className === "Conteudo" && javascriptAtivado) {
             condicao = 4;
             $(".remover").fadeOut("slow");
             $(".ClassDiv").css("border", "none");
@@ -108,7 +109,7 @@
 
     function verifica() {
 
-        if (condicao !== 0) {
+        if (condicao !== 0 && javascriptAtivado) {
 
             if (condicao === 1) {
 

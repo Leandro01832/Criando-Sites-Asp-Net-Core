@@ -1,28 +1,16 @@
 ﻿@model MeuProjetoAgora.business.Pagina
 
 @{
-    Layout = "~/Views/Shared/_Render.cshtml";
+    Layout = "~/Views/Shared/_Render2.cshtml";
     var proximo = ViewBag.proximo;
     var anterior = proximo - 2;
     var atual = proximo - 1;
-    var quant = ViewBag.quantidadePaginas;
-    bool selecionar = ViewBag.selecao;
 }
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<script src="~/lib/jquery/dist/jquery.cookie.js"></script>
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/jquery-ui.min.js"></script>
 
 <style>
-
-    input[type=checkbox] {
-        /* Double-sized Checkboxes */
-        -ms-transform: scale(2); /* IE */
-        -moz-transform: scale(2); /* FF */
-        -webkit-transform: scale(2); /* Safari and Chrome */
-        -o-transform: scale(2); /* Opera */
-        transform: scale(2);
-        padding: 10px;
-    }
-
     .glyphicon {
         font-size: 22px;
     }
@@ -64,13 +52,9 @@
     .minhaClasse2 {
         z-index: 40 !important;
     }
-
-    .minhaClasse3 {
-        color: red;
-    }
 </style>
 
-
+<br />  <br />    <br /><br /><br />
 
 @if (Model == null)
 {
@@ -95,92 +79,89 @@ else
 
     <link rel="stylesheet" href="~/css/RenderizarDinamico.css" />
 
+
     <div id="estrutura">
 
         <div class="row" id="LinhaImaginaria">
 
-            <div style="position: fixed;  margin-left:20px; top:100px;" class="blocoLoader">
-                <a id="voltar" href="/Pagina/@anterior"
+            <div style="position: fixed;  margin-left:20px;" class="blocoLoader">
+                <a id="voltar" href="/Editar/@anterior"
                    class="btn btn-primary loader glyphicon glyphicon-chevron-left">
                 </a>
             </div>
             <div style="position: fixed;  margin-left:70px; top:80px;" class="blocoLoader">
                 <input type="number" placeholder="N° pagina" id="NumeroPaginaAcesso" value="@atual" min="2" style="width: 80px;" />
-                <a id="acessoPaginaComInput" href="/Pagina/@atual" class="glyphicon glyphicon-search loader">
+                <a id="acessoPaginaComInput" href="/Editar/@atual" class="glyphicon glyphicon-search loader">
                 </a>
             </div>
             <div style="position: fixed;  margin-left:20px; top:50px;" class="blocoLoader">
-                <a id="avancar" href="/Pagina/@proximo"
+                <a id="avancar" href="/Editar/@proximo"
                    class="btn btn-primary loader glyphicon glyphicon-chevron-right">
                 </a>
             </div>
+            
 
-            <div style="position: fixed;  right:70px; top:60px;" class="blocoLoader">
-                <p style="background-color:white;">Nome: @Model.Titulo</p>
+            <div id="Chat" class="col-md-4" style="background-color: white; display:none;">
+
+                <partial name="BlocoFerramenta" />
+
             </div>
-            <div style="position: fixed;  right:70px; top:80px;" class="blocoLoader">
-                <input type="text" placeholder="Nome da pagina" id="PaginaInput" style="width: 120px;" />
-                <a id="acessoPaginaInput" href="#" class="glyphicon glyphicon-search loader">
-                </a>
-            </div>
-
-
 
             <div class="content col-md-12" id="ConteudoPagina" data-id="">
 
                 @Html.Raw(ViewBag.Html)
 
+
             </div>
 
-
-
-        </div>
-
-    </div>
-
-    <center>
-        <h3>@Html.CheckBox("automatico", selecionar) Automático </h3>
-
-        <div style="z-index:80;">
-
-            @{ for (var indice = 1; indice <= quant; indice++)
-                {
-                    <a href="/Pagina/@(indice)" class="loader">
-                        <span class="DivPagina glyphicon glyphicon-record" id="DivPagina@(indice)"></span>
-                    </a>
-
-                }
-            }
-
-        </div>
-    </center>
-
-    <div id="loading" style="display:none; z-index:50;"><img src="~/imagem/loader.gif" /></div>
-
-    <div>
-        <script type="text/javascript">
-
-            
-
-            $("input").change(function () {
-
-                if ($("#automatico").is(':checked') == true) {
-                    $.cookie('automatico', '1');
-                    
-                    setTimeout(function () {
-                        $("#loading").show();
-
-                        if (@atual < @quant)
-                            window.location.href = "https://siteprofissional.somee.com/Pagina/@(proximo)";
-                        else
-                            window.location.href = "https://siteprofissional.somee.com/Pagina/2";
-                    }, 10000);
-                }
-                else                
-                    $.cookie('automatico', '0');
+            <script type="text/javascript">
+                $('.linha').sortable({
+                    connectWith: '.linha'
                 });
-        </script>
+
+                $('.ClassDiv').sortable();
+
+                var axis = $('.linha').sortable('option', 'connectWith');
+                let condicaoBloco = false;
+                let condicaoElemento = false;
+
+                // Setter
+                $('.linha').sortable('option', 'connectWith', '.linha');
+
+                $('.linha').sortable({
+                    update: function (event, ui) {
+                        condicaoBloco = true;
+                    }
+                });
+
+                $('.ClassDiv').sortable({
+                    update: function (event, ui) {
+                        condicaoElemento = true;
+                    }
+                });
+            </script>
+
+        </div>
+
     </div>
+
+    <div id="FormTexto" style="display:none;  margin-left:50px;">
+
+    </div>
+
+    <div id="Permissao" style="display:none;">
+
+    </div>
+
+    <div id="Galeria" style="display:none;">
+
+    </div>
+
+    <div id="GaleriaBlocos" style="display:none;">
+
+    </div>
+
+    <div id="loading" style="display:none; z-index:50;"><img src="~/imagem/loader.gif"  /></div>
 
 }
 
@@ -188,39 +169,13 @@ else
 
 @section scripts{
 
+    <script src="~/js/FullScreen.js"></script>
+    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+    <script src="~/js/Chat.js"></script>
     <script src="~/js/loader.js"></script>
 
-    <script type="text/javascript">
+    <script>
         $(document).ready(function () {
-
-            //var checkbox = document.querySelector("#automatico");
-            //function ativarCheckbox(el) {
-            //    el.checked = true;
-            //}
-            //function desativarCheckbox(el) {
-            //    el.checked = false;
-            //}
-
-            //if ($.cookie('automatico') == '1')
-            //    ativarCheckbox(checkbox);
-            //else
-            //    desativarCheckbox(checkbox);
-
-            if ($("#automatico").is(':checked') == true)
-            {
-                
-                setTimeout(function () {
-                    if ($("#automatico").is(':checked') == true)
-                    $("#loading").show();
-                    if (@atual < @quant && $("#automatico").is(':checked') == true)
-                        window.location.href = "https://siteprofissional.somee.com/Pagina/@(proximo)";
-                    else if ($("#automatico").is(':checked') == true)
-                        window.location.href = "https://siteprofissional.somee.com/Pagina/2";
-                }, 10000);
-            }
-
-
-            $("#DivPagina@(atual)").addClass('minhaClasse3');
 
             $('#PaginaInput').change(function () {
                 document.getElementById('acessoPaginaInput').href = '/Pagina/0/';
@@ -233,7 +188,8 @@ else
                     $(".blocoLoader").removeClass('minhaClasse');
                     $(".blocoLoader").addClass('minhaClasse2');
                 }
-                else {
+                else
+                {
                     $(".blocoLoader").removeClass('minhaClasse2');
                     $(".blocoLoader").addClass('minhaClasse');
                 }
@@ -274,6 +230,14 @@ else
 
         });
     </script>
+
+    <script type="text/javascript" src="~/js/Variaveis.js"></script>
+
+    <script src="~/js/AlterarPosicaoBloco.js"></script>
+
+    <script type="text/javascript" src="~/js/funcaoClickRenderizarDinamico.js"></script>
+
+    <script type="text/javascript" src="~/js/ContentUmDoisClick.js"></script>
 
 }
 

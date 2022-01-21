@@ -41,10 +41,11 @@ namespace MeuProjetoAgora.business
 
         [JsonIgnore]
         public virtual List<Pagina> Paginas { get; set; }
-
         
         public string Status { get; set; }
 
-        
+        public bool Aleatorio { get; set; }
+
+
     }
 }

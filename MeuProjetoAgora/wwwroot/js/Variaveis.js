@@ -1,6 +1,7 @@
 ﻿
 
 var timer;
+let javascriptAtivado = false;
 var el = $(".content");
 var condicao = 0;
 var x;

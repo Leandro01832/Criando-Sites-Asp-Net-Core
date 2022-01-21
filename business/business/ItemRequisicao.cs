@@ -15,7 +15,7 @@ namespace MeuProjetoAgora.business
         public int Quantidade { get; set; }
         public int requisicao_ { get; set; }
         [Required]
-
+        [Column(TypeName = "decimal(18,4)")]
         public decimal PrecoUnitario { get; private set; }
         [JsonIgnore]
         [ForeignKey("requisicao_")]

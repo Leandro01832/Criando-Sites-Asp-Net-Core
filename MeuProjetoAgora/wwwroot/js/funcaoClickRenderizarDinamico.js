@@ -1,4 +1,5 @@
-﻿$(".GaleriaBackground").click(function () {
+﻿
+$(".GaleriaBackground").click(function () {
 
     var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
     numero = numero.replace('44398', '');
@@ -12,7 +13,7 @@ $("#GaleriaBloco").click(function () {
 
     $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
     $("#GaleriaBlocos").fadeIn("slow");
-    $("#GaleriaBlocos").load("/Elemento/ListaBlocos/" + numero);
+    $("#GaleriaBlocos").load("/Elemento/ListaBlocos/" + numero++);
 
 
 });
@@ -156,12 +157,16 @@ $("#AlterarPosicao").click(function () {
 
 $("#Ocultar").click(function () {
 
+    javascriptAtivado = false;
+
     $("#Chat").css("display", "none");
     $(".content").removeClass('col-md-8').addClass('col-md-12');
 
 });
 
 $(".Ferramenta").click(function () {    
+
+    javascriptAtivado = true;
     
     $(".content").removeClass('col-md-12').addClass('col-md-8');
     $("#Chat").css("display", "block");

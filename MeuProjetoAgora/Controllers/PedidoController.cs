@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using MeuProjetoAgora.business;
+using MeuProjetoAgora.Data;
+using MeuProjetoAgora.Models.Repository;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting.Internal;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using MeuProjetoAgora.business;
-using MeuProjetoAgora.Models.Repository;
-using NVelocity.App;
-using System.Text;
-using NVelocity;
-using System.IO;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Http;
-using MeuProjetoAgora.Data;
-using ICSharpCode.SharpZipLib.Zip;
-using Microsoft.AspNetCore.Hosting.Internal;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MeuProjetoAgora.Controllers
 {
@@ -60,6 +55,9 @@ namespace MeuProjetoAgora.Controllers
         [Route("")]        
         public async Task<IActionResult> Index()
         {
+            var option = Request.Cookies["automatico"];
+            if (option == null)
+                Set("automatico", "0", 12);
             IList<Pagina> pages = await RepositoryPagina.MostrarPageModels();
             List<Pagina> pages2 = new List<Pagina>();
             foreach (var p in pages.Where(p => p.Exibicao == true))
@@ -67,6 +65,8 @@ namespace MeuProjetoAgora.Controllers
               p.Html = await RepositoryPagina.renderizarPagina(p);
                 pages2.Add(p);
             }
+
+            ViewBag.quantidade = pages.Count();
 
             return View(pages2);
         }
@@ -331,6 +331,21 @@ namespace MeuProjetoAgora.Controllers
         private ActionResult HttpNotFound()
         {
             throw new NotImplementedException();
+        }
+
+        private void Set(string key, string value, int? expireTime)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+                option.Expires = DateTime.Now.AddHours(expireTime.Value);
+            else
+                option.Expires = DateTime.Now.AddHours(10);
+
+            option.HttpOnly = false;
+            
+
+            Response.Cookies.Append(key, value, option);
         }
     }
 }

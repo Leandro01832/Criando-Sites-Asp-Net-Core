@@ -11,6 +11,7 @@ namespace MeuProjetoAgora.business.Elementos
         [Display(Name = "Descrição")]
         public string Descricao { get; set; }
         [Display(Name = "Preço")]
+        [Column(TypeName = "decimal(18,4)")]
         public decimal Preco { get; set; }
         public long? estoque { get; set; }
         [Required]

@@ -101,10 +101,9 @@ namespace MeuProjetoAgora.Models.Repository
         public IRepositoryCarouselPaginaCarousel RepositoryCarouselPaginaCarousel { get; }
 
         public async Task<IList<Pagina>> MostrarPageModels()
-        {         
-
-            var lista = await  includes()
-            .ToListAsync();
+        {
+            var lista = await includes()
+           .ToListAsync();
 
             foreach (var pag in lista)
             {
@@ -112,7 +111,7 @@ namespace MeuProjetoAgora.Models.Repository
                 {
                     foreach (var e in b.Div.Elemento)
                     {
-                        if(e.Elemento.GetType().Name == "CarouselPagina")
+                        if (e.Elemento.GetType().Name == "CarouselPagina")
                         {
                             e.Elemento = await RepositoryCarouselPaginaCarousel.IncluiPaginas(e.Elemento.IdElemento);
                         }
@@ -140,7 +139,7 @@ namespace MeuProjetoAgora.Models.Repository
                 }
             }
 
-            return  lista;
+            return lista;
         }
 
         public async Task<string> renderizarPagina(Pagina pagina)

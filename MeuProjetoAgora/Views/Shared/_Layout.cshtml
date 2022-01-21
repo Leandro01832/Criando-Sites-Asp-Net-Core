@@ -31,7 +31,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    @Html.ActionLink("Meu Projeto Agora", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Site Profissional", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -45,18 +45,11 @@
                             </ul>
                         </li>
 
-                        
+
                         <li>@Html.ActionLink("Contatos", "Contatos", "Home")</li>
                         <li>@Html.ActionLink("Area do Admin", "Admin", "Admin")</li>
-                        
-                        <li>
-                            <input type="number" id="NumeroPaginaAcesso" style="width: 80px;" />                            
-                        </li>
-                        <li>
-                            <a id="acessoPaginaComInput" href="/Pagina/">
-                                Acessar pagina
-                            </a>
-                        </li>
+
+
                     </ul>
 
                     <partial name="_LoginPartial" />
@@ -103,7 +96,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script src="~/lib/jquery/dist/jquery.cookie.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
@@ -112,6 +105,8 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
+
+       
 
 
         $("#NumeroPaginaAcesso").change(function () {

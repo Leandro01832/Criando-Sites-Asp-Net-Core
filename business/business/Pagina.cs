@@ -1,17 +1,14 @@
-﻿
-using MeuProjetoAgora.business.Elementos;
-using MeuProjetoAgora.Join;
+﻿using MeuProjetoAgora.Join;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.IO;
-using System.Web;
 
 namespace MeuProjetoAgora.business
 {
     public class Pagina
     {
+
         [Key]
         public int IdPagina { get; set; }
 

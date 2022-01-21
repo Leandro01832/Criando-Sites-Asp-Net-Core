@@ -16,12 +16,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
+using System.Web;
 
 namespace MeuProjetoAgora.Controllers
 {
     public class PaginaController : Controller
     {
-        private readonly ApplicationDbContext db;       
+        private readonly ApplicationDbContext db;
         public IRepositoryPedido RepositoryPedido { get; }
         public IRepositoryPagina RepositoryPagina { get; }
         public IHttpHelper HttpHelper { get; }
@@ -29,6 +30,7 @@ namespace MeuProjetoAgora.Controllers
         public IHttpContextAccessor ContextAccessor { get; }
         public UserManager<IdentityUser> UserManager { get; }
         public IUserHelper UserHelper { get; }
+        
 
         public PaginaController(ApplicationDbContext context, IRepositoryPedido repositoryPedido,
             IRepositoryPagina repositoryPagina, IHttpHelper httpHelper,
@@ -47,14 +49,14 @@ namespace MeuProjetoAgora.Controllers
 
         [AllowAnonymous]
         public ActionResult EmBranco()
-        {            
+        {
             return PartialView();
         }
 
         [AllowAnonymous]
         public async Task<ActionResult> QuantidadeBloco(int div)
         {
-            var bloco = await  db.DivElemento
+            var bloco = await db.DivElemento
                 .Include(de => de.Elemento)
                 .Include(de => de.Div)
                 .Where(d => d.Div.IdDiv == div).ToListAsync();
@@ -81,24 +83,112 @@ namespace MeuProjetoAgora.Controllers
         {
             ViewBag.id = elemento;
             return PartialView();
-        }        
+        }
 
         [Route("Pagina/RenderizarDinamico/{id?}")]
-        [Route("Alterar/{id?}")]
-        [Route("Configurar/{id?}")]
-        [Route("Renderizar/{id?}")]
-        [Route("Mostrar/{id?}")]
+        [Route("Alterar/{id?}/{page}")]
+        [Route("Configurar/{id?}/{page}")]
+        [Route("Renderizar/{id?}/{page}")]
+        [Route("Mostrar/{id?}/{page}")]
         [Route("Pagina/{id?}")]
-        public async Task<IActionResult> RenderizarDinamico(int? id)
+        [Route("Pagina/{id?}/{page}")]
+        public async Task<IActionResult> RenderizarDinamico(int? id, string page)
         {
+            var option = Request.Cookies["automatico"];
+            if (option == null) Response.Redirect("/Pedido/Index");
+
+            bool teste = false;
+
+            if (option == "1")
+                teste = true;
+
+            ViewBag.selecao = teste;
+
+            var lista = await BuscarPaginas();
+            ViewBag.quantidadePaginas = lista.Count();
+            if (id > 0)
+            {
+                if (id == 1) id = 2;
+
+                Pagina pagina = lista.FirstOrDefault(p => p.IdPagina == id);
+
+                if (pagina == null)
+                {
+                    ViewBag.sites = new SelectList(await db.Pedido
+                    .ToListAsync(), "IdPedido", "Nome");
+                    ViewBag.paginas = new SelectList(new List<Pagina>(), "IdPedido", "Nome");
+                    ViewBag.numeroErro = id;
+                    return View("HttpNotFound");
+                }
+                else
+                {
+                    HttpHelper.SetPedidoId(pagina.pedido_);
+                    string html = await RepositoryPagina.renderizarPaginaComCarousel(pagina);
+                    ViewBag.Html = html;
+                    pagina.Html = html;
+                }
+
+                ViewBag.proximo = id + 1;
+                return View(pagina);
+            }
+            else if (id == 0)
+            {
+                Pagina pag = null;
+
+                if (page != null)
+                {
+                    foreach (var p in lista)
+                    {
+                        var array = p.Rotas.Replace(" ", "").Split(',').ToList();
+
+                        foreach (var v in array)
+                        {
+                            if (v.ToLower() == page.ToLower())
+                            { pag = lista.FirstOrDefault(pagina => pagina.IdPagina == p.IdPagina); break; }
+                            else if (p.Titulo.ToLower() == page.ToLower())
+                            { pag = lista.FirstOrDefault(pagina => pagina.IdPagina == p.IdPagina); break; }
+                        }
+                        if (pag != null) break;
+                    }
+                }
+
+                if (pag == null)
+                {
+                    await db.Rota.AddAsync(new Rota { NomeRota = "site" + "/" + page });
+                    await db.SaveChangesAsync();
+                    return HttpNotFound();
+                }
+
+                foreach (var div in pag.Div)
+                {
+                    div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
+                }
+
+                string html = await RepositoryPagina.renderizarPaginaComCarousel(pag);
+                ViewBag.html = html;
+                pag.Html = html;
+                ViewBag.proximo = pag.IdPagina + 1;
+                return View(pag);
+            }
+            return HttpNotFound();
+        }
+
+        [Authorize]
+        [Route("Editar/{id?}")]
+        public async Task<IActionResult> Editar(int? id)
+        {
+            if (id == 1) id = 2;
+
             var lista = await BuscarPaginas();
             Pagina pagina = lista.FirstOrDefault(p => p.IdPagina == id);
 
             if (pagina == null)
             {
-                ViewBag.sites = new SelectList( await db.Pedido
+                ViewBag.sites = new SelectList(await db.Pedido
                 .ToListAsync(), "IdPedido", "Nome");
                 ViewBag.paginas = new SelectList(new List<Pagina>(), "IdPedido", "Nome");
+                ViewBag.numeroErro = id;
+                return View("HttpNotFound");
             }
             else
             {
@@ -106,10 +196,9 @@ namespace MeuProjetoAgora.Controllers
                 string html = await RepositoryPagina.renderizarPaginaComCarousel(pagina);
                 ViewBag.Html = html;
                 pagina.Html = html;
+            }
 
-
-            }            
-
+            ViewBag.proximo = id + 1;
             return View(pagina);
         }
 
@@ -121,7 +210,8 @@ namespace MeuProjetoAgora.Controllers
 
             if (pagina == null)
             {
-                return HttpNotFound();
+                ViewBag.numeroErro = id;
+                return View("HttpNotFound");
             }
             ViewBag.html = await RepositoryPagina.renderizarPagina(pagina);
 
@@ -136,7 +226,7 @@ namespace MeuProjetoAgora.Controllers
         [Route("-/{dominio}/")]
         public async Task<ActionResult> Site(string dominio, string pagina)
         {
-            if(dominio == null)
+            if (dominio == null)
             {
                 return RedirectToAction("Index", "Pedido", null);
             }
@@ -145,27 +235,27 @@ namespace MeuProjetoAgora.Controllers
 
             if (pagina != null)
             {
-                var pedido = await  RepositoryPedido.includes()
+                var pedido = await RepositoryPedido.includes()
                 .FirstOrDefaultAsync(p => p.DominioTemporario
                 .ToLower()
                 == dominio.ToLower());
 
-                if(pedido != null)
+                if (pedido != null)
                 {
                     foreach (var p in pedido.Paginas)
                     {
                         var array = p.Rotas.Replace(" ", "").Split(',').ToList();
 
-                        foreach(var v in array)
+                        foreach (var v in array)
                         {
-                            if(v.ToLower() == pagina.ToLower())
+                            if (v.ToLower() == pagina.ToLower())
                             {
                                 var lista = await BuscarPaginas();
                                 pag = lista.FirstOrDefault(page => page.IdPagina == p.IdPagina);
                             }
                         }
                     }
-                    if(pag == null)
+                    if (pag == null)
                     {
                         var lista = await BuscarPaginas();
                         pagina = RemoveAccents(pagina);
@@ -177,8 +267,8 @@ namespace MeuProjetoAgora.Controllers
                         .ToLower()
                         == pagina.ToLower());
                     }
-                }              
-                
+                }
+
             }
 
             if (pagina == null)
@@ -187,11 +277,11 @@ namespace MeuProjetoAgora.Controllers
                 {
                     var lista2 = await BuscarPaginas();
                     var lista = lista2
-                    .Where(p => RemoveAccents(p.Pedido.DominioTemporario) 
+                    .Where(p => RemoveAccents(p.Pedido.DominioTemporario)
                     .Replace(" ", "")
                     .Replace("www", "")
                     .Replace(".com", "")
-                    .Replace(".com.br", "")                    
+                    .Replace(".com.br", "")
                     == dominio).ToList();
                     pag = lista[1];
                 }
@@ -203,7 +293,7 @@ namespace MeuProjetoAgora.Controllers
                 }
             }
 
-            if(pag == null && !string.IsNullOrEmpty(pagina))
+            if (pag == null && !string.IsNullOrEmpty(pagina))
             {
                 await db.Rota.AddAsync(new Rota { NomeRota = dominio + "/" + pagina });
                 await db.SaveChangesAsync();
@@ -219,10 +309,10 @@ namespace MeuProjetoAgora.Controllers
             ViewBag.html = html;
             pag.Html = html;
             RepositoryPagina.criandoArquivoHtml(pag);
-            return View(pag);            
+            return View(pag);
         }
 
-        [Authorize(Roles ="Admin")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Salvar(int id)
         {
             var lista = await BuscarPaginas();
@@ -237,7 +327,7 @@ namespace MeuProjetoAgora.Controllers
         public async Task<List<Pagina>> BuscarPaginas()
         {
             var lista = await RepositoryPagina.MostrarPageModels();
-          
+
 
             foreach (var pag in lista.ToList())
             {
@@ -249,7 +339,7 @@ namespace MeuProjetoAgora.Controllers
                     {
                         elemento.Elemento.tipo = elemento.Elemento.GetType().Name;
 
-                        foreach(var dependente in elemento.Elemento.Despendentes)
+                        foreach (var dependente in elemento.Elemento.Despendentes)
                         {
                             dependente.Elemento.tipo = dependente.Elemento.GetType().Name;
                         }
@@ -258,7 +348,7 @@ namespace MeuProjetoAgora.Controllers
             }
 
             return lista.ToList();
-        }        
+        }
 
         public string RemoveAccents(string text)
         {
@@ -272,9 +362,9 @@ namespace MeuProjetoAgora.Controllers
             return sbReturn.ToString();
         }
 
-        private ActionResult HttpNotFound()
+        public IActionResult HttpNotFound()
         {
-            throw new NotImplementedException();
+            return View();
         }
 
         [Authorize(Roles = "Pagina")]
@@ -299,10 +389,10 @@ namespace MeuProjetoAgora.Controllers
 
             var rotas = db.Rota.Where(r => r.NomeRota.Contains(site)).ToList();
             var rotasPossiveis = "";
-            foreach(var r in rotas)
+            foreach (var r in rotas)
             {
-                if(!pagina.Rotas.Contains(r.NomeRota.Replace(site + "/", "")))
-                rotasPossiveis += r.NomeRota.Replace(site + "/", "") + ", ";
+                if (!pagina.Rotas.Contains(r.NomeRota.Replace(site + "/", "")))
+                    rotasPossiveis += r.NomeRota.Replace(site + "/", "") + ", ";
             }
             ViewBag.Rotas = rotasPossiveis;
 
@@ -310,7 +400,7 @@ namespace MeuProjetoAgora.Controllers
 
             foreach (var ele in pagina.Div)
             {
-                elements += ele.Div.IdDiv.ToString() + ", "; 
+                elements += ele.Div.IdDiv.ToString() + ", ";
             }
 
             ViewBag.elementos = elements;
@@ -352,5 +442,8 @@ namespace MeuProjetoAgora.Controllers
         {
             return PartialView();
         }
+        
+
+        
     }
 }

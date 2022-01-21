@@ -164,7 +164,7 @@ namespace MeuProjetoAgora
             app.UseSignalR(Endpoint => Endpoint.MapHub<StreamingHub>("/streamingHub"));
 
             var dataService = serviceProvider.GetRequiredService<IDataService>();
-          //  dataService.InicializaDBAsync(serviceProvider).Wait();
+            dataService.InicializaDBAsync(serviceProvider).Wait();
             CreateRoles(serviceProvider, userHelper).Wait();
         }
 
