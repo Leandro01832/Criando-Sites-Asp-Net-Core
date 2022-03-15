@@ -1,0 +1,41 @@
+﻿@model business.business.Pagina
+@{
+    List<business.div.Div> lista = ViewBag.divs;
+}
+<style>
+    .FecharGaleria {
+        margin-left: 50px;
+    }
+</style>
+@Html.Raw(ViewBag.Html)
+
+@{
+    foreach (var item in lista)
+    {
+        <span>-</span> 
+        <a href="#" id="id-@(item.Id)"  class="btn btn-primary bloco-id">
+        Bloco id: @item.Id
+        </a> 
+        <span>-</span>
+    }
+}
+
+<button class="FecharGaleria btn btn-primary">Fechar</button>
+
+
+<div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".FecharGaleria").click(function () {
+                $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
+                $("#estrutura").fadeIn("slow");
+            });
+
+            $(".bloco-id").click(function () {
+                var number = $(this)[0].id.replace('id-', '');
+                $("#GaleriaBlocos").load("/Div/ListaFixo/" + number);
+            });
+        });
+    </script>
+</div>

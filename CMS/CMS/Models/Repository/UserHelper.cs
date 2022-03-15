@@ -75,8 +75,8 @@ namespace CMS.Models.Repository
 
         public async Task CheckSuperUserAsync()
         {            
-            var email = "leandroleanleo@gmail.com";
-            var password = "M@nequim1991";
+            var email = Configuration.GetConnectionString("Email");
+            var password = Configuration.GetConnectionString("Senha");
             var userASP = await UserManager.FindByNameAsync(email);
             if (userASP == null)
             {
@@ -124,7 +124,9 @@ namespace CMS.Models.Repository
                 || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
             if (!roles.Contains("Ecommerce") && elemento == "Produto" 
                 || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
-            if (!roles.Contains("Link") && elemento == "Link"
+            if (!roles.Contains("Link") && elemento == "LinkBody"
+                || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
+            if (!roles.Contains("Link") && elemento == "LinkMenu"
                 || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
             if (!roles.Contains("Music") && elemento == "musica"
                 || DateTime.Now > pedido.Datapedido.AddDays(pedido.DiasLiberados)) return false;
@@ -144,9 +146,9 @@ namespace CMS.Models.Repository
                 condicao = "Ecommerce";            
             else if (elemento == "Campo")
                 condicao = "Formulario";            
-            else if (elemento == "CarouselPagina")            
+            else if (elemento == "CarouselPagina" || elemento == "CarouselImg")            
                 condicao = "Carousel";            
-            else if (elemento == "Dropdown")            
+            else if (elemento == "Dropdown" || elemento == "LinkBody" || elemento == "LinkMenu")            
                 condicao = "Link";            
             else            
                 condicao = elemento;            

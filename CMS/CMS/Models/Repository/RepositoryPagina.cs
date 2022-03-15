@@ -1,7 +1,7 @@
 ﻿using business.Back;
 using business.business;
+using business.business.carousel;
 using business.business.Elementos;
-using business.business.Elementos.imagem;
 using business.div;
 using business.Join;
 using CMS.Data;
@@ -25,13 +25,11 @@ namespace CMS.Models.Repository
 {
     public interface IRepositoryPagina
     {
-        Task<IList<Pagina>> MostrarPageModels();
+        Task<List<Pagina>> MostrarPageModels();
         Task<string> renderizarPagina(Pagina pagina);
         Task<string> renderizarPaginaComMenuDropDown(Pagina pagina);
         Task<bool> verificaTable(Pagina pagina);
         int[] criarRows(Pagina pagina);
-        void CriarBackgrounds(Pagina pag, List<Imagem> imagens);
-        Pagina LinksPagina(Pagina pagina);
         void criandoArquivoHtml(Pagina pagina);
         byte[] FazerDownload(Pedido site);
         Task<string> renderizarPaginaComCarousel(Pagina pagina);
@@ -43,18 +41,15 @@ namespace CMS.Models.Repository
     public class RepositoryPagina : BaseRepository<Pagina>, IRepositoryPagina
     {
         public RepositoryPagina(IConfiguration configuration, ApplicationDbContext contexto,
-            IRepositoryBackground repositoryBackground, IHostingEnvironment hostingEnvironment,
+            IHostingEnvironment hostingEnvironment,
              SignInManager<IdentityUser> signInManager, UserManager<IdentityUser> userManager,
-              IHttpContextAccessor contextAccessor, IRepositoryDiv repositoryDiv,
-              IRepositoryCarouselPaginaCarousel repositoryCarouselPaginaCarousel) : base(configuration, contexto)
+              IHttpContextAccessor contextAccessor, IRepositoryDiv repositoryDiv) : base(configuration, contexto)
         {
-            RepositoryBackground = repositoryBackground;
             HostingEnvironment = hostingEnvironment;
             SignInManager = signInManager;
             UserManager = userManager;
             ContextAccessor = contextAccessor;
             RepositoryDiv = repositoryDiv;
-            RepositoryCarouselPaginaCarousel = repositoryCarouselPaginaCarousel;
         }
 
         string path = Directory.GetCurrentDirectory();
@@ -74,18 +69,7 @@ namespace CMS.Models.Repository
         
         //711 linhas
         public string CodigoProducao { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/DocProducao.cshtml")); } }
-
-        public string CodigoHtmlInicio { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocHtmlInicio.cshtml")); } }
-        public string CodigoHtml1 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocImagem.cshtml")); } }
-        public string CodigoHtml2 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocTexto.cshtml")); } }
-        public string CodigoHtml3 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocCarousel.cshtml")); } }
-        public string CodigoHtml4 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocFormulario.cshtml")); } }
-        public string CodigoHtml5 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocLink.cshtml")); } }
-        public string CodigoHtml6 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocTable.cshtml")); } }
-        public string CodigoHtml7 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocVideo.cshtml")); } }
-        public string CodigoHtml8 { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocCarouselPagina.cshtml")); } }
-        public string CodigoHtmlFim { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/html/DocHtmlFim.cshtml")); } }
-        
+              
         public string CodigoModal { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/modal.cshtml")); } }
         
         public string CodigoMusic { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/music.cshtml")); } }
@@ -93,35 +77,20 @@ namespace CMS.Models.Repository
         public string CodigoCarousel { get { return File.ReadAllText(Path.Combine(path + "/wwwroot/Arquivotxt/Carousel.cshtml")); } }
 
         public string Html { get { return Path.Combine(path + "/wwwroot/Html/"); } }
-
-        public IRepositoryBackground RepositoryBackground { get; }
+        
         public IHostingEnvironment HostingEnvironment { get; }
         public SignInManager<IdentityUser> SignInManager { get; }
         public UserManager<IdentityUser> UserManager { get; }
         public IHttpContextAccessor ContextAccessor { get; }
         public IRepositoryDiv RepositoryDiv { get; }
-        public IRepositoryCarouselPaginaCarousel RepositoryCarouselPaginaCarousel { get; }
 
-        public async Task<IList<Pagina>> MostrarPageModels()
+        public static List<Pagina> paginas = new List<Pagina>();
+
+        public async Task<List<Pagina>> MostrarPageModels()
         {         
 
             var lista = await  includes()
-            .ToListAsync();
-
-            foreach (var pag in lista)
-            {
-                foreach (var b in pag.Div)
-                {
-                    foreach (var e in b.Div.Elemento)
-                    {
-                        if(e.Elemento.GetType().Name == "CarouselPagina")
-                        {
-                            e.Elemento = await RepositoryCarouselPaginaCarousel.IncluiPaginas(e.Elemento.Id);
-                        }
-                    }
-                }
-
-            }
+            .ToListAsync();           
 
             foreach (var pag in lista)
             {
@@ -131,27 +100,36 @@ namespace CMS.Models.Repository
                 }
             }
 
+            foreach (var pag in lista)
+            {
+                foreach (var div in pag.Div)
+                {
+                    foreach (var item in div.Div.Elemento)
+                    {
+                        if(item.Elemento is CarouselPagina)
+                        {
+                            foreach (var item2 in item.Elemento.Paginas)
+                                item2.Pagina = lista.First(p => p.Id == item2.PaginaId);
+                        }
+                    }
+                }
+            }
+
             return  lista;
         }
 
         public async Task<string> renderizarPagina(Pagina pagina)
         {
-            // desenvolvimento
-            //var resultado = await renderizar(pagina, CodigoCss + CodigoBloco
-            //    + CodigoCss2 + CodigoHtmlInicio + CodigoHtml1 + CodigoHtml2 + CodigoHtml3 + CodigoHtml4
-            //    + CodigoHtml5 + CodigoHtml6 + CodigoHtml7 + CodigoHtml8 + CodigoHtmlFim + CodigoMusic
-            //    + CodigoModal);
-
             //producao
             var resultado = await renderizar(pagina, CodigoCss + CodigoBloco
                + CodigoCss2 + CodigoProducao + CodigoMusic  + CodigoModal);
             return resultado;
-        }
-        
+        }        
 
         public async Task<bool> verificaTable(Pagina pagina)
-        {
+        {            
             bool verifica = false;
+            if (pagina.Pedido == null) return false;
             foreach (var pag in pagina.Pedido.Paginas)
             {
                 var ele = await contexto.Elemento.Include(e => e.div)
@@ -172,7 +150,7 @@ namespace CMS.Models.Repository
             int espaco = 0;
             int rows = 0;
 
-            foreach (var bloco in pagina.Div.Select(d => d.Div))
+            foreach (var bloco in pagina.Div.Skip(6).Select(d => d.Div))
             {
                 if (bloco.Divisao == "col-md-12" || bloco.Divisao == "col-xs-12")
                     espaco += 12;
@@ -205,41 +183,10 @@ namespace CMS.Models.Repository
             }
 
             return numero;
-        }
-
-        public void CriarBackgrounds(Pagina pag, List<Imagem> imagens)
-        {
-            RepositoryBackground.CriarBackground(pag, imagens);
-        }
-
-        public Pagina LinksPagina(Pagina pagina)
-        {
-            
-            if (pagina.Facebook == null)
-            {
-                pagina.Facebook = "vazio";
-            }
-            if (pagina.Twiter == null)
-            {
-                pagina.Twiter = "vazio";
-            }
-            if (pagina.Instagram == null)
-            {
-                pagina.Instagram = "vazio";
-            }
-
-            return pagina;
-        }
+        }      
 
         public async Task<string> renderizarPaginaComMenuDropDown(Pagina pagina)
         {
-            //desenvolvimento
-            //var resultado = await renderizar(pagina, MenuDropDown + CodigoCssMenuDropDwn +
-            //    CodigoBloco + CodigoCss2 + CodigoHtmlInicio + CodigoHtml1 + CodigoHtml2 + CodigoHtml3
-            //    + CodigoHtml4 + CodigoHtml5 + CodigoHtml6 + CodigoHtml7 + CodigoHtml8 + CodigoHtmlFim
-            //    + CodigoMusic + CodigoModal);
-
-            //producao
             var resultado = await renderizar(pagina, MenuDropDown + CodigoCssMenuDropDwn +
                CodigoBloco + CodigoCss2 + CodigoProducao  + CodigoMusic + CodigoModal);
             return resultado;
@@ -247,12 +194,6 @@ namespace CMS.Models.Repository
 
         public async Task<string> renderizarPaginaComCarousel(Pagina pagina)
         {
-            // desenvolvimento
-            //var resultado = await renderizar(pagina, CodigoCss + CodigoBloco + CodigoCss2 +
-            //    CodigoHtmlInicio + CodigoHtml1 + CodigoHtml2 + CodigoHtml3 + CodigoHtml4
-            //    + CodigoHtml5 + CodigoHtml6 + CodigoHtml7 + CodigoHtml8 + CodigoHtmlFim + CodigoMusic
-            //    + CodigoCarousel + CodigoModal);
-
             var resultado = await renderizar(pagina, CodigoCss + CodigoBloco + CodigoCss2 +
                 CodigoProducao + CodigoMusic
                 + CodigoCarousel + CodigoModal);
@@ -349,7 +290,7 @@ namespace CMS.Models.Repository
             if (pagina.Div != null)
             {
 
-                foreach (var divPagina in pagina.Div)
+                foreach (var divPagina in pagina.Div.Skip(6))
                 {
                     blocosGravados += divPagina.Div.Id + ", ";
                     if (!pagina.Blocos.Contains(divPagina.Div.Id.ToString()))
@@ -382,9 +323,9 @@ namespace CMS.Models.Repository
                 Div div;
                 bool MesmoCliente = false;
 
-                var Bloco = await contexto.Div.FirstOrDefaultAsync(d => d.Id == int.Parse(id));                
+                var Bloco = await contexto.Div.FirstOrDefaultAsync(d => d.Id == int.Parse(id));
 
-                if (Bloco != null) 
+                if (Bloco != null)
                 {
                     var paginaBloco = contexto.Pagina.First(p => p.Id == Bloco.Pagina_);
                     var site = contexto.Pedido.First(p => p.Id == paginaBloco.PedidoId);
@@ -393,7 +334,7 @@ namespace CMS.Models.Repository
                         MesmoCliente = true;
                     }
                 }
-                
+
 
                 try
                 {
@@ -411,24 +352,32 @@ namespace CMS.Models.Repository
                     page.IncluiDiv(div);
                     await contexto.SaveChangesAsync();
                 }
-                   
+
             }
         }
 
         public async Task<string> renderizar(Pagina pagina, string TextoHtml)
         {
-            int[] numero = criarRows(pagina);
-
-            pagina = LinksPagina(pagina);
-
-            var site = await contexto.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
-            
+            int[] numero = criarRows(pagina);           
 
             var condicao = await verificaTable(pagina);
+
+             await verificaBackground(pagina);
 
             var condicaoLogin = SignInManager.IsSignedIn(ContextAccessor.HttpContext.User);
 
             var username = UserManager.GetUserName(ContextAccessor.HttpContext.User);
+
+            var redeFacebook = "";
+            var redeTwiter = "";
+            var redeInstagram = "";
+
+            if(pagina.Pedido != null)
+            {
+                redeFacebook = pagina.Pedido.Facebook;
+                redeTwiter = pagina.Pedido.Twiter;
+                redeInstagram = pagina.Pedido.Instagram;
+            }
 
             Velocity.Init();
             var Modelo = new
@@ -440,9 +389,9 @@ namespace CMS.Models.Repository
                 arquivoMusic = pagina.ArquivoMusic,
                 Pagina = pagina,
                 titulo = pagina.Titulo,
-                facebook = pagina.Facebook,
-                twiter = pagina.Twiter,
-                instagram = pagina.Instagram,
+                facebook = redeFacebook,
+                twiter = redeTwiter,
+                instagram = redeInstagram,
                 Div1 = pagina.Div.OrderBy(d => d.Div.Ordem).ToList().First(),
                 Div2 = pagina.Div.Skip(1).OrderBy(d => d.Div.Id).ToList().First(),
                 Div3 = pagina.Div.Skip(2).OrderBy(d => d.Div.Id).ToList().First(),
@@ -466,6 +415,22 @@ namespace CMS.Models.Repository
             return html.ToString();
         }
 
+        private async Task verificaBackground(Pagina pagina)
+        {
+            foreach(var item in pagina.Div)
+            if( item.Div.Background == null)
+                {
+                    item.Div.Background = new BackgroundCor
+                    {
+                        Id = item.Div.Id,
+                        backgroundTransparente = true,
+                        Cor = "transparent"                          
+                    };
+                    contexto.Add(item.Div.Background);
+                    await contexto.SaveChangesAsync();
+                }
+        }
+
         public async Task<Pagina> TestarPagina(string id)
         {
             Pagina pag;
@@ -483,19 +448,42 @@ namespace CMS.Models.Repository
         public IIncludableQueryable<Pagina, Div> includes()
         {
             var include = dbSet
-            .Include(p => p.Pastas)
+            .Include(p => p.Story)
+            .Include(p => p.Div)
             .Include(p => p.Pedido)
-            .ThenInclude(p => p.Paginas)
-            .ThenInclude(p => p.Div)
-            .ThenInclude(b => b.Div)
-            .ThenInclude(b => b.Elemento)
-            .Include(p => p.Div)
-            .ThenInclude(b => b.Div)
-            .ThenInclude(b => b.Elemento)
-            .Include(p => p.Div)
-            .ThenInclude(b => b.Div)
-            .ThenInclude(b => b.Elemento)
-            .ThenInclude(b => b.Div);
+            .ThenInclude(p => p.Pastas)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Background).ThenInclude(b => b.Imagem)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Background).ThenInclude(b => b.Cores)
+            
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Imagem)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Texto)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Table)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Formulario)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Dependentes).ThenInclude(b => b.Elemento)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Dependentes).ThenInclude(b => b.ElementoDependente)
+            
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Paginas).ThenInclude(b => b.Elemento)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Elemento)
+            .ThenInclude(b => b.Paginas).ThenInclude(b => b.Pagina)
+
+            .Include(p => p.Div).ThenInclude(b => b.Div).ThenInclude(b => b.Elemento).ThenInclude(b => b.Div);
 
             return include;
         }

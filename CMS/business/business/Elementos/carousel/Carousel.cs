@@ -3,7 +3,7 @@ using business.business.Elementos.element;
 
 namespace business.business.carousel
 {
-    public abstract class Carousel : ElementoDependente
+    public abstract class Carousel : Elemento
     {
 
     }

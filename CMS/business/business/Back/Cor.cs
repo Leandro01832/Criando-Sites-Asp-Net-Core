@@ -11,8 +11,8 @@ namespace business.Back
         public int Position { get; set; }
         public double Transparencia { get; set; }
         [Display(Name="Para qual plano de fundo?")]
-        public int BackgroundGradienteId { get; set; }        
-        public BackgroundGradiente BackgroundGradiente { get; set; }
+        public int BackgroundId { get; set; }        
+        public virtual Background Background { get; set; }
 
         [NotMapped]
         public int Grau { get; set; }

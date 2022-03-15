@@ -1,7 +1,5 @@
 ﻿using business.business.Elementos.element;
 using business.div;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace business.Join
 {
@@ -9,7 +7,7 @@ namespace business.Join
     {
         public int? ElementoId { get; set; }
         public int? DivId { get; set; }
-        public Div Div { get; set; }
-        public Elemento Elemento { get; set; }
+        public virtual Div Div { get; set; }
+        public virtual Elemento Elemento { get; set; }
     }
 }

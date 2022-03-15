@@ -1,0 +1,110 @@
+﻿@model business.business.Pagina
+@{
+    ViewData["Title"] = "HttpNotFound";
+    Layout = "~/Views/Shared/_Render.cshtml";
+    List<business.business.Story> stories = ViewBag.stories;
+}
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+
+<header>
+    <div class="navbar navbar-inverse navbar-fixed-top" id="Menuzinho" style="z-index:5000000;">
+        <div class="container">
+
+            <div class="navbar-header">
+                <form class="navbar-toggle">
+                    <select asp-for="Story.Nome" class="form-control">
+
+                        @{
+                            foreach (var item in stories)
+                            {
+                                if (item.Nome == "Padrao")
+                                {
+                                    <option value="@item.Nome" selected>@item.Nome</option>
+                                }
+                                else
+                                {
+                                    <option value="@item.Nome">@item.Nome</option>
+                                }
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="Story.Nome" class="text-danger"></span>
+                </form>
+
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                @Html.ActionLink("Instag Leo", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
+
+
+            </div>
+            <div class="navbar-collapse collapse">
+
+                <ul class="nav navbar-nav">
+
+                    <li>
+                        <a href="/Index/">Home</a>
+                    </li>
+                </ul>
+
+                <partial name="_LoginPartial" />
+
+            </div>
+        </div>
+    </div>
+</header>
+
+<br />
+<div style="position: fixed; z-index: 2;">
+    <input type="number" id="NumeroPaginaAcesso" style="width:80%; margin-left: 60px;"
+           placeholder="N° da pag. Ex: 2, 3, 4, 5, ..." value="@ViewBag.numeroErro" />
+    <center>
+        <a id="acessoPaginaComInput" href="/Pagina/" class="btn btn-primary glyphicon glyphicon-search loader">
+            Acessar
+        </a>
+    </center>
+</div>
+
+
+<br />
+<br />
+<br />
+
+<h1>Pagina não encontrada</h1>
+<h3>Por favor digitar um numero menor</h3>
+
+<div id="loading" style="display:none; z-index:50;"><img src="~/imagem/loader.gif" /></div>
+
+
+@section scripts{
+
+    <script src="~/js/loader.js"></script>
+    <script type="text/javascript">
+
+        $("#Story_Nome").change(function () {
+            
+            $.ajax({
+                type: 'POST',
+                url: '/Pagina/NavegarEmTipo',
+                dataType: 'json',
+                data: { Tipo: $(this).val() },
+                success: function (data) {
+
+                    if (data != "") alert(data);
+
+                },
+                error: function (ex) {
+                    alert('Falha ao buscar paginas.' + ex);
+                }
+            });
+            return false;
+        });
+
+    </script>
+
+
+}
+

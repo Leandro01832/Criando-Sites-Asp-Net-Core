@@ -8,7 +8,7 @@ using System.Text;
 
 namespace business.business.Elementos.produto
 {
-   public abstract class ProdutoComum : ElementoComum
+   public abstract class ProdutoComum : Elemento
     {
         
         [Display(Name = "Descrição")]

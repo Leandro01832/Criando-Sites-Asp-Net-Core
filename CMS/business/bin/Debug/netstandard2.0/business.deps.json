@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETStandard,Version=v2.0/",
-    "signature": "16ba376f3dfb31b51ce6136eeb77553f4fe393a4"
+    "signature": "aaa9b89d0b318e3c2ccaf429152c0d20475d14c4"
   },
   "compilationOptions": {},
   "targets": {
@@ -12,9 +12,8 @@
           "Microsoft.EntityFrameworkCore": "2.2.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.0",
           "NETStandard.Library": "2.0.3",
-          "Newtonsoft.Json": "12.0.1",
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore": "2.2.0.0",
-          "Microsoft.AspNetCore.SignalR.Core": "1.1.0.0"
+          "Microsoft.AspNetCore.SignalR.Core": "1.1.0.0",
+          "Newtonsoft.Json": "11.0.0.0"
         },
         "runtime": {
           "business.dll": {}
@@ -214,14 +213,6 @@
       "NETStandard.Library/2.0.3": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0"
-        }
-      },
-      "Newtonsoft.Json/12.0.1": {
-        "runtime": {
-          "lib/netstandard2.0/Newtonsoft.Json.dll": {
-            "assemblyVersion": "12.0.0.0",
-            "fileVersion": "12.0.1.22727"
-          }
         }
       },
       "Remotion.Linq/2.2.0": {
@@ -602,19 +593,19 @@
           "System.Runtime": "4.1.0"
         }
       },
-      "Microsoft.AspNetCore.Identity.EntityFrameworkCore/2.2.0.0": {
-        "runtime": {
-          "Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll": {
-            "assemblyVersion": "2.2.0.0",
-            "fileVersion": "2.2.0.18316"
-          }
-        }
-      },
       "Microsoft.AspNetCore.SignalR.Core/1.1.0.0": {
         "runtime": {
           "Microsoft.AspNetCore.SignalR.Core.dll": {
             "assemblyVersion": "1.1.0.0",
             "fileVersion": "1.1.0.18316"
+          }
+        }
+      },
+      "Newtonsoft.Json/11.0.0.0": {
+        "runtime": {
+          "Newtonsoft.Json.dll": {
+            "assemblyVersion": "11.0.0.0",
+            "fileVersion": "11.0.2.21924"
           }
         }
       }
@@ -765,13 +756,6 @@
       "sha512": "sha512-st47PosZSHrjECdjeIzZQbzivYBJFv6P2nv4cj2ypdI204DO+vZ7l5raGMiX4eXMJ53RfOIg+/s4DHVZ54Nu2A==",
       "path": "netstandard.library/2.0.3",
       "hashPath": "netstandard.library.2.0.3.nupkg.sha512"
-    },
-    "Newtonsoft.Json/12.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-pBR3wCgYWZGiaZDYP+HHYnalVnPJlpP1q55qvVb+adrDHmFMDc1NAKio61xTwftK3Pw5h7TZJPJEEVMd6ty8rg==",
-      "path": "newtonsoft.json/12.0.1",
-      "hashPath": "newtonsoft.json.12.0.1.nupkg.sha512"
     },
     "Remotion.Linq/2.2.0": {
       "type": "package",
@@ -1039,12 +1023,12 @@
       "path": "system.threading.tasks/4.0.11",
       "hashPath": "system.threading.tasks.4.0.11.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Identity.EntityFrameworkCore/2.2.0.0": {
+    "Microsoft.AspNetCore.SignalR.Core/1.1.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""
     },
-    "Microsoft.AspNetCore.SignalR.Core/1.1.0.0": {
+    "Newtonsoft.Json/11.0.0.0": {
       "type": "reference",
       "serviceable": false,
       "sha512": ""

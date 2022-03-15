@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - CriadorSites</title>
+    <title>@ViewData["Title"] - Instag Leo</title>
 
     <environment names="Development">
         <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
@@ -19,13 +19,6 @@
     <link rel="stylesheet" href="~/css/site.css" />
     <link rel="stylesheet" href="~/css/the-big-picture.css" />
     <script data-ad-client="ca-pub-1473710636214528" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-
-    <style>
-        li{
-            margin-left:10px;
-        }
-    </style>
-
 </head>
 
 <body>
@@ -38,7 +31,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    @Html.ActionLink("Meu Projeto Agora", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
+                    @Html.ActionLink("Instag Leo", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -49,12 +42,15 @@
                                 <li>@Html.ActionLink("Criar Site", "Create", "Pedido")</li>
                                 <li>Email:<input type="email" id="InputEmail" /></li>
                                 <li><a href="#" id="AcessoTemplates">Acessar sites do email</a></li>
+                                <li>@Html.ActionLink("Story", "Index", "Story")</li>
                             </ul>
                         </li>
 
 
                         <li>@Html.ActionLink("Contatos", "Contatos", "Home")</li>
-                        <li>@Html.ActionLink("Area do Admin", "Admin", "Admin")</li>                        
+                        <li>@Html.ActionLink("Area do Admin", "Admin", "Admin")</li>
+
+
                     </ul>
 
                     <partial name="_LoginPartial" />
@@ -73,7 +69,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2020 - CriadorSites - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2020 - Instag Leo - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
 
@@ -101,7 +97,7 @@
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>
-
+    <script src="~/lib/jquery/dist/jquery.cookie.js"></script>
     @RenderSection("Scripts", required: false)
 </body>
 </html>
@@ -111,9 +107,28 @@
 
     $(document).ready(function () {
 
+        $("#Selecionar").change(function () {
+
+            $.ajax({
+                type: 'POST',
+                url: '/Pagina/NavegarEmTipo',
+                dataType: 'json',
+                data: { Tipo: $(this).val() },
+                success: function (data) {
+
+                    if (data != "") alert(data);
+
+                },
+                error: function (ex) {
+                    alert('Falha ao buscar paginas.' + ex);
+                }
+            });
+            return false;
+        });
+
 
         $("#NumeroPaginaAcesso").change(function () {
-            document.getElementById("acessoPaginaComInput").href = "/Pagina/";
+            document.getElementById("acessoPaginaComInput").href = "/Story-Padrao-Pagina/";
             document.getElementById("acessoPaginaComInput").href += $(this).val();
         });
 

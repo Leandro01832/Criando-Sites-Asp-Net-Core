@@ -7,7 +7,7 @@ namespace business.Join
     {
         public int? PaginaId { get; set; }
         public int? DivId { get; set; }
-        public Div Div { get; set; }
-        public Pagina Pagina { get; set; }
+        public virtual Div Div { get; set; }
+        public virtual Pagina Pagina { get; set; }
     }
 }

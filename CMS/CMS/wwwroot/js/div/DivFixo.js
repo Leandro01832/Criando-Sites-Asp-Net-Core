@@ -33,18 +33,24 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Elemento/_DivFixo',
+            url: '/Div/_DivFixo',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
             headers: headers
-        }).done(function (response) {
+        }).done(function (response) {            
+
+            $("#links-back").show();
+            $("#form").css("display", "none");
+
+            $("#numero-back").val(response.replace(/[^0-9]/g, ''));
 
             var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
             numero = numero.replace('44311', '');
             $(".content").load("/Pagina/getview", { id: numero });
 
-            alert("Bloco criado com sucesso!!! " + response);
+            
+            alert("Bloco criado com sucesso!!! " + response);            
             
         });
     }
@@ -57,7 +63,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Elemento/_DivFixo',
+            url: '/Div/_DivFixo',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),

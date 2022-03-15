@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations;
 namespace business.business.Elementos.imagem
 {
 
-    public class Imagem : ElementoComum
+    public class Imagem : ElementoDependente
     {
         [Display(Name = "Arquivo")]
         public string ArquivoImagem { get; set; }
@@ -16,7 +16,9 @@ namespace business.business.Elementos.imagem
         public int Width { get; set; }
 
         [JsonIgnore]
-        public virtual List<Background> Backgrounds { get; set; }
+        public virtual List<Background> Background { get; set; }
+        [JsonIgnore]
+        public virtual List<Elemento> Elemento { get; set; }
 
         public int? PastaImagemId { get; set; }
         [JsonIgnore]

@@ -60,7 +60,7 @@ namespace CMS.Controllers.Api
         {
             var pagina = await includes().FirstAsync(p => p.Id == id);
 
-            foreach (var div in pagina.Div)
+            foreach (var div in pagina.Div.Skip(6))
             {
                 div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
             }
@@ -148,7 +148,8 @@ namespace CMS.Controllers.Api
         public IIncludableQueryable<Pagina, Div> includes()
         {
             var include = _context.Pagina
-            .Include(p => p.Pastas)
+            .Include(p => p.Pedido)
+            .ThenInclude(p => p.Pastas)
             .Include(p => p.Pedido)
             .ThenInclude(p => p.Paginas)
             .ThenInclude(p => p.Div)

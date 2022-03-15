@@ -12,6 +12,6 @@ namespace business.business
         public long Numero { get; set; }
         public string Cep { get; set; }
         [Required]
-        public virtual string ClienteId { get; set; }
+        public string ClienteId { get; set; }
     }
 }

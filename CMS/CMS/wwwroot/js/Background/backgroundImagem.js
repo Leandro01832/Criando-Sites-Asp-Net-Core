@@ -43,7 +43,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Ferramenta/_BackgroundImagem',
+            url: '/Background/_BackgroundImagem',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -65,7 +65,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Ferramenta/_BackgroundImagem',
+            url: '/Background/_BackgroundImagem',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),

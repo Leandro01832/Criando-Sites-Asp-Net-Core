@@ -12,7 +12,7 @@
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input asp-for="PaginaId" type="hidden" />
+                <input asp-for="PedidoId" type="hidden" />
             </div>
             <div class="form-group">
                 <input type="button" id="CriarPasta" value="Create" class="btn btn-default" />
@@ -36,7 +36,7 @@
             $("#CriarPasta").click(function () { 
                 var data = {
                     Nome: $("#Nome").val(),
-                    PaginaId: numero
+                    PedidoId: $("#IdentificaSite").val()
                 };
 
                 $.ajax({

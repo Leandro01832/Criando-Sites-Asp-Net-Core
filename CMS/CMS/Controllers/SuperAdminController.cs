@@ -48,12 +48,7 @@ namespace CMS.Controllers
             var elementos = _context.ElementoDependente;
             return View(await elementos.ToListAsync());
         }
-        public async Task<IActionResult> IndexElementoDependenteElemento()
-        {
-            var applicationDbContext = _context.ElementoDependenteElemento
-            .Include(e => e.Elemento).Include(e => e.ElementoDependente);
-            return View(await applicationDbContext.ToListAsync());
-        }
+
         [Route("SuperAdmin/Rotas")]
         [Route("Rotas")]
         public async Task<IActionResult> Rotas()
@@ -112,24 +107,6 @@ namespace CMS.Controllers
 
             return View(mensagemChat);
         }
-        public async Task<IActionResult> DetailsElementoDependenteElemento(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var elementoDependenteElemento = await _context.ElementoDependenteElemento
-                .Include(e => e.Elemento)
-                .Include(e => e.ElementoDependente)
-                .FirstOrDefaultAsync(m => m.ElementoDependenteId == id);
-            if (elementoDependenteElemento == null)
-            {
-                return NotFound();
-            }
-
-            return View(elementoDependenteElemento);
-        }
         #endregion
 
         //Região Create
@@ -156,20 +133,7 @@ namespace CMS.Controllers
             ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente");
             return View();
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateElementoDependente([Bind("ElementoId,ElementoDependenteId")] ElementoDependenteElemento elementoDependenteElemento)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(elementoDependenteElemento);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
-            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
-            return View(elementoDependenteElemento);
-        }
+        
         #endregion
 
         //Região Editar
@@ -212,48 +176,8 @@ namespace CMS.Controllers
             }
             return View(mensagemChat);
         }
-        public async Task<IActionResult> EditElementoDependenteElemento(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
 
-            var elementoDependenteElemento = await _context.ElementoDependenteElemento.FindAsync(id);
-            if (elementoDependenteElemento == null)
-            {
-                return NotFound();
-            }
-            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
-            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
-            return View(elementoDependenteElemento);
-        }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditElementoDependenteElemento(int id, [Bind("ElementoId,ElementoDependenteId")] ElementoDependenteElemento elementoDependenteElemento)
-        {
-            if (id != elementoDependenteElemento.ElementoDependenteId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(elementoDependenteElemento);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    return NotFound();
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["ElementoId"] = new SelectList(_context.Elemento, "IdElemento", "Discriminator", elementoDependenteElemento.ElementoId);
-            ViewData["ElementoDependenteId"] = new SelectList(_context.ElementoDependente, "IdElementoDependente", "IdElementoDependente", elementoDependenteElemento.ElementoDependenteId);
-            return View(elementoDependenteElemento);
-        }
+           
         #endregion
 
         //Região Ddelete
@@ -280,33 +204,6 @@ namespace CMS.Controllers
         {
             var mensagemChat = await _context.MensagemChat.FindAsync(id);
             _context.MensagemChat.Remove(mensagemChat);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-        public async Task<IActionResult> DeleteElementoDependente(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var elementoDependenteElemento = await _context.ElementoDependenteElemento
-                .Include(e => e.Elemento)
-                .Include(e => e.ElementoDependente)
-                .FirstOrDefaultAsync(m => m.ElementoDependenteId == id);
-            if (elementoDependenteElemento == null)
-            {
-                return NotFound();
-            }
-
-            return View(elementoDependenteElemento);
-        }
-        [HttpPost, ActionName("DeleteElementoDependente")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteElementoDependenteConfirmed(int id)
-        {
-            var elementoDependenteElemento = await _context.ElementoDependenteElemento.FindAsync(id);
-            _context.ElementoDependenteElemento.Remove(elementoDependenteElemento);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

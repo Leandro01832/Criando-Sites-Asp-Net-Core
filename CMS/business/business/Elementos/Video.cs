@@ -2,7 +2,7 @@
 
 namespace business.business.Elementos
 {
-    public class Video : ElementoComum
+    public class Video : Elemento
     {
         public string ArquivoVideo { get; set; } 
     }

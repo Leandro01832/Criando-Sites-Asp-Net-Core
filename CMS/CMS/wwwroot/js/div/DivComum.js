@@ -18,9 +18,11 @@
 
         var formdata = {};
         $(data).each(function (index, obj) {
+            
             formdata[obj.name] = obj.value;
         });
 
+        debugger;
         formdata["Pagina_"] = numero;
         return formdata;
     }
@@ -33,17 +35,22 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Elemento/_DivComum',
+            url: '/Div/_DivComum',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
             headers: headers
         }).done(function (response) {
 
+            $("#links-back").show();
+            $("#form").css("display", "none");
+
+            $("#numero-back").val(response.replace(/[^0-9]/g, ''));
+
             var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
             numero = numero.replace('44311', '');
             $(".content").load("/Pagina/getview", { id: numero });
-
+            
             alert("Bloco criado com sucesso!!! " + response);
             
         });
@@ -57,7 +64,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Elemento/_DivComum',
+            url: '/Div/_DivComum',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),

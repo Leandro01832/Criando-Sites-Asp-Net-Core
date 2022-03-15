@@ -1,4 +1,5 @@
 ﻿using business.business.element;
+using business.business.Elementos.element;
 using business.business.Elementos.produto;
 using CMS.Data;
 using CMS.Models.ViewModels;
@@ -12,7 +13,7 @@ namespace CMS.Models.Repository
 {
     public interface IRepositoryProduto
     {
-        Task<ElementoDependente> TestarProduto(string id);
+        Task<Elemento> TestarProduto(string id);
         Task<BuscaProdutosViewModel> GetProdutosAsync(string pesquisa);
         Task<bool> VerificaExistenciaElementoDependente(string id);
     }
@@ -39,7 +40,7 @@ namespace CMS.Models.Repository
             return new BuscaProdutosViewModel(await query.ToListAsync(), pesquisa);
         }        
 
-        public async Task<ElementoDependente> TestarProduto(string id)
+        public async Task<Elemento> TestarProduto(string id)
         {
             ProdutoDependente produto;
             try

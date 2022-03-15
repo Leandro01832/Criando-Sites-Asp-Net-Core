@@ -25,6 +25,7 @@ namespace CMS.Data
 
         }
 
+        public DbSet<Story> Story { get; set; }
         public DbSet<BackgroundGradiente> BackgroundGradiente { get; set; }
         public DbSet<Cadastro> Cadastro { get; set; }
         public DbSet<DadoFormulario> DadoFormulario { get; set; }
@@ -52,7 +53,6 @@ namespace CMS.Data
         public DbSet<Background> Background { get; set; }
         public DbSet<Video> Video { get; set; }
         public DbSet<Elemento> Elemento { get; set; }
-        public DbSet<ElementoComum> ElementoComum { get; set; }
         public DbSet<ElementoDependente> ElementoDependente { get; set; }
         public DbSet<Campo> Campo { get; set; }
         public DbSet<Link> Link { get; set; }
@@ -75,7 +75,7 @@ namespace CMS.Data
 
             base.OnModelCreating(builder);
             builder.Entity<PaginaCarouselPagina>()
-            .HasKey(p => new { p.CarouselPaginaId, p.PaginaId });
+            .HasKey(p => new { p.ElementoId, p.PaginaId });
 
             base.OnModelCreating(builder);
             builder.Entity<DivPagina>()
@@ -89,7 +89,6 @@ namespace CMS.Data
 
             builder.Entity<Carousel>().ToTable("Carousel");
             builder.Entity<Elemento>().ToTable("Elemento");
-            builder.Entity<ElementoComum>().ToTable("ElementoComum");
             builder.Entity<ElementoDependente>().ToTable("ElementoDependente");
             builder.Entity<Div>().ToTable("Div");
             builder.Entity<Link>().ToTable("Link");

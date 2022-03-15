@@ -1,5 +1,102 @@
  
 
+<div id='bordaEsquerda$model.Div5.Div.Id' class='bordaEsquerda' data-value='$model.Div5.Div.Id'>
+
+</div>
+
+<div id='bordaDireita$model.Div6.Div.Id' class='bordaDireita' data-value='$model.Div6.Div.Id'>
+
+</div>
+
+<script type='text/javascript'>
+
+        $(document).ready(function () {
+
+            jQuery(function () {
+
+                $('.item:first-child').addClass('active').show();
+            });
+
+        });
+
+</script>
+
+#if($model.Pagina.Margem)
+
+<style>
+
+    #bordaDireita$model.Div6.Div.Id {
+        display: block;
+    }
+
+    #bordaEsquerda$model.Div5.Div.Id {
+        display: block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 60%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+</style>
+
+#else
+
+<style type='text/css'>
+
+
+    h1 {
+        text-align: center;
+    }
+
+
+
+    #menu a {
+        display: inline-block;
+    }
+
+    #conteudo$model.Pagina.Id {
+        width: 100%;
+        min-height: 1000px;
+        height: auto;
+        position: relative;
+        margin: auto;
+        margin-top: 0px;
+        background-size: contain;
+    }
+
+    #bordaDireita$model.Div6.Div.Id {
+        display: none;
+    }
+
+    #bordaEsquerda$model.Div5.Div.Id {
+        display: none;
+    }
+</style>
+
+#end
+
+#foreach($bloco in $divs)
+#set($bloco.Div.Desenhado = 0)
+#end
+
+ #set ($valor = 0)
+#foreach($nunber in $model.Rows)
+
+<style>
+    #line$nunber {
+        top: 5px;
+    }
+</style>
+
+   #set ($valor = $valor + 10)
+#end
+
+
 #if($model.Musicbool)
 <audio controls autoplay loop>
     <source src='$site$model.arquivoMusic' type='audio/mp3' />

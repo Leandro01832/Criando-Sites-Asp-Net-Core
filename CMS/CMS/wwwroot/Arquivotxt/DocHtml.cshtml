@@ -1,5 +1,5 @@
 ﻿
-#set($site = 'http://www.siteprofissional.somee.com')
+#set($site = '')
 
 
 <meta charset='UTF-8'>
@@ -7,15 +7,15 @@
 
 <div id='conteudo$model.Pagina.Id' class='Conteudo'>
 
-    <div id='corpo' data-value='$model.background.IdBackground' class='Corpo'>
+    <div id='corpo' data-value='$model.Div1.Id' class='Corpo'>
 
     </div>
 
-    <div id='topo$model.background_topo.IdBackground' class='Topo' data-value='$model.background_topo.IdBackground'>
+    <div id='topo$model.Div2.Id' class='Topo' data-value='$model.Div2.Id'>
         <h1>$model.titulo</h1>
     </div>
 
-    <div id='menu$model.background_menu.IdBackground' class='Menu' data-value='$model.background_menu.IdBackground'>
+    <div id='menu$model.Div3.Id' class='Menu' data-value='$model.Div3.Id'>
         <p>menu</p>
         <br />
         #if ($model.facebook != 'vazio' && $model.facebook != '')
@@ -51,7 +51,7 @@
 
     </div>
 
-    <div id='blocos$model.background_bloco.IdBackground' class='bloco' data-value='$model.background_bloco.IdBackground'>
+    <div id='blocos$model.Div4.Id' class='bloco' data-value='$model.Div4.Div.Id'>
 
         #foreach($nunber in $model.Rows)
 
@@ -274,11 +274,11 @@
 
 </div>
 
-<div id='bordaEsquerda$model.background_borda_esquerda.IdBackground' class='bordaEsquerda' data-value='$model.background_borda_esquerda.IdBackground'>
+<div id='bordaEsquerda$model.Div5.Id' class='bordaEsquerda' data-value='$model.Div5.Id'>
 
 </div>
 
-<div id='bordaDireita$model.background_borda_direita.IdBackground' class='bordaDireita' data-value='$model.background_borda_direita.IdBackground'>
+<div id='bordaDireita$model.Div6.Id' class='bordaDireita' data-value='$model.Div6.Id'>
 
 </div>
 

@@ -1,0 +1,241 @@
+﻿@model business.business.Pagina
+
+@{
+    Layout = "~/Views/Shared/_Render2.cshtml";
+    var proximo = ViewBag.proximo;
+    var anterior = proximo - 2;
+    var atual = proximo - 1;
+}
+
+<script src="/lib/jquery/dist/jquery.js"></script>
+<script src="~/js/jquery-ui.min.js"></script>
+
+<style>
+    .glyphicon {
+        font-size: 22px;
+    }
+
+    #sites {
+        margin-left: 50px;
+    }
+
+    #paginas {
+        margin-left: 50px;
+    }
+
+    #acesso {
+        margin-left: 50px;
+    }
+
+    #loading {
+        display: none;
+        background-color: lightgray;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 300px;
+        filter: alpha(opacity=75);
+        opacity: 0.75;
+    }
+
+    .blocoLoader {
+        z-index: 40;
+    }
+
+    .minhaClasse {
+        z-index: 0 !important;
+    }
+
+    .minhaClasse2 {
+        z-index: 40 !important;
+    }
+</style>
+
+<br />  <br />    <br /><br /><br />
+
+@if (Model == null)
+{
+    <label class="control-label" style="margin-left:50px;">Escolha um site:</label>
+    @Html.DropDownList("sites", null, htmlAttributes: new { @class = "form-control site" })
+
+    @Html.DropDownList("paginas", null, htmlAttributes: new { @class = "form-control pagina" })
+
+    <a href="#" id="acesso" class="btn btn-primary">Acessar</a>
+}
+else
+{
+
+    ViewBag.Title = Model.Titulo + " - " + Model.Pedido.Nome;
+    string valor = ViewBag.html;
+
+    <style media="screen and (max-width: 450px)">
+        .content {
+            width: 100%;
+        }
+    </style>
+
+    <input type="hidden" value="@ViewBag.IdSite" id="IdentificaSite" />
+
+    <link rel="stylesheet" href="~/css/RenderizarDinamico.css" />
+
+
+    <div id="estrutura">
+
+        <div class="row" id="LinhaImaginaria">
+
+            <div style="position: fixed;  margin-left:20px;" class="blocoLoader">
+                <a id="voltar" href="/Editar/@anterior"
+                   class="btn btn-primary loader glyphicon glyphicon-chevron-left">
+                </a>
+            </div>
+            <div style="position: fixed;  margin-left:70px; top:80px;" class="blocoLoader">
+                <input type="number" placeholder="N° pagina" id="NumeroPaginaAcesso" value="@atual" min="2" style="width: 80px;" />
+                <a id="acessoPaginaComInput" href="/Editar/@atual" class="glyphicon glyphicon-search loader">
+                </a>
+            </div>
+            <div style="position: fixed;  margin-left:20px; top:50px;" class="blocoLoader">
+                <a id="avancar" href="/Editar/@proximo"
+                   class="btn btn-primary loader glyphicon glyphicon-chevron-right">
+                </a>
+            </div>
+            
+
+            <div id="Chat" class="col-md-4" style="background-color: white; display:none;">
+                <partial name="BlocoFerramenta" />
+            </div>
+
+            <div class="content col-md-12" id="ConteudoPagina" data-id="">
+                @Html.Raw(ViewBag.Html)
+            </div>
+
+            <script type="text/javascript">
+                $('.linha').sortable({
+                    connectWith: '.linha'
+                });
+
+                $('.ClassDiv').sortable();
+
+                var axis = $('.linha').sortable('option', 'connectWith');
+                let condicaoBloco = false;
+                let condicaoElemento = false;
+
+                // Setter
+                $('.linha').sortable('option', 'connectWith', '.linha');
+
+                $('.linha').sortable({
+                    update: function (event, ui) {
+                        condicaoBloco = true;
+                    }
+                });
+
+                $('.ClassDiv').sortable({
+                    update: function (event, ui) {
+                        condicaoElemento = true;
+                    }
+                });
+            </script>
+
+        </div>
+
+    </div>
+
+    <div id="FormTexto" style="display:none;  margin-left:50px;">
+
+    </div>
+
+    <div id="Permissao" style="display:none;">
+
+    </div>
+
+    <div id="Galeria" style="display:none;">
+
+    </div>
+
+    <div id="GaleriaBlocos" style="display:none;">
+
+    </div>
+
+    <div id="loading" style="display:none; z-index:50;"><img src="~/imagem/loader.gif"  /></div>
+
+}
+
+
+
+@section scripts{
+
+    <script src="~/js/FullScreen.js"></script>
+    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
+    <script src="~/js/Chat.js"></script>
+    <script src="~/js/loader.js"></script>
+
+    <script>
+        $(document).ready(function () {
+
+            $('#PaginaInput').change(function () {
+                document.getElementById('acessoPaginaInput').href = '/Pagina/0/';
+                document.getElementById('acessoPaginaInput').href += $(this).val();
+            });
+
+            $("button").click(function () {
+
+                if ($(".collapse")[0].ariaExpanded == "true") {
+                    $(".blocoLoader").removeClass('minhaClasse');
+                    $(".blocoLoader").addClass('minhaClasse2');
+                }
+                else
+                {
+                    $(".blocoLoader").removeClass('minhaClasse2');
+                    $(".blocoLoader").addClass('minhaClasse');
+                }
+
+
+            }).before(function () { });
+
+            $(".site").click(function () {
+
+                $(".pagina").empty();
+                $(".pagina").append('<option value="0">[Selecione  uma pagina..]</option>');
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/AjaxGet/GetPaginas',
+                    dataType: 'json',
+                    data: { PedidoId: $(this).val() },
+                    success: function (data) {
+                        $.each(data, function (i, data) {
+                            $(".pagina").append('<option value="'
+                                + data.idPagina + '">'
+                                + data.titulo + '</option>');
+                        });
+                    },
+                    error: function (ex) {
+                        alert('Falha ao buscar paginas.' + ex);
+                    }
+                });
+                return false;
+            });
+            $("#paginas").change(function () {
+                document.getElementById("acesso").href = "/pagina/" + $(this).val();
+            });
+
+            $("#NumeroElementoEditar").focusout(function () {
+                $("#conteudomodal").load("/Elemento/Edit/" + $(this).val());
+            });
+
+        });
+    </script>
+
+    <script type="text/javascript" src="~/js/Variaveis.js"></script>
+
+    <script src="~/js/AlterarPosicaoBloco.js"></script>
+
+    <script type="text/javascript" src="~/js/funcaoClickRenderizarDinamico.js"></script>
+
+    <script type="text/javascript" src="~/js/ContentUmDoisClick.js"></script>
+
+}
+
+

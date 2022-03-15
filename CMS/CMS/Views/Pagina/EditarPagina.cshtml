@@ -13,21 +13,6 @@
                 <span asp-validation-for="Titulo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Facebook" class="control-label"></label>
-                <input asp-for="Facebook" class="form-control" />
-                <span asp-validation-for="Facebook" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Twiter" class="control-label"></label>
-                <input asp-for="Twiter" class="form-control" />
-                <span asp-validation-for="Twiter" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Instagram" class="control-label"></label>
-                <input asp-for="Instagram" class="form-control" />
-                <span asp-validation-for="Instagram" class="text-danger"></span>
-            </div>
-            <div class="form-group">
 
                 <input asp-for="ArquivoMusic" type="hidden" />
 
@@ -74,8 +59,14 @@
             </div>
             <div class="form-group">
                 <label asp-for="PedidoId" class="control-label"></label>
-                <select asp-for="PedidoId" class="form-control" asp-items="ViewBag.pedido_"></select>
+                <select asp-for="PedidoId" class="form-control" asp-items="ViewBag.PedidoId"></select>
                 <span asp-validation-for="PedidoId" class="text-danger"></span>
+            </div>            
+            
+            <div class="form-group">
+                <label asp-for="StoryId" class="control-label"></label>
+                <select asp-for="StoryId" class="form-control" asp-items="ViewBag.StoryId"></select>
+                <span asp-validation-for="StoryId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -104,7 +95,8 @@
             Rotas: $("#Rotas").val(),
             Music: $("#Music").is(':checked'),
             Margem: $("#Margem").is(':checked'),
-            pedido_: $("#pedido_").val(),
+            PedidoId: $("#PedidoId").val(),
+            StoryId: $("#StoryId").val(),
             Blocos: $("#Blocos").val(),
             Topo: $("#Topo").is(':checked'),
             Menu: $("#Menu").is(':checked')

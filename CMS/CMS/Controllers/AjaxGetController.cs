@@ -3,7 +3,6 @@ using business.business.carousel;
 using business.business.Elementos;
 using business.business.Elementos.element;
 using business.business.Elementos.imagem;
-using business.business.Elementos.produto;
 using business.business.Elementos.texto;
 using business.business.link;
 using CMS.Data;
@@ -23,29 +22,33 @@ namespace CMS.Controllers
         public IRepositoryPedido RepositoryPedido { get; }
         public IRepositoryPagina RepositoryPagina { get; }
         public IHttpHelper HttpHelper { get; }
-        public IRepositoryBackground RepositoryBackground { get; }
 
         public AjaxGetController(ApplicationDbContext context, IRepositoryPedido repositoryPedido,
-            IRepositoryPagina repositoryPagina, IHttpHelper httpHelper,
-            IRepositoryBackground repositoryBackground)
+            IRepositoryPagina repositoryPagina, IHttpHelper httpHelper)
         {
             db = context;
             RepositoryPedido = repositoryPedido;
             RepositoryPagina = repositoryPagina;
             HttpHelper = httpHelper;
-            RepositoryBackground = repositoryBackground;
-        } 
+        }
 
-        public JsonResult GetPastas(int Pagina)
+        public JsonResult GetStories(string valor)
         {
-            var pastas = db.PastaImagem.Where(b => b.PaginaId == Pagina);
+            var stories = db.Story.Where(s => s.Id >= 1);
+
+            return Json(stories);
+        }
+
+        public JsonResult GetPastas(int Pedido)
+        {
+            var pastas = db.PastaImagem.Where(b => b.PedidoId == Pedido);
 
             return Json(pastas);
         }
 
         public JsonResult GetCores(int Background)
         {
-            var cores = db.Cor.Where(b => b.BackgroundGradienteId == Background);
+            var cores = db.Cor.Where(b => b.BackgroundId == Background);
 
             return Json(cores);
         }
@@ -83,38 +86,21 @@ namespace CMS.Controllers
             return Json(pedidos);
         }
 
-        public async Task<JsonResult> GetBackgrounds(int PaginaId)
-        {
-            var pagina = await db.Pagina.Include(d => d.Div).ThenInclude(d => d.Div)
-                .ThenInclude(d => d.Background).FirstAsync(b => b.Id == PaginaId);
-                var background = new List<Background>();
-                foreach (var item in pagina.Div)
-                background.Add(item.Div.Background);
+        //  public async Task<JsonResult> GetBackgrounds(int PaginaId)
+        //  {
+        //      var pagina = await db.Pagina.Include(d => d.Div).ThenInclude(d => d.Div)
+        //          .ThenInclude(d => d.Background).FirstAsync(b => b.Id == PaginaId);
+        //          var background = new List<Background>();
+        //          foreach (var item in pagina.Div)
+        //          background.Add(item.Div.Background);
+        //
+        //      return Json(background.AsQueryable());
+        //  }
 
-            return Json(background.AsQueryable());
-        }
-
-        public async Task<JsonResult> Elementos(int Pagina)
-        {
-            var pagina = await db.Pagina.FirstAsync(p => p.Id == Pagina);
-            var PedidoId = pagina.PedidoId;
-            var pedido = await db.Pedido.Include(p => p.Paginas)
-                .FirstAsync(m => m.Id == PedidoId);
-            
-
-            List<Elemento> elementos = new List<Elemento>();
-
-            foreach(var pag in pedido.Paginas)
-            {
-                var page = await db.Pagina.Include(p => p.Div)
-                .FirstAsync(p => p.Id == pag.Id);
-
-                var elements = await db.Elemento.Where(e => e.Pagina_ == pag.Id).ToListAsync();
-
-                elementos.AddRange(elements);
-            }
-
-            return Json(elementos);
+        public JsonResult Elementos(int Pagina, string Tipo)
+        {        
+            var els = db.Elemento.Where(ele => ele.GetType().Name == Tipo && ele.Pagina_ == Pagina);
+            return Json(els);
         }
     }
 }

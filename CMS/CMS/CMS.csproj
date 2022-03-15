@@ -22,4 +22,9 @@
     <ProjectReference Include="..\business\business.csproj" />
   </ItemGroup>
 
+
+  <ItemGroup>
+    <Folder Include="wwwroot\Html\" />
+  </ItemGroup>
+
 </Project>

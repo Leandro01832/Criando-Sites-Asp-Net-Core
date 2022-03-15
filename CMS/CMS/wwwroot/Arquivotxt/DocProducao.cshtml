@@ -1,58 +1,8 @@
 ﻿#set($site = '')
 
-<meta charset='UTF-8'>
-
 <div id='conteudo$model.Pagina.Id' class='Conteudo'>
 
-    <div id='corpo' data-value='$model.Div1.DivId' class='Corpo'>
-
-    </div>
-
-    #if($model.Pagina.Topo)
-    <div id='$model.Div2.DivId' class='Topo' data-value='$model.Div2.DivId'>
-        <h1>$model.titulo</h1>
-    </div>
-    #end
-
-    #if($model.Pagina.Menu)
-    <div id='$model.Div3.DivId' class='Menu' data-value='$model.Div3.DivId'>
-        <p>menu</p>
-        <br />
-        #if ($model.facebook != 'vazio' && $model.facebook != '')
-        <a href='$model.facebook' target='_blank'>
-            <img class='img-responsive' src='/imagem/facebook.png' alt='imagem' style='width:50px;' />
-        </a>
-        #end
-
-        #if ($model.twiter != 'vazio' && $model.twiter != '')
-        <a href='$model.twiter' target='_blank'>
-            <img class='img-responsive' src='/imagem/twitter.png' alt='imagem' style='width:50px;' />
-        </a>
-        #end
-
-        #if ($model.instagram != 'vazio' && $model.instagram != '')
-        <a href='$model.instagram' target='_blank'>
-            <img class='img-responsive' src='/imagem/instagram.png' alt='imagem' style='width:50px;' />
-        </a>
-        #end
-
-
-
-
-
-        #if($model.Pedidos)
-
-        <a href='/Requisicao/IndexPedido' target='_blank'>
-            Pedidos
-        </a>
-
-        #end
-
-
-    </div>
-    #end
-
-    <div id='blocos$model.Div4.DivId' class='bloco' data-value='$model.Div4.DivId'>
+    <div id='blocos$model.Div4.Div.Id' class='bloco' data-value='$model.Div4.Div.Id'>
 
         #foreach($nunber in $model.Rows)
 
@@ -92,22 +42,28 @@
 
             #if ($condicao == 0 && $bloco.Div.Desenhado == 0)
 
+                #if ($model.pagina.Id == 0 && $bloco.Div.Id != 0)
+                <p>Identificação do bloco: $bloco.Div.Id </p>
+                #end
             <div id='DIV${bloco.Div.Id}Pagina${model.Pagina.Id}' class='ClassDiv $bloco.Div.Divisao grid-container' data-value='$bloco.Div.Id'>
 
 
 
                 #foreach($element in $bloco.Div.Elemento)
-
-                #if($element.Elemento.Tipo != 'LinkBody' && $element.Elemento.Tipo != 'Dropdown')
-
+                             
                 <div id='elemento${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento grid-item' data-value='$element.Elemento.Id'>
                     <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
-                        #if ($element.Elemento.tipo == 'Carousel')
+
+                        #if($model.Pagina.Id == 0 && $bloco.Div.Id == 0)
+                        <p>Identificação do elemento: $element.Elemento.Id</p>
+                        #end
+
+                        #if ($element.Elemento.Tipo == 'CarouselImg')
                             <div id='carouselsite$element.Elemento.Id' class='carousel' data-ride='carousel'>
                                 <div class='carousel-inner' role='listbox'>
-                                    #foreach($dependente in $element.Elemento.Despendentes)
+                                    #foreach($dependente in $element.Elemento.Dependentes)
                                     <div class='item'>
-                                        <img class='img-responsive minhaimg' src='$site$dependente.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
+                                        <img class='img-responsive minhaimg' src='$site$dependente.ElementoDependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
                                         <!-- <div class='carousel-caption'>
                                         </div>   -->
                                     </div>
@@ -116,7 +72,7 @@
                             </div>
                         #end
 
-                        #if($element.Elemento.tipo == 'CarouselPagina')
+                        #if($element.Elemento.Tipo == 'CarouselPagina')
                             <div id='carouselsiteCarouselPagina$element.Elemento.Id' class='carousel' data-ride='carousel'>
                                 <div class='carousel-inner' role='listbox'>
                                     #foreach($Page in $element.Elemento.Paginas)
@@ -128,7 +84,7 @@
 
                                             <div id='ElementoCarouselPagina$el.Elemento.Id'>
 
-                                                #if ($el.Elemento.tipo == 'Video')
+                                                #if ($el.Elemento.Tipo == 'Video')
 
                                                 <div id='VideoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
 
@@ -140,7 +96,7 @@
 
                                                 #end
 
-                                                #if ($el.Elemento.tipo == 'Texto')
+                                                #if ($el.Elemento.Tipo == 'Texto')
 
                                                 <div id='textoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
 
@@ -149,59 +105,20 @@
 
                                                 #end
 
-                                                #if($el.Elemento.tipo == 'Link')
+                                                #if($el.Elemento.Tipo == 'Link')
 
-                                                #if($el.Elemento.UrlLink == false)
+                                                <a href='$element.Elemento.TextoLink'>
 
-                                                <div id='LinkCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
-                                                    <a href='/site/$el.Elemento.Destino.Pedido.DominioTemporario/$el.Elemento.Destino.Titulo.Replace(' ', ' ')'>
+                                                 ${element.Elemento.Texto.PalavrasTexto}
+                                
+                                                <img class='img-responsive' src='$site$element.Elemento.Imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+                               
 
-                                                        #set($linkIndice = 0)
-                                                        #foreach($el in $el.Elemento.Despendentes)
-
-                                                        #if($linkIndice == 0)
-                                                        $el.ElementoDependente.Dependente.PalavrasTexto
-                                                        #end
-
-                                                        #if($linkIndice == 1)
-                                                        <img class='img-responsive' src='$ site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:${el.ElementoDependente.Dependente.Width}%;' />
-                                                        #end
-
-                                                        #set($linkIndice = $linkIndice + 1)
-
-                                                        #end
-
-
-                                                    </a>
-                                                </div>
-
-                                                #else
-
-                                                <div id='LinkCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
-                                                    <a href='$el.Elemento.TextoLink'>
-
-                                                        #set($linkIndice = 0)
-                                                        #foreach($el in $el.Elemento.Despendentes)
-
-                                                        #if($linkIndice == 0)
-                                                        $el.ElementoDependente.Dependente.PalavrasTexto
-                                                        #end
-
-                                                        #if($linkIndice == 1)
-                                                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
-                                                        #end
-
-                                                        #set($linkIndice = $linkIndice + 1)
-
-                                                        #end
-                                                    </a>
-                                                </div>
+                                                </a>                                             
 
                                                 #end
-                                                #end
 
-
-                                                #if ($el.Elemento.tipo == 'Imagem')
+                                                #if ($el.Elemento.Tipo == 'Imagem')
 
                                                 <div id='ImagemCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
                                                     <img class='img-responsive' src='$site$el.Elemento.ArquivoImagem' alt='imagem' style='width:${el.Elemento.Width}%;' />
@@ -209,12 +126,12 @@
 
                                                 #end
 
-                                                #if($el.Elemento.tipo == 'Formulario')
+                                                #if($el.Elemento.Tipo == 'Formulario')
 
                                                 <div id='FormCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
 
                                                     <form>
-                                                        #foreach($el in $el.Elemento.Despendentes)
+                                                        #foreach($el in $el.Elemento.Dependentes)
 
                                                         <label>$el.ElementoDependente.Dependente.Nome</label>
                                                         <input class='CampoFormulario$el.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' value='$el.ElementoDependente.Dependente.ValorCampo' />
@@ -271,9 +188,9 @@
                             </div>
                         #end
 
-                        #if($element.Elemento.tipo == 'Formulario')
+                        #if($element.Elemento.Tipo == 'Formulario')
                             <form>
-                                #foreach($el in $element.Elemento.Despendentes)
+                                #foreach($el in $element.Elemento.Dependentes)
 
                                 <label>$el.ElementoDependente.Dependente.Nome</label>
                                 <input class='CampoFormulario$element.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' />
@@ -322,54 +239,25 @@
 
                         #end
 
-                        #if ($element.Elemento.tipo == 'Imagem')
+                        #if ($element.Elemento.Tipo == 'Imagem')
                         <img class='img-responsive' src='$site$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
                         #end
 
-                        #if($element.Elemento.tipo == 'Link' && $element.Elemento.Menu == false)
+                        #if($element.Elemento.Tipo == 'LinkBody')
 
-                        #if($element.Elemento.UrlLink == false)
-                            <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Destino.Titulo.Replace(' ', ' ')'>
-
-                                #set($linkIndice = 0)
-                                #foreach($el in $element.Elemento.Despendentes)
-
-                                #if($linkIndice == 0)
-                                $el.ElementoDependente.Dependente.PalavrasTexto
-                                #end
-
-                                #if($linkIndice == 1)
-                                <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
-                                #end
-
-                                #set($linkIndice = $linkIndice + 1)
-
-                                #end
-                            </a>
                         
-
-                        #else
                             <a href='$element.Elemento.TextoLink'>
 
-                                #set($linkIndice = 0)
-                                #foreach($el in $element.Elemento.Despendentes)
+                                ${element.Elemento.Texto.PalavrasTexto}
+                                
+                                <img class='img-responsive' src='$site$element.Elemento.Imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+                               
 
-                                #if($linkIndice == 0)
-                                $el.ElementoDependente.Dependente.PalavrasTexto
-                                #end
-
-                                #if($linkIndice == 1)
-                                <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
-                                #end
-
-                                #set($linkIndice = $linkIndice + 1)
-
-                                #end
                             </a>
-                        #end
+                        
                         #end
 
-                        #if($element.Elemento.tipo == 'Table')
+                        #if($element.Elemento.Tipo == 'Table')
                             <table class='$element.Elemento.EstiloTabela'>
 
                                 <tr>
@@ -383,14 +271,14 @@
 
                                 </tr>
 
-                                #foreach($prod in $element.Elemento.Despendentes)
+                                #foreach($prod in $element.Elemento.Dependentes)
                                 <tr class='linhaProduto' id='Produto$prod.ElementoDependente.Dependente.Id' data-value='$prod.ElementoDependente.Dependente.Id'>
                                     <th>
                                         <label>$prod.ElementoDependente.Dependente.Nome</label>
                                     </th>
                                     <th>
                                         #set($imgIndice = 0)
-                                        #foreach($img in $prod.ElementoDependente.Dependente.Despendentes)
+                                        #foreach($img in $prod.ElementoDependente.Dependente.Dependentes)
 
 
                                         #if($imgIndice == 0)
@@ -430,11 +318,11 @@
                             </table>
                         #end
 
-                        #if ($element.Elemento.tipo == 'Texto')
+                        #if ($element.Elemento.Tipo == 'Texto')
                             <p>$element.Elemento.PalavrasTexto</p>
                         #end
 
-                        #if ($element.Elemento.tipo == 'Video')
+                        #if ($element.Elemento.Tipo == 'Video')
                             <video style='width:100%; height:100%' controls>
                                 <source src='$site$element.Elemento.ArquivoVideo' type='video/mp4' />
                             </video>
@@ -443,52 +331,7 @@
                     </div>
 
                 </div>
-
-                #elseif($element.Elemento.Tipo == 'LinkBody' && $elemen)
-                #if($element.Elemento.UrlLink == false)
-                <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
-                    <a href='/site/$element.Elemento.Destino.Pedido.DominioTemporario/$element.Elemento.Pagina.Titulo.Replace(' ', '')'>
-
-                        #set($linkIndice = 0)
-                        #foreach($el in $element.Elemento.Despendentes)
-
-                        #if($linkIndice == 0)
-                        $el.ElementoDependente.Dependente.PalavrasTexto
-                        #end
-
-                        #if($linkIndice == 1)
-                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
-                        #end
-
-                        #set($linkIndice = $linkIndice + 1)
-
-                        #end
-
-
-                    </a>
-                </div>
-                #else
-                <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
-                    <a href='$element.Elemento.TextoLink'>
-
-                        #set($linkIndice = 0)
-                        #foreach($el in $element.Elemento.Despendentes)
-
-                        #if($linkIndice == 0)
-                        $el.ElementoDependente.Dependente.PalavrasTexto
-                        #end
-
-                        #if($linkIndice == 1)
-                        <img class='img-responsive' src='$site$el.ElementoDependente.Dependente.ArquivoImagem' alt='imagem' style='width:100%;' />
-                        #end
-
-                        #set($linkIndice = $linkIndice + 1)
-
-                        #end
-                    </a>
-                </div>
-                #end
-                #end
+                                    
                 #end
             </div>
             <!--<br />-->
@@ -499,31 +342,27 @@
         #end
         <br />
         <br />
+    
+</div>
+
     </div>
-</div>
-
-<div id='bordaEsquerda$model.Div5.DivId' class='bordaEsquerda' data-value='$model.Div5.DivId'>
-
-</div>
-
-<div id='bordaDireita$model.Div6.DivId' class='bordaDireita' data-value='$model.Div6.DivId'>
-
-</div>
 
 <script type='text/javascript'>
 
-    $(document).ready(function () {
+        $(document).ready(function () {
 
-        jQuery(function () {
+            jQuery(function () {
 
-            $('.item:first-child').addClass('active').show();
+                $('.item:first-child').addClass('active').show();
+            });
+
         });
-
-    });
 
 </script>
 
 #if($model.Pagina.Margem)
+
+
 
 <style>
 
@@ -580,23 +419,4 @@
     }
 </style>
 
-
-
-
-#end
-
-#foreach($bloco in $divs)
-#set($bloco.Div.Desenhado = 0)
-#end
-
- #set ($valor = 0)
-#foreach($nunber in $model.Rows)
-
-<style>
-    #line$nunber {
-        top: 5px;
-    }
-</style>
-
-   #set ($valor = $valor + 10)
 #end

@@ -1,0 +1,50 @@
+﻿@model business.Back.BackgroundCor
+
+<h4>Background - Cor</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="_BackgroundCor" id="formulario">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Cor" class="control-label"></label>
+                <input asp-for="Cor" type="color" class="form-control" />
+                <span asp-validation-for="Cor" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="backgroundTransparente" />
+                    @Html.DisplayNameFor(model => model.backgroundTransparente)
+                </label>
+            </div>
+
+            <input type="hidden" asp-for="Id" value="@ViewBag.id" />
+            @{
+                if (Model.Id == 0)
+                {
+                    <div class="form-group">
+                        <input type="button" value="Save" onclick="ScriptBackground.Create()" class="btn btn-primary" />
+                    </div>
+                }
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <script src="~/js/Background/background.js"></script>
+    <script src="~/js/AjaxGet.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input, select").change(function () {
+                
+                ScriptBackground.Update();
+            });
+        });
+    </script>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

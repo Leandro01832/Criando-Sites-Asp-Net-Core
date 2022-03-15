@@ -1,23 +1,18 @@
 ﻿@model business.business.link.LinkBody
 
+
 <h4>LinkBody</h4>
 <hr />
 <div class="row">
     <div class="col-md-12">
         <form asp-action="_LinkBody" id="formulario">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div> 
+
 
             <div class="form-group">
-                <label>Site de destino</label>
-                <div class="col-md-10">
-                    <select id="site" name="site" class="form-control site"></select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label asp-for="PaginaId" class="control-label"></label>
-                <select asp-for="PaginaId" class="form-control pagina" asp-items="ViewBag.PaginaId"></select>
-                <span asp-validation-for="PaginaId" class="text-danger"></span>
+                <label asp-for="ImagemId" class="control-label"></label>
+                <select asp-for="ImagemId" class="form-control" asp-items="ViewBag.ImagemId"></select>
+                <span asp-validation-for="ImagemId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
@@ -30,20 +25,41 @@
                 <input asp-for="Nome" class="form-control" />
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
+
             <div class="form-group">
-                <label asp-for="Ordem" class="control-label"></label>
-                <input asp-for="Ordem" class="form-control" />
-                <span asp-validation-for="Ordem" class="text-danger"></span>
+                <label asp-for="TextoLink" class="control-label"></label>
+                <input asp-for="TextoLink" class="form-control" />
+                <span asp-validation-for="TextoLink" class="text-danger"></span>
             </div>
+
+            <input asp-for="Ordem" type="hidden" />
             <input type="hidden" asp-for="Id" />
             @{
                 if (Model.Id == 0)
                 {
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <script src="~/js/Elemento/link/LinkBody.js"></script>
+                        <input type="button" value="Save" onclick="ScriptElemento.Create()" class="btn btn-primary" />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <script src="~/js/Elemento/link/LinkBody.js"></script>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("input, select").change(function () {
+
+                                    ScriptElemento.Update();
+                                });
+                            });
+                        </script>
+
                     </div>
                 }
             }
         </form>
     </div>
 </div>
+

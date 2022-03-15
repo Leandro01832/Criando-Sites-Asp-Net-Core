@@ -4,21 +4,14 @@ class LinkBody {
 
     Create() {
         let data = this.getData();
-        this.postBack(data);
+        this.postElemento(data);
     }
 
     Update() {
         let data = this.getData();
-        this.editBack(data);
+        this.editElemento(data);
     }
-
-    getElementos() {
-
-        return {
-            Id: itemId,
-            Quantidade: novaQuantidade
-        };
-    }
+    
 
     getData() {
 

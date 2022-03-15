@@ -120,7 +120,7 @@
                     var id = $("#" + y.id).data("value");
 
                     condicao = 0;
-                    $("#conteudomodal").load("/Elemento/EditDiv/" + id);
+                    $("#conteudomodal").load("/Div/Edit/" + id);
                 }
 
                 if (x === "Topo" || x === "Menu" || x === "bloco" || x === "bordaEsquerda" || x === "bordaDireita" ||
@@ -132,7 +132,7 @@
                     $("#" + y.parentElement.id).css("border-width", "5px");
                     condicao = 0;
 
-                    $("#conteudomodal").load("/Elemento/EditDiv/" + id);
+                    $("#conteudomodal").load("/Background/Edit/Padrao/" + id);
                 }
 
                 if (x === ""

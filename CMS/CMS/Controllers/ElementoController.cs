@@ -1,6 +1,7 @@
 ﻿using business.Back;
 using business.business;
 using business.business.carousel;
+using business.business.element;
 using business.business.Elementos;
 using business.business.Elementos.element;
 using business.business.Elementos.imagem;
@@ -8,6 +9,7 @@ using business.business.Elementos.produto;
 using business.business.Elementos.texto;
 using business.business.link;
 using business.div;
+using business.Join;
 using CMS.Data;
 using CMS.Models.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -18,7 +20,6 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CMS.Controllers
@@ -31,145 +32,92 @@ namespace CMS.Controllers
         public IRepositoryDiv RepositoryDiv { get; }
         public UserManager<IdentityUser> UserManager { get; }
         public IHttpHelper HttpHelper { get; }
-        public IRepositoryCarouselPaginaCarousel RepositoryCarouselPaginaCarousel { get; }
-        public IRepositoryLink RepositoryLink { get; }
         public IUserHelper UserHelper { get; }
+        public IRepositoryPagina epositoryPagina { get; }
 
         public ElementoController(ApplicationDbContext context, IRepositoryElemento repositoryElemento,
             IRepositoryDiv repositoryDiv, UserManager<IdentityUser> userManager, IHttpHelper httpHelper,
-            IRepositoryCarouselPaginaCarousel repositoryCarouselPaginaCarousel, IRepositoryLink repositoryLink,
-            IUserHelper userHelper)
+            IUserHelper userHelper, IRepositoryPagina repositoryPagina)
         {
             _context = context;
             RepositoryElemento = repositoryElemento;
             RepositoryDiv = repositoryDiv;
             UserManager = userManager;
             HttpHelper = httpHelper;
-            RepositoryCarouselPaginaCarousel = repositoryCarouselPaginaCarousel;
-            RepositoryLink = repositoryLink;
             UserHelper = userHelper;
-        }
+            epositoryPagina = repositoryPagina;
+        }        
 
-        [Route("Elemento/ListaBlocos/{id}")]
-        public async Task<IActionResult> ListaBlocos(int id)
+        [Route("Elemento/Lista/{id}")]
+        public async Task<IActionResult> Lista(string id)
         {
-            List<Div> lista = new List<Div>();
-            
-            var pedido = await _context.Pedido.Include(p => p.Paginas)
-            .FirstAsync(p => p.Id == HttpHelper.GetPedidoId());
+            var arr = id.Split('-');
+            var numero = int.Parse(arr[1]);
+            var tipo = arr[0].Replace("GaleriaElemento", "");
+            List<Elemento> lista =  await _context.Elemento
+                .Include(e => e.Imagem)
+                .Include(e => e.Texto)
+                .Include(e => e.Table)
+                .Include(e => e.Formulario)
+                .Include(e => e.Dependentes).ThenInclude(e => e.Elemento)
+                .Include(e => e.Dependentes).ThenInclude(e => e.ElementoDependente)
+                .Include(e => e.Paginas).ThenInclude(e => e.Pagina)
+                .Include(e => e.Paginas).ThenInclude(e => e.Elemento)
+                .Where(e => e.Pagina_ == numero &&  e.GetType().Name == tipo).ToListAsync();            
 
-            foreach (var page in pedido.Paginas)
+            Pagina pagina = new Pagina();
+            pagina.Margem = false;
+            pagina.Div = new List<DivPagina>();
+
+            pagina.Div.AddRange(new List<DivPagina> {
+                new DivPagina{ Div = new DivComum() }, new DivPagina{ Div = new DivComum() },
+                new DivPagina{ Div = new DivComum() }, new DivPagina{ Div = new DivComum() },
+                new DivPagina{ Div = new DivComum() }, new DivPagina{ Div = new DivComum() },
+                new DivPagina{ Div = new DivComum() }
+            });
+            
+            for (int i = 0; i <= 6; i++)
             {
-                var divs = await RepositoryDiv.includes()
-                .Where(d => d.Pagina_ == page.Id).ToListAsync();
-                lista.AddRange(divs);
+                if (i <= 6)
+                    pagina.Div[i].Div = new DivComum
+                    {
+                        Background = new BackgroundCor
+                        {
+                            backgroundTransparente = true,
+                            Cor = "transparent"
+                        }
+                    };
             }
 
-            ViewBag.Pagina = id;
-            return PartialView(lista);
-        }
+            if (RepositoryPagina.paginas.Count == 0)
+                RepositoryPagina.paginas = await epositoryPagina.MostrarPageModels();
 
-        [Route("Elemento/Lista/{id}/{condicao}")]
-        public async Task<IActionResult> Lista(string id, int condicao)
-        {
-            var numero = Regex.Match(id, @"\d+").Value;
-            List<Elemento> lista = new List<Elemento>();
-            var ped = HttpHelper.GetPedidoId();
-            var pedido = await _context.Pedido.FindAsync(ped);
-
-            if (condicao == 0)            
-                lista = await _context.Elemento
-                .Where(e => e.Pagina_ == int.Parse(numero))
-                .Cast<Elemento>().ToListAsync();            
-
-            else if (condicao == 1)
-            foreach (var page in pedido.Paginas)
-            lista.AddRange(await _context.Elemento
-            .Where(e => e.Pagina_ == page.Id)
-            .Cast<Elemento>().ToListAsync());           
-
-            return PartialView(lista);
-        }
-
-        [Authorize(Roles = "Div")]
-        [Route("Elemento/CreateDiv/{div}")]
-        public async Task<IActionResult> CreateDiv(string div)
-        {
-            Div bloco = null;
-            if (div == "DivComum") bloco = new DivComum();
-            if (div == "DivFixo") bloco = new DivFixo();
-
-            var backgrounds = new List<Background>();
-            var site = HttpHelper.GetPedidoId();
-            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
-            
-            
-            return PartialView(bloco);
-        }
-
-        [Authorize(Roles = "Div")]
-        public async Task<IActionResult> EditDiv(int? id)
-        {
-            var div = await _context.Div
-                .Include(d => d.Elemento)
-                .ThenInclude(d => d.Elemento)
-                .FirstAsync(d => d.Id == id);
-            if (div == null)
+            foreach (var div in pagina.Div)
             {
-                return NotFound();
+                foreach (var item in div.Div.Elemento)
+                {
+                    if (item.Elemento is CarouselPagina)
+                    {
+                        foreach (var item2 in item.Elemento.Paginas)
+                            item2.Pagina = RepositoryPagina.paginas.First(p => p.Id == item2.PaginaId);
+                    }
+                }
             }
 
-            bool permissao = await UserHelper.VerificarPermissaoDiv(id);
-            if (!permissao) return PartialView("NoPermission");
+            List<DivElemento> listaDivElemento = new List<DivElemento>();
+            foreach (var item in lista)
+                listaDivElemento.Add(new DivElemento { Div = pagina.Div[6].Div, Elemento = item });
 
-            var elements = "";
-            foreach (var el in div.Elemento)
-            {
-                elements += el.Elemento.Id + ", ";
-            }
-            
-            var site = HttpHelper.GetPedidoId();
-            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
-            
+            pagina.Div[6].Div.Elemento = listaDivElemento;
+            pagina.Div[6].Div.Colunas = "auto auto auto";
 
-            ViewBag.elementos = elements;
-            return PartialView(div);
-        }
-
-        #region Create-Edit-Div
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Div")]
-        public async Task<string> _DivComum([FromBody] DivComum div)
-        {
-            try
-            {
-                if (div.Id == 0)
-                    return await RepositoryDiv.SalvarBloco(div);
-                else
-                    return await RepositoryDiv.EditarBloco(div);
-            }
-            catch (Exception ex) { return ex.Message; }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Div")]
-        public async Task<string> _DivFixo([FromBody] DivFixo div)
-        {
-            try
-            {
-                if (div.Id == 0)
-                    return await RepositoryDiv.SalvarBloco(div);
-                else
-                    return await RepositoryDiv.EditarBloco(div);
-            }
-            catch (Exception ex) { return ex.Message; }
-        } 
-        #endregion
+            string html = await epositoryPagina.renderizarPaginaComCarousel(pagina);
+            ViewBag.Html = html;
+            return PartialView(pagina);
+        }        
                 
-        [Route("Elemento/Create/{elemento}")]
-        public async Task<IActionResult> Create(string elemento)
+        [Route("Elemento/Create/{elemento}/{pagina}")]
+        public async Task<IActionResult> Create(string elemento, int pagina)
         {
             var site = HttpHelper.GetPedidoId();
             var usuario = await UserManager.GetUserAsync(this.User);
@@ -199,25 +147,31 @@ namespace CMS.Controllers
 
             Elemento ele = null;
 
-            if (elemento == "TextoDependente") ele =          new TextoDependente         ();
-            if (elemento == "Imagem") ele =                   new Imagem                  ();
-            if (elemento == "ImagemDependente") ele =         new ImagemDependente        ();
-            if (elemento == "Show") ele =                     new Show                    ();
-            if (elemento == "Video") ele =                    new Video                   ();
-            if (elemento == "Texto") ele =                    new Texto                   ();
-            if (elemento == "Table") ele =                    new Table                   ();
-            if (elemento == "Roupa") ele =                    new Roupa                   ();
-            if (elemento == "Calcado") ele =                  new Calcado                 ();
-            if (elemento == "Alimenticio") ele =              new Alimenticio             ();
-            if (elemento == "Acessorio") ele =                new Acessorio               ();
-            if (elemento == "LinkMenu") ele =                 new LinkMenu                ();
-            if (elemento == "LinkBody") ele =                 new LinkBody                ();
-            if (elemento == "Formulario") ele =               new Formulario              ();
-            if (elemento == "Dropdown") ele =                 new Dropdown                ();
-            if (elemento == "CarouselPagina") ele =           new CarouselPagina          ();
-            if (elemento == "CarouselImg") ele =              new CarouselImg             ();
-            if (elemento == "Campo") ele =                    new Campo                   ();
+            if (elemento == "TextoDependente")  ele =  new TextoDependente ();
+            if (elemento == "Imagem")           ele =  new Imagem          ();
+            if (elemento == "ImagemDependente") ele =  new ImagemDependente();
+            if (elemento == "Show")             ele =  new Show            ();
+            if (elemento == "Video")            ele =  new Video           ();
+            if (elemento == "Texto")            ele =  new Texto           ();
+            if (elemento == "Table")            ele =  new Table           ();
+            if (elemento == "Roupa")            ele =  new Roupa           ();
+            if (elemento == "Calcado")          ele =  new Calcado         ();
+            if (elemento == "Alimenticio")      ele =  new Alimenticio     ();
+            if (elemento == "Acessorio")        ele =  new Acessorio       ();
+            if (elemento == "LinkMenu")         ele =  new LinkMenu        ();
+            if (elemento == "LinkBody")         ele =  new LinkBody        ();
+            if (elemento == "Formulario")       ele =  new Formulario      ();
+            if (elemento == "Dropdown")         ele =  new Dropdown        ();
+            if (elemento == "CarouselPagina")   ele =  new CarouselPagina  ();
+            if (elemento == "CarouselImg")      ele =  new CarouselImg     ();
+            if (elemento == "Campo")            ele =  new Campo           ();
 
+            var pedido = await _context.Pedido.Include(p => p.Paginas).Include(p => p.Pastas).FirstAsync(p => p.Id == site);
+            var elementos = new List<Elemento>();
+            var els = await _context.Elemento.Where(elem => elem.Pagina_ == pagina).ToListAsync();
+            elementos.AddRange(els);
+            
+            PreencherCombo(ele, pedido, elementos);
 
             return PartialView(ele);
         }
@@ -258,27 +212,11 @@ namespace CMS.Controllers
                 return NotFound();
             }
 
-            var pedido = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == site);
-
+            var pedido = await _context.Pedido.Include(p => p.Paginas).Include(p => p.Pastas).FirstAsync(p => p.Id == site);
             var elementos = new List<Elemento>();
-            foreach (var item in pedido.Paginas)
-            {
-                var pag = await _context.Pagina.Include(p => p.Div)
-                    .ThenInclude(p => p.Div)
-                    .ThenInclude(p => p.Elemento)
-                    .FirstAsync(p => p.Id == item.Id);
-                foreach (var item2 in pag.Div)
-                    foreach (var item3 in item2.Div.Elemento)
-                        elementos.Add(item3.Elemento);
-
-            }
-
-            var pastas = new List<PastaImagem>();
-            foreach (var item in pedido.Paginas)
-            {
-                var pag = await _context.Pagina.Include(p => p.Pastas ).FirstAsync(p => p.Id == item.Id);
-                pastas.AddRange(pag.Pastas);
-            }
+            
+                var els = await _context.Elemento.Where(ele => ele.Pagina_ == elemento.Pagina_).ToListAsync();
+                elementos.AddRange(els);           
 
             bool permissao2 = await UserHelper.VerificarPermissao2(site, email, verifica, elemento.GetType().Name);
             bool permissao = await UserHelper.VerificarPermissao(site, roles, elemento.GetType().Name);
@@ -290,40 +228,10 @@ namespace CMS.Controllers
 
             if (!permissao) return PartialView("NoPermission");
 
-            
-             if (elemento is LinkBody)
-            {
-               var link = (LinkBody)elemento;
-                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "Nome", link.PaginaId); 
-                ViewBag.TextoId = new SelectList(elementos, "Id", "Nome", link.TextoId);
-            }    
-             else if (elemento is LinkMenu)
-            {
-                var link = (LinkMenu)elemento;
-                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "Nome", link.PaginaId);
-                ViewBag.TextoId = new SelectList(elementos, "Id", "Nome", link.TextoId);
-            }
-
-             if(elemento is Imagem)
-            {
-                var imagem = (Imagem)elemento;
-                ViewBag.PastaImagemId = new SelectList(pastas, "Id", "Nome", imagem.PastaImagemId);
-            }
-
-            if (elemento  is Campo)
-            {
-                var c = (Campo)elemento;
-                ViewBag.FormularioId = new SelectList(elementos, "Id", "Nome", c.FormularioId);
-            }
-
-            if (elemento  is ProdutoDependente)
-            {
-                var c = (ProdutoDependente)elemento;
-                ViewBag.FormularioId = new SelectList(elementos, "Id", "Nome", c.TableId);
-            }
+            PreencherCombo(elemento, pedido, elementos);
 
             return PartialView(elemento);
-        }
+        }        
 
         #region Create-Edit-Elemento
         [HttpPost]
@@ -641,6 +549,34 @@ namespace CMS.Controllers
         public IActionResult NaoEncontrado()
         {
             return PartialView();
+        }
+
+        private void PreencherCombo(Elemento elemento, Pedido pedido, List<Elemento> elementos)
+        {
+            if (elemento is LinkBody)
+            {
+                var link = (LinkBody)elemento;
+                ViewBag.ImagemId = new SelectList(elementos.OfType<Imagem>().ToList(), "Id", "NomeComId", link.ImagemId);
+                ViewBag.TextoId = new SelectList(elementos.OfType<Texto>().ToList(), "Id", "NomeComId", link.TextoId);
+            }
+            else if (elemento is LinkMenu)
+            {
+                var link = (LinkMenu)elemento;
+                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "NomeComId", link.PaginaId);
+                ViewBag.TextoId = new SelectList(elementos.OfType<Texto>().ToList(), "Id", "NomeComId", link.TextoId);
+            }            
+
+            if (elemento is Campo)
+            {
+                var c = (Campo)elemento;
+                ViewBag.FormularioId = new SelectList(elementos.OfType<Formulario>().ToList(), "Id", "NomeComId", c.FormularioId);
+            }
+
+            if (elemento is ProdutoDependente)
+            {
+                var c = (ProdutoDependente)elemento;
+                ViewBag.FormularioId = new SelectList(elementos.OfType<Table>().ToList(), "Id", "NomeComId", c.TableId);
+            }
         }
     }
 }

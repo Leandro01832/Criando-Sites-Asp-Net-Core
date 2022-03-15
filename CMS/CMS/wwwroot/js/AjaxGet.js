@@ -6,52 +6,71 @@ var imgs_ = [['']];
 var selects = $("select");
 
 var elementoSelect = "";
-
 for (var i = 0; i < selects.length; i++) {
 
     var ele_selecionado = selects[i].className;
+    if (ele_selecionado.includes("Texto"))
+        buscar("Texto");
 
-    if (ele_selecionado.includes("Texto") || ele_selecionado.includes("TextoDependente") ||
-        ele_selecionado.includes("Imagem") || ele_selecionado.includes("ImagemDependente") ||
-        ele_selecionado.includes("LinkBody") || ele_selecionado.includes("LinkMenu") ||
-        ele_selecionado.includes("Video") || ele_selecionado.includes("Table") ||
-        ele_selecionado.includes("Campo") || ele_selecionado.includes("Calcado") ||
-        ele_selecionado.includes("Roupa") || ele_selecionado.includes("Alimenticio") ||
-        ele_selecionado.includes("Show") || ele_selecionado.includes("Acessorio") ||
-        ele_selecionado.includes("CarrosselPagina") || ele_selecionado.includes("CarrosselImg"))
-        buscar();    
+    if (ele_selecionado.includes("Carrossel"))
+        buscar("Carrossel");
+
+    if (ele_selecionado.includes("Imagem"))
+        buscar("Imagem");
+
+    if (ele_selecionado.includes("Form"))
+        buscar("Form");
+
+    if (ele_selecionado.includes("linkBody"))
+        buscar("linkBody");
+
+    if (ele_selecionado.includes("linkMenu"))
+        buscar("linkBody");
+
+    if (ele_selecionado.includes("Video"))
+        buscar("Video");
+
+    if (ele_selecionado.includes("Table"))
+        buscar("Table");
+
+    if (ele_selecionado.includes("Produto"))
+        buscar("Produto");
+
+    if (ele_selecionado.includes("Campo"))
+        buscar("Campo");
+
+    if (ele_selecionado.includes("Elementos"))
+        buscar("Elementos");  
 }
 
-function buscar()
-{
+function buscar(elemento) {
     $.ajax({
         type: 'POST',
         url: '/AjaxGet/Elementos',
         dataType: 'json',
-        data: { Pagina: numero },
+        data: { Pagina: numero, Tipo: elemento },
         success: function (data) {
 
-            $("." + data.tipo).empty();
+            $("." + elemento).empty();
 
-            if ($("#selecionado" + data.tipo).val() === "") {
-                $("." + data.tipo).append('<option value="">Escolher ' + data.tipo + '...</option>');
+            if ($("#selecionado" + elemento).val() === "") {
+                $("." + elemento).append('<option value="">Escolher ' + elemento + '...</option>');
             }
 
 
             $.each(data, function (i) {
+                
 
-                if (i === data.length / 2) return false;
-
-                if ($("#selecionado" + data.tipo).val() !== "" &&
-                    parseInt($("#selecionado" + data.tipo).val()) === data.id) {
-                    $("." + data.tipo).append('<option value="'
-                        + data.id + '" ' + '" selected =' + "selected" + '> ' + data.nome +
-                        ' - Chave: '  + data.id
+                if ($("#selecionado" + elemento).val() !== "" &&
+                    parseInt($("#selecionado" + elemento).val()) === data[i]) {
+                    $("." + elemento).append('<option value="'
+                        + data[i].id + '" ' + '" selected =' + "selected" + '> ' + data[i].nome +
+                        ' - Chave: ' + data[i].id
                         + '</option>');
                 }
                 else {
-                    $("." + data.tipo).append('<option value="' + data.id + '" > ' + data.nome +
-                        ' - Chave: ' + data.id
+                    $("." + elemento).append('<option value="' + data[i].id + '" > ' + data[i].nome +
+                        ' - Chave: ' + data[i].id 
                         + '</option>');
                 }
             });
@@ -89,7 +108,7 @@ $.ajax({
     type: 'POST',
     url: '/AjaxGet/GetPastas',
     dataType: 'json',
-    data: { Pagina: numero }
+    data: { Pedido: $("#IdentificaSite").val() }
 })
     .done(function (response) {
 
@@ -101,75 +120,75 @@ $.ajax({
     });
 
 
-$.ajax({
-    type: 'POST',
-    url: '/AjaxGet/GetBackgrounds',
-    dataType: 'json',
-    data: { PaginaId: numero }
-})
-    .done(function (response) {
-        var obj = response;
-        $(".background").empty();
-        $.each(obj, function (i, obj) {            
-            $(".background").append('<option value="'
-                + obj.id + '">'
-                + obj.nome + ' - Chave: ' + obj.id +'</option>');
+//$.ajax({
+//    type: 'POST',
+//    url: '/AjaxGet/GetBackgrounds',
+//    dataType: 'json',
+//    data: { PaginaId: numero }
+//})
+//    .done(function (response) {
+//        var obj = response;
+//        $(".background").empty();
+//        $.each(obj, function (i, obj) {            
+//            $(".background").append('<option value="'
+//                + obj.id + '">'
+//                + obj.nome + ' - Chave: ' + obj.id +'</option>');
 
-        });
+//        });
 
-    });
+//    });
 
-$.ajax({
-    type: 'POST',
-    url: '/AjaxGet/GetBackgrounds',
-    dataType: 'json',
-    data: { PaginaId: numero  }
-})
-    .done(function (response) {
-        var obj = response;
-        $(".backgroundSelected").empty();
-        $.each(obj, function (i, obj) {
+//$.ajax({
+//    type: 'POST',
+//    url: '/AjaxGet/GetBackgrounds',
+//    dataType: 'json',
+//    data: { PaginaId: numero  }
+//})
+//    .done(function (response) {
+//        var obj = response;
+//        $(".backgroundSelected").empty();
+//        $.each(obj, function (i, obj) {
 
-            if (parseInt($("#selecionado").val()) === obj.id) {
-                $(".backgroundSelected").append('<option value="'
-                    + obj.id + '" selected =' + "selected" + '>'
-                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
+//            if (parseInt($("#selecionado").val()) === obj.id) {
+//                $(".backgroundSelected").append('<option value="'
+//                    + obj.id + '" selected =' + "selected" + '>'
+//                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
 
-            }
-            else {
-                $(".backgroundSelected").append('<option value="'
-                    + obj.id + '">'
-                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
-            }
+//            }
+//            else {
+//                $(".backgroundSelected").append('<option value="'
+//                    + obj.id + '">'
+//                    + obj.nome + ' - Chave: ' + obj.id + '</option>');
+//            }
 
             
 
-        });
+//        });
 
-    });
+//    });
 
 
-$.ajax({
-    type: 'POST',
-    url: '/AjaxGet/GetBackgrounds',
-    dataType: 'json',
-    data: { PaginaId: numero }
-})
-    .done(function (response) {
-        var obj = response;
-        $(".backgroundGradiente").empty();
+//$.ajax({
+//    type: 'POST',
+//    url: '/AjaxGet/GetBackgrounds',
+//    dataType: 'json',
+//    data: { PaginaId: numero }
+//})
+//    .done(function (response) {
+//        var obj = response;
+//        $(".backgroundGradiente").empty();
 
         
-        $.each(obj, function (i, obj) {
+//        $.each(obj, function (i, obj) {
 
-            if (obj.tipo === "BackgroundGradiente")
-            $(".backgroundGradiente").append('<option value="'
-                + obj.id + '">'
-                + obj.nome + ' - Chave: ' + obj.id +'</option>');
+//            if (obj.tipo === "BackgroundGradiente")
+//            $(".backgroundGradiente").append('<option value="'
+//                + obj.id + '">'
+//                + obj.nome + ' - Chave: ' + obj.id +'</option>');
 
-        });
+//        });
 
-    });
+//    });
 
 $(".backgroundGradiente").click(function () {
 

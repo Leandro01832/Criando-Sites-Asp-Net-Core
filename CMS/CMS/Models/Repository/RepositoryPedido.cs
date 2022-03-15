@@ -1,5 +1,4 @@
 ﻿using business.business;
-using business.business.element;
 using business.Join;
 using CMS.Data;
 using Microsoft.AspNetCore.Hosting;
@@ -23,18 +22,16 @@ namespace CMS.Models.Repository
     public class RepositoryPedido : BaseRepository<Pedido>, IRepositoryPedido
     {
         public RepositoryPedido(IConfiguration configuration, ApplicationDbContext contexto,
-            IRepositoryBackground repositoryBackground, IRepositoryDiv repositoryDiv,
+            IRepositoryDiv repositoryDiv,
             IHttpHelper httpHelper, IHostingEnvironment hostingEnvironment,
             IUserHelper userHelper) : base(configuration, contexto)
         {
-            RepositoryBackground = repositoryBackground;
             RepositoryDiv = repositoryDiv;
             HttpHelper = httpHelper;
             HostingEnvironment = hostingEnvironment;
             UserHelper = userHelper;
         }
-
-        public IRepositoryBackground RepositoryBackground { get; }
+        
         public IRepositoryDiv RepositoryDiv { get; }
         public IHttpHelper HttpHelper { get; }
         public IHostingEnvironment HostingEnvironment { get; }

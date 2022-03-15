@@ -4,6 +4,8 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayName("Id")
+            </th> <th>
                 @Html.DisplayNameFor(model => model.CorBackground)
             </th>             
             <th>
@@ -16,10 +18,13 @@
 @foreach (var item in Model) {
         <tr>
             <td>
+                @Html.DisplayFor(modelItem => item.Background.Id)
+            </td> 
+            <td>
                 <input type="color" value="@item.CorBackground" />
             </td>             
             <td>
-                @Html.DisplayFor(modelItem => item.BackgroundGradiente.Nome)
+                @Html.DisplayFor(modelItem => item.Background.Div.Nome)
             </td>
             <td>
                 <a class="EditarCor" data-value="@item.Id">Editar</a> |

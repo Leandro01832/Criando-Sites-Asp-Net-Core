@@ -2,20 +2,12 @@
 
     Create() {
         let data = this.getData();
-        this.postBack(data);
+        this.postElemento(data);
     }
 
     Update() {
         let data = this.getData();
-        this.editBack(data);
-    }
-
-    getElementos() {
-
-        return {
-            Id: itemId,
-            Quantidade: novaQuantidade
-        };
+        this.postElemento(data);
     }
 
     getData() {
@@ -31,6 +23,7 @@
         });
 
         formdata["Pagina_"] = numero;
+        formdata["PalavrasTexto"] = $("#textarea").val();
         return formdata;
     }
 

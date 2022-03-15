@@ -4,7 +4,7 @@
 <hr />
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="_CarouselImg">
+        <form asp-action="_CarouselImg" id="formulario">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nome" class="control-label"></label>
@@ -12,18 +12,36 @@
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Ordem" class="control-label"></label>
-                <input asp-for="Ordem" class="form-control" />
-                <span asp-validation-for="Ordem" class="text-danger"></span>
+                <label asp-for="ElementosDependentes" class="control-label"></label>
+                <input asp-for="ElementosDependentes" class="form-control" />
+                <span asp-validation-for="ElementosDependentes" class="text-danger"></span>
             </div>
-            
+
+            <input asp-for="Ordem" type="hidden" />
             <input type="hidden" asp-for="Id" />
-            <input type="hidden" asp-for="ElementosDependentes" />
+
             @{
                 if (Model.Id == 0)
                 {
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <script src="~/js/Elemento/carousel/ElementoDependenteCarouselImg.js"></script>
+                        <input type="button" value="Save" onclick="ScriptElemento.Create()" class="btn btn-primary" />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <script src="~/js/Elemento/carousel/ElementoDependenteCarouselImg.js"></script>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("input, select").change(function () {
+
+                                    ScriptElemento.Update();
+                                });
+                            });
+                        </script>
+
                     </div>
                 }
             }

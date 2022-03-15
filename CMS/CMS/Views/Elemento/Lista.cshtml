@@ -1,0 +1,24 @@
+﻿@model business.business.Pagina
+
+
+<style>
+    .FecharGaleria {
+        margin-left: 50px;
+    }
+</style>
+@Html.Raw(ViewBag.Html)
+
+<button class="FecharGaleria btn btn-primary">Fechar</button>
+
+
+<div>
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $(".FecharGaleria").click(function () {
+                $("#FormTexto, #estrutura, #Permissao, #Galeria, #GaleriaBlocos").fadeOut("slow");
+                $("#estrutura").fadeIn("slow");
+            });
+        });
+    </script>
+</div>

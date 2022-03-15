@@ -29,16 +29,13 @@ namespace CMS.Controllers
         {
             List<Cor> lista = new List<Cor>();
 
-            var pagina = await _context.Pagina.FirstAsync(p => p.Id == id);
-            var pedido = await _context.Pedido.Include(p => p.Paginas)
-            .FirstAsync(p => p.Id == pagina.PedidoId);
+            var pagina = await _context.Pagina
+                .Include(p => p.Div)
+                .ThenInclude(p => p.Div)
+                .ThenInclude(p => p.Background)
+                .FirstAsync(p => p.Id == id);
 
-            foreach (var page in pedido.Paginas)
-            {
-                var pagin = await _context.Pagina.Include(p => p.Div)
-                    .ThenInclude(p => p.Div).ThenInclude(p => p.Background).FirstAsync(p => p.Id == page.Id);
-
-                foreach(var item in pagin.Div)
+                foreach(var item in pagina.Div)
                 {
                     if(item.Div.Background is BackgroundGradiente)
                     {
@@ -46,33 +43,11 @@ namespace CMS.Controllers
                         .FirstAsync(b => b.Id == item.Div.Background.Id);
                         lista.AddRange(backcolor.Cores);
                     }
-                }
-
-                
-
-                
-            }
+                }                
+            
 
             return PartialView(lista);
-        }
-
-        [Authorize(Roles = "Background")]
-        public async Task<IActionResult> ListaBackground(int? id)
-        {
-            List<Background> lista = new List<Background>();
-            Pagina pagina = await _context.Pagina.FirstAsync(p => p.Id == id);
-            Pedido ped = await _context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
-
-            foreach(var item in ped.Paginas)
-            {
-                Pagina pag = await _context.Pagina.Include(p => p.Div)
-                    .ThenInclude(p => p.Div).ThenInclude(p => p.Background).FirstAsync(p => p.Id == item.Id);
-
-                foreach (var item2 in pag.Div)
-                    lista.Add(item2.Div.Background);
-            }
-            return PartialView(lista);
-        }
+        }        
 
         [Authorize(Roles = "Imagem")]
         public IActionResult CreatePasta()
@@ -96,8 +71,28 @@ namespace CMS.Controllers
         }
 
         [Authorize(Roles = "Background")]
-        public IActionResult CreateCor()
+        public async Task<IActionResult> CreateCor(int? id)
         {
+            List<Cor> lista = new List<Cor>();
+
+            var pagina = await _context.Pagina
+                .Include(p => p.Div)
+                .ThenInclude(p => p.Div)
+                .ThenInclude(p => p.Background)
+                .FirstAsync(p => p.Id == id);
+
+            foreach (var item in pagina.Div)
+            {
+                if (item.Div.Background is BackgroundGradiente)
+                {
+                    var backcolor = await _context.BackgroundGradiente.Include(b => b.Cores)
+                    .FirstAsync(b => b.Id == item.Div.Background.Id);
+                    lista.AddRange(backcolor.Cores);
+                }
+            }
+
+
+            ViewBag.BackgroundId = new SelectList(lista, "Id", "Id");
             return PartialView();
         }
 
@@ -124,7 +119,25 @@ namespace CMS.Controllers
             {
                 return NotFound();
             }
-            ViewBag.selecionado = cor.BackgroundGradienteId;
+            List<Cor> lista = new List<Cor>();
+            var black = _context.Background.Include(b => b.Div).First(b => b.Id == cor.BackgroundId);
+            var pagina = await _context.Pagina
+                .Include(p => p.Div)
+                .ThenInclude(p => p.Div)
+                .ThenInclude(p => p.Background)
+                .FirstAsync(p => p.Id == black.Div.Pagina_);
+
+            foreach (var item in pagina.Div)
+            {
+                if (item.Div.Background is BackgroundGradiente)
+                {
+                    var backcolor = await _context.BackgroundGradiente.Include(b => b.Cores)
+                    .FirstAsync(b => b.Id == item.Div.Background.Id);
+                    lista.AddRange(backcolor.Cores);
+                }
+            }
+
+            ViewBag.BackgroundId = new SelectList(lista, "Id", "Id", cor.BackgroundId);
             return PartialView(cor);
         }
 
@@ -138,7 +151,7 @@ namespace CMS.Controllers
                 try
                 {
                     var b = await _context.BackgroundGradiente
-                        .FirstAsync(bg => bg.Id == cor.BackgroundGradienteId);
+                        .FirstAsync(bg => bg.Id == cor.BackgroundId);
                     b.Grau = cor.Grau;
                     _context.Update(b);
                     _context.Update(cor);
@@ -152,118 +165,14 @@ namespace CMS.Controllers
             }
 
             return "";
-        }
+        }        
         
-        [Authorize(Roles = "Background")]
-        public IActionResult CreateBackground(string back)
-        {
-            Background background = null;
-
-            if (back == "BackgroundCor") background = new BackgroundCor();
-            if (back == "BackgroundGradiente") background = new BackgroundGradiente();
-            if (back == "BackgroundImagem") background = new BackgroundImagem();
-            
-            return PartialView(background);
-        }
-
-        [Authorize(Roles = "Background")]
-        public async Task<IActionResult> EditBackground(int? id)
-        {
-            var background = await _context.Background.FindAsync(id);
-            if (background == null)
-            {
-                return NotFound();
-            }
-            
-            return PartialView(background);
-        }
-
-        #region Create-Edit-Background
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Background")]
-        public async Task<string> _BackgroundCor([FromBody]BackgroundCor background)
-        {
-            if (background.backgroundTransparente)
-                background.Cor = "transparent";
-            if(background.Id == 0)
-            {
-                _context.Add(background); await _context.SaveChangesAsync();
-                return $"Chave do plano de fundo {background.Id}";
-            }
-            else
-            {
-                _context.Update(background);  await _context.SaveChangesAsync();
-                return "";
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Background")]
-        public async Task<string> _BackgroundGradiente([FromBody]BackgroundGradiente background)
-        {
-            if (background.Id == 0)
-            {
-                _context.Add(background); await _context.SaveChangesAsync();
-                return $"Chave do plano de fundo {background.Id}";
-            }
-            else
-            {
-                _context.Update(background); await _context.SaveChangesAsync();
-                return "";
-            }
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Background")]
-        public async Task<string> _BackgroundImagem([FromBody]BackgroundImagem background)
-        {
-            if (background.Id == 0)
-            {
-                _context.Add(background); await _context.SaveChangesAsync();
-                return $"Chave do plano de fundo {background.Id}";
-            }
-            else
-            {
-                _context.Update(background); await _context.SaveChangesAsync();
-                return "";
-            }
-        } 
-        #endregion        
         
-        public async Task<IActionResult> DeleteBackground(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var background = await _context.Background
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (background == null)
-            {
-                return NotFound();
-            }
-
-            return PartialView(background);
-        }
-        
-        [HttpPost, ActionName("DeleteBackground")]
-        [ValidateAntiForgeryToken]
-        public async Task<string> DeleteBackgroundConfirmed(int id)
-        {
-            var background = await _context.Background.FindAsync(id);
-            _context.Background.Remove(background);
-            await _context.SaveChangesAsync();
-            return "";
-        }
 
         public async Task<IActionResult> DeleteCor(int? id)
         {
             var cor = await _context.Cor
-                .Include(b => b.BackgroundGradiente)
+                .Include(b => b.Background)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (cor == null)
             {

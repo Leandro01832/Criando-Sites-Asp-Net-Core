@@ -1,13 +1,12 @@
 ﻿using business.business.element;
-using business.business.Elementos.element;
 
-namespace business.Join
+namespace business.business.Elementos.element
 {
     public class ElementoDependenteElemento
     {
-        public int ElementoId { get; set; }
-        public int ElementoDependenteId { get; set; }
-        public Elemento Elemento { get; set; }
-        public ElementoDependente ElementoDependente { get; set; }
+        public int? ElementoDependenteId { get; set; }
+        public int? ElementoId { get; set; }
+        public virtual Elemento Elemento { get; set; }
+        public virtual ElementoDependente ElementoDependente { get; set; }
     }
 }

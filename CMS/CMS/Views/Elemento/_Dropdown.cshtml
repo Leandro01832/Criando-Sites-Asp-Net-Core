@@ -16,13 +16,36 @@
                 <input asp-for="Ordem" class="form-control" />
                 <span asp-validation-for="Ordem" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="ElementosDependentes" />
+
+            <div class="form-group">
+                <label asp-for="ElementosDependentes" class="control-label"></label>
+                <input asp-for="ElementosDependentes" class="form-control" />
+                <span asp-validation-for="ElementosDependentes" class="text-danger"></span>
+            </div>
+
             <input type="hidden" asp-for="Id" />
             @{
                 if (Model.Id == 0)
                 {
                     <div class="form-group">
-                        <input type="submit" value="Save" class="btn btn-primary" />
+                        <script src="~/js/Elemento/ElementoDependenteDropdown.js"></script>
+                        <input type="button" value="Save" onclick="ScriptElemento.Create()" class="btn btn-primary" />
+                    </div>
+                }
+                else
+                {
+                    <div>
+                        <script src="~/js/Elemento/ElementoDependenteDropdown.js"></script>
+
+                        <script type="text/javascript">
+                            $(document).ready(function () {
+                                $("input, select").change(function () {
+
+                                    ScriptElemento.Update();
+                                });
+                            });
+                        </script>
+
                     </div>
                 }
             }

@@ -6,7 +6,10 @@ using System.ComponentModel.DataAnnotations;
 namespace business.business
 {
     public class Pedido : BaseModel
-    {       
+    {
+
+        private int diasLiberados = 500;
+
         public bool Venda { get; set; }
 
         [MaxLength(30, ErrorMessage = "Não é possivel adicionar mais de 30 caracteres")]
@@ -23,15 +26,25 @@ namespace business.business
         [JsonIgnore]
         public virtual DateTime Datapedido { get; set; }
 
-        public int DiasLiberados { get; set; }
+        public int DiasLiberados { get { return diasLiberados; } set { diasLiberados = value; } }
+
+        [DataType(DataType.Url)]
+        public string Facebook { get; set; }
+
+        [DataType(DataType.Url)]
+        public string Twiter { get; set; }
+
+        [DataType(DataType.Url)]
+        public string Instagram { get; set; }
 
         [Required]
         public virtual string ClienteId { get; set; }
 
+        [JsonIgnore]
+        public virtual List<PastaImagem> Pastas { get; set; }
 
         [JsonIgnore]
         public virtual List<Pagina> Paginas { get; set; }
-
         
         public string Status { get; set; }
 

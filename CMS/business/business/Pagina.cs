@@ -10,19 +10,16 @@ namespace business.business
 {
     public class Pagina : BaseModel
     {
+        private bool margem = true;
+        private string rotas = "";
+
+
+        public int StoryId { get; set; }
+        public virtual Story Story { get; set; }
 
         [Required(ErrorMessage = "O titulo é necessário")]
         [Display(Name = "Titulo da pagina")]
-        public string Titulo { get; set; }
-
-        [DataType(DataType.Url)]
-        public string Facebook { get; set; }
-
-        [DataType(DataType.Url)]
-        public string Twiter { get; set; }
-
-        [DataType(DataType.Url)]
-        public string Instagram { get; set; }
+        public string Titulo { get; set; }        
 
         [Display(Name = "Arquivo")]
         public string ArquivoMusic { get; set; }
@@ -31,12 +28,12 @@ namespace business.business
         public string Html { get; set; }
 
         [Display(Name ="Informe todas as rotas de uma pagina separando por virgulas.")]
-        public string Rotas { get; set; }
+        public string Rotas { get { return rotas; } set { rotas = value; } }
 
         public bool Music { get; set; }
 
         [Display(Name ="Manter a margem Direita e esquerda")]
-        public bool Margem { get; set; }
+        public bool Margem { get { return margem; } set { margem = value; } }
 
         public bool Topo { get; set; }
 
@@ -44,8 +41,6 @@ namespace business.business
 
         public bool Exibicao { get; set; }
         
-        [JsonIgnore]
-        public virtual List<PastaImagem> Pastas { get; set; }
         [JsonIgnore]
         public virtual List<DivPagina> Div { get; set; }
         [JsonIgnore]
@@ -60,6 +55,9 @@ namespace business.business
 
         [NotMapped]
         public string Blocos { get; set; }
+
+        [NotMapped]
+        public string NomeComId { get { return Titulo + " chave - " + Id.ToString(); } }
 
         public void IncluiDiv(Div div)
         {

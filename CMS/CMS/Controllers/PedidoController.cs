@@ -17,7 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CMS.Controllers
+namespace MeuProjetoAgora.Controllers
 {
     public class PedidoController : Controller
     {
@@ -26,15 +26,13 @@ namespace CMS.Controllers
         public IRepositoryPedido RepositoryPedido { get; }
         public IRepositoryPagina RepositoryPagina { get; }
         public IHttpHelper HttpHelper { get; }
-        public IRepositoryBackground RepositoryBackground { get; }
         public IHttpContextAccessor ContextAccessor { get; }
         public IUserHelper UserHelper { get; }
         public UserManager<IdentityUser> UserManager { get; }
         public HostingEnvironment HostingEnvironment;
 
         public PedidoController(ApplicationDbContext context, IRepositoryPedido repositoryPedido,
-            IRepositoryPagina repositoryPagina, IHttpHelper httpHelper,
-            IRepositoryBackground repositoryBackground, IHttpContextAccessor contextAccessor,
+            IRepositoryPagina repositoryPagina, IHttpHelper httpHelper, IHttpContextAccessor contextAccessor,
             IUserHelper userHelper, HostingEnvironment hostingEnvironment,
             UserManager<IdentityUser> userManager
             )
@@ -44,30 +42,32 @@ namespace CMS.Controllers
             RepositoryPedido = repositoryPedido;
             RepositoryPagina = repositoryPagina;
             HttpHelper = httpHelper;
-            RepositoryBackground = repositoryBackground;
             ContextAccessor = contextAccessor;
             UserHelper = userHelper;
             UserManager = userManager;
         }
-        
-        //[Route("Carousel")]
-        //[Route("Carrossel")]
-        //[Route("Pages")]
-        //[Route("Paginas")]
-        //[Route("Index")]
-        //[Route("")]        
-        //public async Task<IActionResult> Index()
-        //{
-        //    IList<Pagina> pages = await RepositoryPagina.MostrarPageModels();
-        //    List<Pagina> pages2 = new List<Pagina>();
-        //    foreach (var p in pages.Where(p => p.Exibicao == true))
-        //    {
-        //      p.Html = await RepositoryPagina.renderizarPagina(p);
-        //        pages2.Add(p);
-        //    }
 
-        //    return View(pages2);
-        //}
+        
+        public async Task<IActionResult> Index()
+        {
+            var option = Request.Cookies["automatico"];
+            var option2 = Request.Cookies["story"];
+            if (option == null)
+                Set("automatico", "0", 12);
+            if (option2 == null)
+                Set("story", "0", 12);
+            IList<Pagina> pages = await RepositoryPagina.MostrarPageModels();
+            List<Pagina> pages2 = new List<Pagina>();
+            foreach (var p in pages.Where(p => p.Exibicao == true))
+            {
+                p.Html = await RepositoryPagina.renderizarPagina(p);
+                pages2.Add(p);
+            }
+
+            ViewBag.quantidade = pages.Count();
+
+            return View(pages2);
+        }
 
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> Details(int id)
@@ -85,8 +85,8 @@ namespace CMS.Controllers
         public IActionResult ViewCreate()
         {
             return View();
-        }       
-        
+        }
+
         [Authorize]
         [Route("Criar-Site")]
         [Route("Create-Site")]
@@ -97,7 +97,7 @@ namespace CMS.Controllers
         {
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -116,7 +116,19 @@ namespace CMS.Controllers
                 try
                 {
                     pedido.ClienteId = usuario.Id;
-                    pedido.DiasLiberados = 7;
+
+                    if (pedido.Facebook == null)
+                    {   
+                        pedido.Facebook = "vazio";
+                    }   
+                    if (pedido.Twiter == null)
+                    {   
+                        pedido.Twiter = "vazio";
+                    }   
+                    if (pedido.Instagram == null)
+                    {   
+                        pedido.Instagram = "vazio";
+                    }
 
                     Context.Add(pedido);
                     await Context.SaveChangesAsync();
@@ -142,8 +154,8 @@ namespace CMS.Controllers
             }
             return View(pedido);
         }
-        
-        [Authorize(Roles ="Admin")]
+
+        [Authorize(Roles = "Admin")]
         [Route("Editar-Site/{id?}")]
         [Route("EditarSite/{id?}")]
         [Route("Edit-Site/{id?}")]
@@ -167,7 +179,7 @@ namespace CMS.Controllers
             }
             return View(pedido);
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "Admin")]
@@ -202,11 +214,11 @@ namespace CMS.Controllers
                     }
                     return View(pedido);
                 }
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction(nameof(Index));
             }
             return View(pedido);
-        } 
-        
+        }
+
         [Route("Galeria/{id?}")]
         [Route("Pedido/Galeria/{id?}")]
         [Route("Paginas-de-um-site/{id?}")]
@@ -232,15 +244,15 @@ namespace CMS.Controllers
 
         [Authorize(Roles = "Admin")]
         public async Task<FileResult> Baixar(int id)
-            {
+        {
             var site = await Context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == id);
 
             var finalResult = RepositoryPagina.FazerDownload(site);
 
             return File(finalResult, "application/zip", site.DominioTemporario);
 
-            }
-        
+        }
+
         [Authorize]
         [Route("Pedido/CreatePagina")]
         [Route("CreatePage")]
@@ -249,12 +261,14 @@ namespace CMS.Controllers
         public async Task<ActionResult> CreatePagina()
         {
             var usuario = await UserManager.GetUserAsync(this.User);
-            var sites = await  Context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();   
+            var sites = await Context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
+            var stories = await Context.Story.ToListAsync();
 
             ViewBag.PedidoId = new SelectList(sites, "Id", "Nome");
+            ViewBag.StoryId = new SelectList(stories, "Id", "Nome");
             return View();
         }
-        
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -266,52 +280,32 @@ namespace CMS.Controllers
         {
             var usuario = await UserManager.GetUserAsync(this.User);
             var sites = await Context.Pedido.Where(c => c.ClienteId == usuario.Id).ToListAsync();
+            var stories = await Context.Story.ToListAsync();
 
             if (ModelState.IsValid)
             {
                 HttpHelper.SetPedidoId(pagina.PedidoId);
-                var pag = RepositoryPagina.LinksPagina(pagina);
-
-                pagina.Margem = true;
-                pagina.Rotas = "";
-              await  Context.Pagina.AddAsync(pagina);
-                await  Context.SaveChangesAsync();                
-
-               await RepositoryBackground.CriarBackground(pagina, await Context.Imagem.Where(i => i.Id <= 3).ToListAsync());
-
-
-                Pedido ped = await Context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == pagina.PedidoId);
+                await Context.Pagina.AddAsync(pagina);
+                await Context.SaveChangesAsync();
+                
 
                 for (int i = 0; i <= 5; i++)
                 {
-                    var idPagina = ped.Paginas.OrderBy(pagi => pagi.Id).ToList()[0].Id;
                     DivComum div = new DivComum();
-                    div.Nome = $"bloco-{i}";
-                    div.Ordem = 1;
-                    div.Padding = 5;
-                    div.Height = 200;
-                    div.BorderRadius = 0;
-                    div.Desenhado = 0;
-                    div.Colunas = "1";
-                    div.Divisao = "col-md-12";
-                    div.Elementos = "";
                     div.Pagina_ = pagina.Id;
-                    if(i < 3)
-                    div.Background = new BackgroundImagem
-                    {
-                        Background_Position = "",
-                        Background_Repeat = "repeat",
-                        Imagem = Context.Imagem.ToList()[i],
-                        ImagemId = Context.Imagem.ToList()[i].Id,
-                        Nome = $"plano de fundo {i}"
-                    };
+                    if (i < 3)
+                        div.Background = new BackgroundImagem
+                        {
+                            Background_Position = "",
+                            Background_Repeat = "repeat",
+                            Imagem = Context.Imagem.ToList()[i]
+                        };
                     else
-                   div.Background = new BackgroundCor
-                   {
-                       backgroundTransparente = true,
-                       Cor = "transparent",
-                       Nome = $"blocos {i}"
-                   };
+                        div.Background = new BackgroundCor
+                        {
+                            backgroundTransparente = true,
+                            Cor = "transparent"
+                        };
 
                     await Context.Div.AddAsync(div);
                     await Context.SaveChangesAsync();
@@ -325,13 +319,14 @@ namespace CMS.Controllers
 
 
             ViewBag.PedidoId = new SelectList(sites, "Id", "Nome", pagina.PedidoId);
+            ViewBag.StoryId = new SelectList(stories, "Id", "Nome", pagina.StoryId);
             return View(pagina);
         }
 
         [Route("Buscar/{dominio}/{extensao}")]
         public IActionResult Buscar(string dominio, string extensao)
         {
-            if(dominio.Contains(' ') || dominio == null)
+            if (dominio.Contains(' ') || dominio == null)
             {
                 ViewBag.erro = "Não pode haver espaços no dominio e dominio não pode ser vazio";
                 return View("Create");
@@ -370,6 +365,20 @@ namespace CMS.Controllers
         private ActionResult HttpNotFound()
         {
             throw new NotImplementedException();
+        }
+
+        private void Set(string key, string value, int? expireTime)
+        {
+            CookieOptions option = new CookieOptions();
+
+            if (expireTime.HasValue)
+                option.Expires = DateTime.Now.AddHours(expireTime.Value);
+            else
+                option.Expires = DateTime.Now.AddHours(10);
+
+            option.HttpOnly = false;
+
+            Response.Cookies.Append(key, value, option);
         }
     }
 }

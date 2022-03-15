@@ -35,6 +35,15 @@
    else if (Model is CarouselPagina) { <partial name="_CarouselPagina" model="Model" /> }
 }
 
+<div>
+
+            <script src="~/js/UploadArquivos.js"></script>
+            <script src="~/js/AdicionarElementosDependentes.js"></script>
+            <script src="~/js/Elemento.js"></script>
+            <script src="~/js/AjaxGet.js"></script>
+
+        </div>
+
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }

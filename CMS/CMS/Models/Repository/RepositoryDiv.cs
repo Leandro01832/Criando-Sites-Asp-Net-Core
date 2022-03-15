@@ -1,4 +1,5 @@
 ﻿using business.Back;
+using business.business;
 using business.business.Elementos.element;
 using business.div;
 using business.Join;
@@ -17,7 +18,8 @@ namespace CMS.Models.Repository
         Task<string> SalvarBloco(Div div);
         Task<string> EditarBloco(Div div);
         Task ElementosBloco(Div div);
-        IIncludableQueryable<Div, Background> includes();
+        IIncludableQueryable<Pedido, Pagina> includes();
+        IIncludableQueryable<Div, Pagina> includesBloco();
         Task<bool> VerificarExistenciaTable(string id);
     }
 
@@ -50,18 +52,8 @@ namespace CMS.Models.Repository
 
         public async Task<string> SalvarBloco(Div div)
         {
-            Div Div = new DivComum();
-                Div.Nome         = div.Nome;
-                Div.Colunas      = "auto";
-                Div.Height       = 200;
-                Div.Divisao      = "col-md-12";
-                Div.BorderRadius = 0;
-                Div.Padding      = 5;
-                Div.Desenhado    = 0;
-
             try
             {
-                div.Id = 0;
                 await dbSet.AddAsync(div);
                 await contexto.SaveChangesAsync();
             }
@@ -158,12 +150,69 @@ namespace CMS.Models.Repository
                 return false;
         }
 
-        public IIncludableQueryable<Div, Background> includes()
+        public IIncludableQueryable<Pedido, Pagina> includes()
+        {
+            var divs = contexto.Pedido
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Background).ThenInclude(p => p.Cores)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Background).ThenInclude(p => p.Imagem)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Texto)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Imagem)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Table)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Formulario)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Dependentes).ThenInclude(p => p.Elemento)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Dependentes).ThenInclude(p => p.ElementoDependente)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Paginas).ThenInclude(p => p.Elemento)
+                .Include(p => p.Paginas)
+                .ThenInclude(p => p.Div).ThenInclude(p => p.Div).ThenInclude(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Paginas).ThenInclude(p => p.Pagina);
+            return divs;
+        }
+
+        public IIncludableQueryable<Div, Pagina> includesBloco()
         {
             var divs = contexto.Div
-                .Include(p => p.Elemento)
-                .ThenInclude(p => p.Elemento)
-                .Include(p => p.Background);
+                .Include(p => p.Background).ThenInclude(p => p.Cores)
+                .Include(p => p.Background).ThenInclude(p => p.Imagem)
+                
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Texto)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Imagem)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Table)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Formulario)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Dependentes).ThenInclude(p => p.Elemento)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Dependentes).ThenInclude(p => p.ElementoDependente)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Paginas).ThenInclude(p => p.Elemento)
+
+                .Include(p => p.Elemento).ThenInclude(p => p.Elemento)
+                .ThenInclude(p => p.Paginas).ThenInclude(p => p.Pagina);
             return divs;
         }
 

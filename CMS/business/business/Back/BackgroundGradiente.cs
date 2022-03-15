@@ -7,7 +7,7 @@ namespace business.Back
     {
         [Display(Name = "Grau do Background Gradiente.")]
         public int Grau { get; set; }
-        public List<Cor> Cores { get; set; }
+        
 
     }
 }

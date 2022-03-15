@@ -30,7 +30,7 @@
             formdata[obj.name] = obj.value;
         });
 
-        formdata["PaginaId"] = numero;
+        formdata["backgroundTransparente"] = $("#backgroundTransparente").is(':checked');
 
         return formdata;
 
@@ -44,7 +44,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Ferramenta/_BackgroundCor',
+            url: '/Background/_BackgroundCor',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),
@@ -66,7 +66,7 @@
         headers['RequestVerificationToken'] = token;
 
         $.ajax({
-            url: '/Ferramenta/_BackgroundCor',
+            url: '/Background/_BackgroundCor',
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify(data),

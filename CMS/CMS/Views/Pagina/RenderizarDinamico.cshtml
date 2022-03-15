@@ -2,12 +2,33 @@
 
 @{
     Layout = "~/Views/Shared/_Render.cshtml";
+    var proximo = ViewBag.proximo;
+    var anterior = proximo - 2;
+    var atual = proximo - 1;
+    var quant = ViewBag.quantidadePaginas;
+    List<business.business.Story> stories = ViewBag.stories;
 }
 
 <script src="/lib/jquery/dist/jquery.js"></script>
-<script src="~/js/jquery-ui.min.js"></script>
+
+<style media="screen and (max-width: 550px)">
+    .carousel-control {
+        display: block !important;
+    }
+</style>
 
 <style>
+
+    input[type=checkbox] {
+        /* Double-sized Checkboxes */
+        -ms-transform: scale(2); /* IE */
+        -moz-transform: scale(2); /* FF */
+        -webkit-transform: scale(2); /* Safari and Chrome */
+        -o-transform: scale(2); /* Opera */
+        transform: scale(2);
+        padding: 10px;
+    }
+
     .glyphicon {
         font-size: 22px;
     }
@@ -23,21 +44,86 @@
     #acesso {
         margin-left: 50px;
     }
+
+    #loading {
+        display: none;
+        background-color: lightgray;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        text-align: center;
+        padding-top: 300px;
+        filter: alpha(opacity=75);
+        opacity: 0.75;
+    }
+
+    .blocoLoader {
+        z-index: 40;
+    }
+
+    .minhaClasse {
+        z-index: 0 !important;
+    }
+
+    .minhaClasse2 {
+        z-index: 40 !important;
+    }
+
+    .minhaClasse3 {
+        color: red ;
+    }
 </style>
 
-<br />  <br />    <br />
+
 
 @if (Model == null)
 {
-    <label class="control-label" style="margin-left:50px;">Escolha um site:</label>
-    @Html.DropDownList("sites", null, htmlAttributes: new { @class = "form-control site" })
+    <label class="control-label" style="margin-left:50px;">Escolha uma pagina</label>
 
-    @Html.DropDownList("paginas", null, htmlAttributes: new { @class = "form-control pagina" })
-
-    <a href="#" id="acesso" class="btn btn-primary">Acessar</a>
 }
 else
 {
+
+    <header>
+        <div class="navbar navbar-inverse navbar-fixed-top" id="Menuzinho" style="z-index:5000000;">
+            <div class="container">
+
+                <div class="navbar-header">
+                    <form class="navbar-toggle">
+                        <select asp-for="Story.Nome" class="form-control ClasseStory"></select>
+
+                        <span asp-validation-for="Story.Nome" class="text-danger"></span>
+                    </form>
+
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    @Html.ActionLink("Instag Leo", "Index", "Pedido", new { area = "" }, new { @class = "navbar-brand" })
+
+
+                </div>
+                <div class="navbar-collapse collapse">
+
+                    <ul class="nav navbar-nav">
+
+                        <li>
+                            <a href="/Index/">Home</a>
+                        </li>
+                        <li>
+                            <select id="storyPagina" name="storyPagina" class="form-control ClasseStory"></select>
+                        </li>
+                    </ul>
+
+                    <partial name="_LoginPartial" />
+
+                </div>
+            </div>
+        </div>
+    </header>
 
     ViewBag.Title = Model.Titulo + " - " + Model.Pedido.Nome;
     string valor = ViewBag.html;
@@ -49,73 +135,59 @@ else
     </style>
 
     <link rel="stylesheet" href="~/css/RenderizarDinamico.css" />
+    <a class="left carousel-control blocoLoader" href="/Story-@(ViewBag.story)-Pagina/@(anterior)" style="display:none;">
+        <span class="glyphicon glyphicon-chevron-left"></span>
+        <span class="sr-only">Previous</span>
+    </a>
 
 
-    <div id="estrutura">
+    <a class="right carousel-control blocoLoader" href="/Story-@(ViewBag.story)-Pagina/@(proximo)" style="display:none;">
+        <span class="glyphicon glyphicon-chevron-right"></span>
+        <span class="sr-only">Next</span>
+    </a>
 
-        <div class="row" id="LinhaImaginaria">
+    <div style="position:fixed; top:80px; left:10%;" class="blocoLoader">
 
+        <span style="background-color:white;">Pag.</span>
+        <input type="number" placeholder="N° pagina"
+               id="NumeroPaginaAcesso" value="@atual" min="2" style="width: 80px;" />
+        <a id="acessoPaginaComInput" href="#"
+           class="btn btn-primary glyphicon glyphicon-search loader">
+        </a>
+        <a id="voltar" href="#"
+           class="btn btn-primary loader glyphicon glyphicon-chevron-left">
+        </a>
+        <a id="avancar" href="#"
+           class="btn btn-primary loader glyphicon glyphicon-chevron-right">
+        </a>
 
+    </div>
 
-            <div id="Chat" class="col-md-4" style="background-color: white;">
+    @Html.Raw(ViewBag.Html)    
 
-                <partial name="BlocoFerramenta" /> 
+    <div style="position:fixed; bottom:4%; left: 1%; width: 100%; overflow-x:auto; ">
+
+        <center>
+            <h3 style="background-color:darkgray; opacity: 0.80;">@Html.CheckBox("automatico") Automático </h3>
+
+            <div style="z-index:80;">
+
+                @{ for (var indice = 1; indice <= quant; indice++)
+                    {
+                        <a href="#" class="loader LinksPagina">
+                            <span class="DivPagina glyphicon glyphicon-record" id="DivPagina@(indice)"></span>
+                        </a>
+
+                    }
+                }
 
             </div>
-
-            <div class="content col-md-8" id="ConteudoPagina" data-id="">
-
-                @Html.Raw(ViewBag.Html)
-
-
-            </div>
-
-            <script type="text/javascript">
-                $('.linha').sortable({
-                    connectWith: '.linha'
-                });
-
-                $('.ClassDiv').sortable();
-
-                var axis = $('.linha').sortable('option', 'connectWith');
-                let condicaoBloco = false;
-                let condicaoElemento = false;
-
-                // Setter
-                $('.linha').sortable('option', 'connectWith', '.linha');
-
-                $('.linha').sortable({
-                    update: function (event, ui) {
-                        condicaoBloco = true;
-                    }
-                });
-
-                $('.ClassDiv').sortable({
-                    update: function (event, ui) {
-                        condicaoElemento = true;
-                    }
-                });
-            </script>
-
-        </div>
+        </center>
 
     </div>
 
-    <div id="FormTexto" style="display:none;  margin-left:50px;">
 
-    </div>
-
-    <div id="Permissao" style="display:none;">
-
-    </div>
-
-    <div id="Galeria" style="display:none;">
-
-    </div>
-
-    <div id="GaleriaBlocos" style="display:none;">
-
-    </div>
+    <div id="loading" style="display:none; z-index:50;"><img src="~/imagem/loader.gif" /></div>
 
 }
 
@@ -123,54 +195,150 @@ else
 
 @section scripts{
 
-    <script src="~/js/FullScreen.js"></script>
-    <script src="~/lib/aspnet-signalr/signalr.min.js"></script>
-    <script src="~/js/Chat.js"></script>
+    @*<script src="https://unpkg.com/jquery@2.2.0/dist/jquery.js"></script>*@
+    <script src="~/lib/jquery/dist/jquery.cookie.js"></script>
+    <script src="~/js/loader.js"></script>
 
-    <script>
+    <script type="text/javascript">
         $(document).ready(function () {
 
-            $(".site").click(function () {
+            var links = $(".LinksPagina");
 
-                $(".pagina").empty();
-                $(".pagina").append('<option value="0">[Selecione  uma pagina..]</option>');
+            $("#DivPagina@(atual)").addClass('minhaClasse3');
 
-                $.ajax({
-                    type: 'POST',
-                    url: '/AjaxGet/GetPaginas',
-                    dataType: 'json',
-                    data: { PedidoId: $(this).val() },
-                    success: function (data) {
-                        $.each(data, function (i, data) {
-                            $(".pagina").append('<option value="'
-                                + data.idPagina + '">'
-                                + data.titulo + '</option>');
-                        });
-                    },
-                    error: function (ex) {
-                        alert('Falha ao buscar paginas.' + ex);
-                    }
+            $.ajax({
+                type: 'POST',
+                url: '/AjaxGet/GetStories',
+                dataType: 'json',
+                data: { valor: "" },
+                success: function (data) {
+                    $.each(data, function (i) {
+
+                        if (data[i].nome == "@ViewBag.story") {
+                            $(".ClasseStory").append(' <option value="' + data[i].nome + '" selected>' +
+                                data[i].nome + '</option>');
+                            for (var j = 0; j < links.length; j++) {
+                                var k = j + 1;
+                                links[j].href = "/Story-" + data[i].nome + "-Pagina/" + k;
+                            }
+                        }
+                        else
+                            $(".ClasseStory").append('<option value="' + data[i].nome + '" >' +
+                                data[i].nome + '</option>');
+                    });
+
+
+
+                },
+                error: function (ex) {
+                    alert('Falha ao buscar elementos.' + ex);
+                }
+            });
+
+
+
+            $(".ClasseStory").change(function () {
+
+                document.getElementById("acessoPaginaComInput").href += "/Story-" + $(this).val() + "-Pagina/" + @atual;
+
+                for (var i = 0; i < links.length; i++)
+                {
+                    var j = i + 1;
+                    links[i].href += "/Story-" + $(this).val() + "-Pagina/" + j;
+                }
+
+                window.location.href = "/Story-" + $(this).val() + "-Pagina/1";
+                $("#loading").show();
+
+            });
+
+            $("#NumeroPaginaAcesso").change(function () {
+                document.getElementById("acessoPaginaComInput").href = "/Story-" + $(".ClasseStory").val() + "-Pagina/";
+                document.getElementById("acessoPaginaComInput").href += $(this).val();
+            });
+
+            $("#voltar").click(function () {
+                window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/" + @anterior;
+            });
+
+            $("#avancar").click(function () {
+                window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/" + @proximo;
+            });
+
+            var checkbox = document.querySelector("#automatico");
+            function ativarCheckbox(el) {
+                el.checked = true;
+            }
+            function desativarCheckbox(el) {
+                el.checked = false;
+            }
+
+            $("input").change(function () {
+
+                if ($("#automatico").is(':checked') == true) {
+                    $.cookie('automatico', '1');
+                    alert("As paginas serão mostradas automaticamente.");
+                    setTimeout(function () {
+                        $("#loading").show();
+
+                        if (@atual < @quant)
+                            window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/" + @proximo;
+                        else
+                            window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/1";
+                    }, 10000);
+                }
+                else
+                    $.cookie('automatico', '0');
                 });
-                return false;
-            });
-            $("#paginas").change(function () {
-                document.getElementById("acesso").href = "/pagina/" + $(this).val();
+
+            if ($.cookie('automatico') == '1')
+            {
+                ativarCheckbox(checkbox);
+                setTimeout(function () {
+
+
+                    if ($.cookie('automatico') == '1')
+                    $("#loading").show();
+                    if (@atual < @quant && $.cookie('automatico') == '1')
+                        window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/" + @proximo;
+                    else if ($.cookie('automatico') == '1')
+                        window.location.href = "/Story-" + $(".ClasseStory").val() + "-Pagina/1";
+                }, 10000);
+            }
+            else
+                desativarCheckbox(checkbox);
+
+
+
+            $(".carousel-control").click(function () { $("#loading").show(); });
+
+
+
+            
+
+            $('#PaginaInput').change(function () {
+                document.getElementById('acessoPaginaInput').href = '/Pagina/0/';
+                document.getElementById('acessoPaginaInput').href += $(this).val();
             });
 
-            $("#NumeroElementoEditar").focusout(function () {
-                $("#conteudomodal").load("/Elemento/Edit/" + $(this).val()); 
-            });
+            $("button").click(function () {
+
+                if ($(".collapse")[0].ariaExpanded == "true") {
+                    $(".blocoLoader").removeClass('minhaClasse');
+                    $(".blocoLoader").addClass('minhaClasse2');
+                }
+                else {
+                    $(".blocoLoader").removeClass('minhaClasse2');
+                    $(".blocoLoader").addClass('minhaClasse');
+                }
+
+
+            }).before(function () { });
+            
 
         });
     </script>
 
-    <script type="text/javascript" src="~/js/Variaveis.js"></script>
-
-    <script src="~/js/AlterarPosicaoBloco.js"></script>
-
-    <script type="text/javascript" src="~/js/funcaoClickRenderizarDinamico.js"></script>
-
-    <script type="text/javascript" src="~/js/ContentUmDoisClick.js"></script>
 }
 
 

@@ -1,0 +1,61 @@
+﻿@model business.Back.BackgroundImagem
+
+<h4>Background - Imagem</h4>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="_BackgroundImagem" id="formulario">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Background_Repeat" class="control-label"></label>
+                <input asp-for="Background_Repeat" class="form-control" />
+                <span asp-validation-for="Background_Repeat" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Background_Position" class="control-label"></label>
+                <input asp-for="Background_Position" class="form-control" />
+                <span asp-validation-for="Background_Position" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">Pastas</label>
+                <div class="col-md-10">
+                    <select id="pastasBackground" name="pastasBackground" class="form-control pastas"></select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label asp-for="ImagemId" class="control-label"></label>
+                <select asp-for="ImagemId" class="form-control Imagem"></select>
+                <span asp-validation-for="ImagemId" class="text-danger"></span>
+            </div>
+            <input type="hidden" asp-for="Id" value="@ViewBag.id" />
+            @{
+                if (Model.Id == 0)
+                {
+                    <div class="form-group">
+                        <input type="button" value="Save" onclick="ScriptBackground.Create()" class="btn btn-primary" />
+                    </div>
+                }
+            }
+        </form>
+    </div>
+</div>
+
+<div>
+    <script src="~/js/Background/backgroundImagem.js"></script>
+    <script src="~/js/AjaxGet.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("input, select").change(function () {
+
+                ScriptBackground.Update();
+            });
+        });
+    </script>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

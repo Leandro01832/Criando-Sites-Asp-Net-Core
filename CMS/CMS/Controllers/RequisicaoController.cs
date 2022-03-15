@@ -14,17 +14,17 @@ namespace CMS.Controllers
     public class RequisicaoController : Controller
     {
         public ApplicationDbContext ApplicationDbContext { get; }
-        public IRepositoryRequisicao RepositoryRequisicao { get; }
-        public IRepositoryProduto RepositoryProduto { get; }
         public UserManager<AppIdentityUser> userManager { get; }
+        public IRepositoryProduto RepositoryProduto { get; }
+        public IRepositoryRequisicao RepositoryRequisicao { get; }
 
-        public RequisicaoController(ApplicationDbContext applicationDbContext, IRepositoryRequisicao repositoryRequisicao,
-             IRepositoryProduto repositoryProduto, UserManager<AppIdentityUser> UserManager)
+        public RequisicaoController(ApplicationDbContext applicationDbContext, UserManager<AppIdentityUser> UserManager,
+            IRepositoryProduto repositoryProduto, IRepositoryRequisicao repositoryRequisicao)
         {
             ApplicationDbContext = applicationDbContext;
-            RepositoryRequisicao = repositoryRequisicao;
-            RepositoryProduto = repositoryProduto;
             userManager = UserManager;
+            RepositoryProduto = repositoryProduto;
+            RepositoryRequisicao = repositoryRequisicao;
         }
 
         public async Task<IActionResult> BuscaProdutos(string pesquisa)
