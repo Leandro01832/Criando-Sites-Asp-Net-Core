@@ -6,7 +6,7 @@ namespace CMS.Models.ViewModels
 {
     public class BuscaProdutosViewModel
     {
-        private List<ProdutoDependente> list;
+        private List<Produto> list;
 
         public BuscaProdutosViewModel(IList<Elemento> produtos, string pesquisa)
         {
@@ -14,7 +14,7 @@ namespace CMS.Models.ViewModels
             Pesquisa = pesquisa;
         }
 
-        public BuscaProdutosViewModel(List<ProdutoDependente> list, string pesquisa)
+        public BuscaProdutosViewModel(List<Produto> list, string pesquisa)
         {
             this.list = list;
             Pesquisa = pesquisa;

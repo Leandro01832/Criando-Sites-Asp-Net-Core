@@ -8,12 +8,23 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Background_Repeat" class="control-label"></label>
-                <input asp-for="Background_Repeat" class="form-control" />
+                <select asp-for="Background_Repeat">
+                    <option value="repeat">Repetido</option>
+                    <option value="no-repeat">Não repetido</option>
+                    <option value="repeat-x">Repetido horizontalmente</option>
+                    <option value="repeat-y">Repetido verticalmente</option>
+                </select>
                 <span asp-validation-for="Background_Repeat" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Background_Position" class="control-label"></label>
-                <input asp-for="Background_Position" class="form-control" />
+                <select asp-for="Background_Position">
+                    <option Value="center">Posição no centro</option>
+                    <option Value="left botton">Posição para baixo e esquerda</option>
+                    <option Value="right botton">Posição para baixo e direita</option>
+                    <option Value="left top">Posição para cima e esquerda</option>
+                    <option Value="right top">Posição para cima e direita</option>
+                </select>
                 <span asp-validation-for="Background_Position" class="text-danger"></span>
             </div>
 

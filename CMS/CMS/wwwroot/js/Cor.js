@@ -26,11 +26,11 @@ class cor {
         numero = numero.replace('44311', '');
 
         return {
-            IdCor: $("#IdCor").val(),
+            Id: $("#Id").val(),
             CorBackground: $("#CorBackground").val(),
             Position: $("#Position").val(),
             Transparencia: $("#Transparencia").val(),
-            BackgroundGradienteId: $("#BackgroundGradienteId").val(),
+            BackgroundId: $("#BackgroundId").val(),
             Grau: $("#Grau").val()
         };
     }

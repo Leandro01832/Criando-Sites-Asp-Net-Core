@@ -264,11 +264,11 @@ namespace CMS.Models.Repository
                 zipOutputStream.Close();
             }
 
-            byte[] finalResult = System.IO.File.ReadAllBytes(tempOutput);
+            byte[] finalResult = File.ReadAllBytes(tempOutput);
 
-            if (System.IO.File.Exists(tempOutput))
+            if (File.Exists(tempOutput))
             {
-                System.IO.File.Delete(tempOutput);
+                File.Delete(tempOutput);
             }
 
             if (finalResult == null || !finalResult.Any())

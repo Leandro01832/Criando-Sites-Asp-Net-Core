@@ -22,7 +22,7 @@
                 <p class="text-primary text-center">Rotas Possíveis</p>
                 <p class="text-danger">@ViewBag.Rotas</p>
             </div>
-            
+
 
             <div class="form-group">
                 <label asp-for="Rotas" class="control-label"></label>
@@ -61,12 +61,20 @@
                 <label asp-for="PedidoId" class="control-label"></label>
                 <select asp-for="PedidoId" class="form-control" asp-items="ViewBag.PedidoId"></select>
                 <span asp-validation-for="PedidoId" class="text-danger"></span>
-            </div>            
-            
+            </div>
+
             <div class="form-group">
                 <label asp-for="StoryId" class="control-label"></label>
                 <select asp-for="StoryId" class="form-control" asp-items="ViewBag.StoryId"></select>
                 <span asp-validation-for="StoryId" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <div class="checkbox">
+                    <label>
+                        <input asp-for="Layout" /> @Html.DisplayNameFor(model => model.Layout)
+                    </label>
+                </div>
             </div>
 
             <div class="form-group">
@@ -99,7 +107,8 @@
             StoryId: $("#StoryId").val(),
             Blocos: $("#Blocos").val(),
             Topo: $("#Topo").is(':checked'),
-            Menu: $("#Menu").is(':checked')
+            Menu: $("#Menu").is(':checked'),
+            Layout: $("#Layout").is(':checked')
         };  
 
             $.ajax({

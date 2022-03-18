@@ -140,7 +140,7 @@
 
 #if($model.Div2.Div.Background.Tipo == "BackgroundImagem")
 <style>
-    #topo$model.background_topo.Id {
+    #topo$model.Div2.Div.Id {
         background-image: url($site$model.Div2.Div.Background.Imagem.ArquivoImagem);
         background-repeat: $model.Div2.Div.Background.Background_Repeat;
     }
@@ -296,7 +296,7 @@
 #if($model.Div5.Div.Background.Tipo == "BackgroundImagem")
 
 <style>
-    #bordaEsquerda$model.background_borda_esquerda.Id {
+    #bordaEsquerda$model.Div5.Div.Id {
         background-image: url($site$model.Div5.Div.Background.Imagem.ArquivoImagem);
         background-repeat: $model.Div5.Div.Background.Background_Repeat;
     }
@@ -452,7 +452,7 @@
 #if($model.Div4.Div.Background.Tipo == "BackgroundImagem")
 
 <style>
-    #blocos$model.background_bloco.Id {
+    #blocos$model.Div4.Div.Id {
         background-image: url($site$model.Div4.Div.Background.Imagem.ArquivoImagem);
         background-repeat: $model.Div4.Div.Background.Background_Repeat;
     }
@@ -464,7 +464,7 @@
     #blocos$model.Div4.Div.Id {
 
          #set($um = 1)
-         #foreach($Cores in $model.Div4.Div.Cores)
+         #foreach($Cores in $model.Div4.Div.Background.Cores)
          #if($um == 1)
         #set($back = $Cores.HexToColor($Cores.CorBackground))
         background: rgb($back); 
@@ -473,9 +473,9 @@
          #end
 
 
-         #set($quantidade = $model.Div4.Div.Cores.Count())
-        background: -moz-linear-gradient(${model.Div4.Div.Grau}deg,
-        #foreach($Cor in $model.Div4.Div.Cores)
+         #set($quantidade = $model.Div4.Div.Background.Cores.Count())
+        background: -moz-linear-gradient(${model.Div4.Div.Background.Grau}deg,
+        #foreach($Cor in $model.Div4.Div.Background.Cores)
          #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -487,8 +487,8 @@
 
         #end  
 
-        background: -webkit-linear-gradient(${model.Div4.Div.Grau}deg,
-        #foreach($Cor in $model.Div4.Div.Cores)
+        background: -webkit-linear-gradient(${model.Div4.Div.Background.Grau}deg,
+        #foreach($Cor in $model.Div4.Div.Background.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -500,8 +500,8 @@
 
         #end  
 
-        background: linear-gradient(${model.Div4.Div.Grau}deg,
-        #foreach($Cor in $model.Div4.Div.Cores)
+        background: linear-gradient(${model.Div4.Div.Background.Grau}deg,
+        #foreach($Cor in $model.Div4.Div.Background.Cores)
         #set($Transparencia = $Cor.Transparencia / 10)
         rgba($Cor.HexToColor($Cor.CorBackground),$Transparencia.toString().replace(',','.')) ${Cor.Position}%
 
@@ -534,13 +534,13 @@
     </div>
 
    #if($model.Pagina.Topo)
-    <div id='topo$model.Div2.Div.Id' class='Topo' data-value='$model.Div2.Div.Id'>
+    <div id='topo$model.Div2.Div.Id' class='Topo' data-value='$model.Div2.Div.Id' style='z-index:10;'>
         <h1>$model.titulo</h1>
     </div>
     #end
 
     #if($model.Pagina.Menu)
-    <div id='menu$model.Div3.Div.Id' class='Menu' data-value='$model.Div3.Div.Id'>
+    <div id='menu$model.Div3.Div.Id' class='Menu' data-value='$model.Div3.Div.Id' style='z-index:10;'>
         <p>menu</p>
         <br />
         #if ($model.facebook != 'vazio' && $model.facebook != '')

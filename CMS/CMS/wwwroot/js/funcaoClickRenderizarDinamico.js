@@ -18,6 +18,13 @@ $("#GaleriaBlocoFixo").click(function () {
 
 });
 
+$(".GaleriaLayout").click(function () {
+    var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+    numero = numero.replace('44311', '');
+    
+    $("#conteudomodal").load("/Pagina/GaleriaLayout/" + numero);
+});
+
 
 $("#GaleriaBloco").click(function () {
     var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
@@ -68,7 +75,7 @@ $("#BlocoCriarBackgroundCor").click(function () {
 $(".CoresBack").click(function () {
     var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
     numero = numero.replace('44311', '');
-    $("#conteudomodal").load("/Background/CreateCor/" + numero);
+    $("#conteudomodal").load("/Ferramenta/CreateCor/" + numero);
 });
 
 
@@ -302,6 +309,12 @@ $("#BlocoCriarCampo").click(function () {
     var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
     numero = numero.replace('44311', '');
     $("#conteudomodal").load("/Elemento/Create/Campo/" + numero);
+});
+
+$("#BlocoCriarPaginaComLayout").click(function () {
+    var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+    numero = numero.replace('44311', '');
+    $("#conteudomodal").load("/Pagina/CreatePaginaComLayout/" + numero);
 });
 
 $("#CriaElemento").click(function () {

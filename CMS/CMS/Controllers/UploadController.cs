@@ -68,7 +68,7 @@ namespace CMS.Controllers
         [ValidateAntiForgeryToken]
         [RequestFormLimits(MultipartBodyLengthLimit = 409715200)]
         [RequestSizeLimit(409715200)]
-        public async Task<string> SalvarVideo(IFormFile files, string Nome, int Id,
+        public async Task<string> SalvarVideo(IFormFile files, string Nome, int Id, int PaginaEscolhida,
             [FromServices] IHostingEnvironment hostingEnvironment)
         {
             string filename = ContentDispositionHeaderValue.Parse(files.ContentDisposition).FileName.ToString().Trim('"');
@@ -77,7 +77,8 @@ namespace CMS.Controllers
             {
                 ArquivoVideo = "",
                 Nome = Nome,
-                Pagina_ = Id
+                Pagina_ = Id,
+                PaginaEscolhida = PaginaEscolhida
             };
 
             try
@@ -159,7 +160,7 @@ namespace CMS.Controllers
 
         [RequestFormLimits(MultipartBodyLengthLimit = 409715200)]
         [RequestSizeLimit(409715200)]
-        public async Task<IActionResult> ImageUpload(IList<IFormFile> files, int Id, string pasta,
+        public async Task<IActionResult> ImageUpload(IList<IFormFile> files, int Id, string pasta, int PaginaEscolhida,
             [FromServices] IHostingEnvironment hostingEnvironment)
         {
             var local = await db.PastaImagem
@@ -177,7 +178,8 @@ namespace CMS.Controllers
                     ArquivoImagem = "",
                     Pagina_ = Id,
                     Nome = "Imagem",
-                    Width = 100
+                    Width = 100,
+                    PaginaEscolhida = PaginaEscolhida
                 };
 
                 await db.Imagem.AddAsync(img);

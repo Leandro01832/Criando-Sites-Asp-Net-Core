@@ -1,6 +1,8 @@
-﻿namespace business.business.carousel
+﻿using business.business.Elementos.element;
+
+namespace business.business.carousel
 {
-    public class CarouselImg : Carousel
+    public class CarouselImg : Elemento
     {
     }
 }

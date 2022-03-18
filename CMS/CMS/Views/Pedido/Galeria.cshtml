@@ -5,35 +5,54 @@
 }
 
 <h2>Galeria</h2>
+<h4>Lista @ViewBag.pagina</h4>
 <a asp-action="CreatePagina" class="btn btn-primary">Criar nova pagina</a>
 
 
 <table class="table">
-    <tr>         
+    <tr>
         <th>
             @Html.DisplayNameFor(model => model.Titulo)
         </th>
         <th>
-            @Html.DisplayName("Preview dinâminco")
+            @Html.DisplayName("Preview dinâmico")
         </th>
 
-        
+
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        
-        <td>
-            @Html.DisplayFor(modelItem => item.Titulo)
-        </td>
+    @foreach (var item in Model)
+    {
+        <tr>
 
-        <td>
-           
-            <a href="/Editar/@item.Id" target="_blank" class="btn btn-warning">Mostrar Pagina</a>
-        </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
 
-        
-    </tr>
-}
+            <td>
+
+                <a href="/Editar/@item.Id" target="_blank" class="btn btn-warning">Mostrar Pagina</a>
+            </td>
+
+
+        </tr>
+    }
 
 </table>
+<label>Lista:</label>
+<input type="number" id="numeroAcesso" value="@ViewBag.pagina" min="1" />
+
+@section scripts{
+
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#numeroAcesso").change(function () {
+            window.location.href = "/Galeria/@(ViewBag.site)/" + $(this).val();
+        });
+
+});
+</script>
+
+}

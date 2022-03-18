@@ -12,6 +12,7 @@ namespace business.business
     {
         private bool margem = true;
         private string rotas = "";
+        private int mostrarDados = 0;
 
 
         public int StoryId { get; set; }
@@ -57,7 +58,12 @@ namespace business.business
         public string Blocos { get; set; }
 
         [NotMapped]
+        public int MostrarDados { get { return mostrarDados; } set { mostrarDados = value; } }
+
+        [NotMapped]
         public string NomeComId { get { return Titulo + " chave - " + Id.ToString(); } }
+
+        public bool Layout { get; set; }
 
         public void IncluiDiv(Div div)
         {

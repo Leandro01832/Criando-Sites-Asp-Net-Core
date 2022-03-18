@@ -20,6 +20,17 @@
                 <span asp-validation-for="Nome" class="text-danger"></span>
             </div>
 
+            @{
+                if (ViewBag.condicao)
+                {
+                    <div class="form-group">
+                        <label asp-for="PaginaEscolhida" class="control-label"></label>
+                        <select asp-for="PaginaEscolhida" class="form-control" asp-items="ViewBag.PaginaEscolhida"></select>
+                        <span asp-validation-for="PaginaEscolhida" class="text-danger"></span>
+                    </div>
+                }
+            }
+
             @if (Model.Id == 0)
             {
                 <div class="form-group">

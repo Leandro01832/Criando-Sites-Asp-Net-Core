@@ -27,6 +27,7 @@
 
     postDiv(data) {
 
+        data["Id"] = 0;
         let token = $('[name=__RequestVerificationToken]').val();
 
         let headers = {};

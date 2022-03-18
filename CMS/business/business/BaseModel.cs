@@ -13,5 +13,7 @@ namespace business.business
         {
             get { return this.GetType().Name; }
         }
+
+        
     }
 }

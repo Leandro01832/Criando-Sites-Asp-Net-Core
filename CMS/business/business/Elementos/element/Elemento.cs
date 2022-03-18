@@ -13,7 +13,23 @@ namespace business.business.Elementos.element
     {
         private string nome = "elemento";
         private string elementosDependentes = "";
+        private int? textoId = null;
+        private int? imagemId = null;
+        private int? tableId = null;
+        private int? formularioId = null;
+        private int? paginaEscolhida = null;
 
+        public int? PaginaEscolhida
+        {
+            get { if (paginaEscolhida == 0) return null; return paginaEscolhida; }
+            set { paginaEscolhida = value; }
+        }
+
+        [NotMapped]
+        public int VerificarPagina
+        {
+            get { if (PaginaEscolhida == null) return 0; else return 1; }
+        }
         public string Nome { get { return nome; } set { nome = value; } }
         public int Ordem { get; set; }
 
@@ -27,20 +43,42 @@ namespace business.business.Elementos.element
         public string NomeComId { get { return Nome + " chave - " + Id.ToString(); } }
 
         [Display(Name = "Qual é o texto do Link?")]
-        public int? TextoId { get; set; }
+        public int? TextoId
+        {
+            get { if (textoId == 0) return null; return textoId; }
+            set { textoId = value; }
+        }
         public virtual Texto Texto { get; set; }
 
         [Display(Name = "Qual é a Imagem do Link?")]
-        public int? ImagemId { get; set; }
+        public int? ImagemId
+        {
+            get { if (imagemId == 0) return null; return imagemId; }
+            set { imagemId = value; }
+        }
         [JsonIgnore]
         public virtual Imagem Imagem { get; set; }
+        [NotMapped]
+        public int VerificarNuloImagem
+        {
+            get { if (Imagem == null) return 0; else return 1; }
+            
+        }
 
         [Display(Name = "Tabela do produto")]
-        public int? TableId { get; set; }
+        public int? TableId
+        {
+            get { if (tableId == 0) return null; return tableId; }
+            set { tableId = value; }
+        }
         public Table Table { get; set; }
 
         [Display(Name = "Formulario do campo")]
-        public int? FormularioId { get; set; }
+        public int? FormularioId
+        {
+            get { if (formularioId == 0) return null; return formularioId; }
+            set { formularioId = value; }
+        }
         public virtual Formulario Formulario { get; set; }
 
         public virtual List<ElementoDependenteElemento> Dependentes { get; set; }

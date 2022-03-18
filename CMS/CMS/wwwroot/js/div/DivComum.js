@@ -21,14 +21,14 @@
             
             formdata[obj.name] = obj.value;
         });
-
-        debugger;
+        
         formdata["Pagina_"] = numero;
         return formdata;
     }
 
     postDiv(data) {
 
+        data["Id"] = 0;
         let token = $('[name=__RequestVerificationToken]').val();
 
         let headers = {};

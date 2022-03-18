@@ -3,6 +3,7 @@ using business.business;
 using business.business.Elementos;
 using business.business.Elementos.imagem;
 using business.div;
+using business.Join;
 using CMS.Data;
 using CMS.Models.Repository;
 using Microsoft.EntityFrameworkCore;
@@ -28,13 +29,13 @@ namespace CMS
         {
             var contexto = provider.GetService<ApplicationDbContext>();
 
-          //  await contexto.Database.MigrateAsync();
+            //  await contexto.Database.MigrateAsync();           
 
             if (RepositoryPagina.paginas.Count == 0)
             {
-                var listaPaginas = await epositoryPagina.MostrarPageModels();
-                if (listaPaginas.Count > 0)
-                    RepositoryPagina.paginas.AddRange(listaPaginas);
+                var listaPagina = await epositoryPagina.MostrarPageModels();
+                if (listaPagina.Count > 0)
+                    RepositoryPagina.paginas.AddRange(listaPagina.Where(l => ! l.Layout).ToList());
             }
 
             var quant = await contexto.Story.ToListAsync();

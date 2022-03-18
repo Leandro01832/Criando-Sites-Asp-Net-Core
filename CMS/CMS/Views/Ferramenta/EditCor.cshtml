@@ -34,15 +34,21 @@
             </div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <script src="~/js/Cor.js"></script>
+
+
+                <script type="text/javascript">
+                    $(document).ready(function () {
+                        $("input, select").change(function () {
+                            ScriptCor.Update();
+                        });
+                    });
+                </script>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

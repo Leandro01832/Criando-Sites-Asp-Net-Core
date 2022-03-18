@@ -86,17 +86,6 @@ namespace CMS.Controllers
             return Json(pedidos);
         }
 
-        //  public async Task<JsonResult> GetBackgrounds(int PaginaId)
-        //  {
-        //      var pagina = await db.Pagina.Include(d => d.Div).ThenInclude(d => d.Div)
-        //          .ThenInclude(d => d.Background).FirstAsync(b => b.Id == PaginaId);
-        //          var background = new List<Background>();
-        //          foreach (var item in pagina.Div)
-        //          background.Add(item.Div.Background);
-        //
-        //      return Json(background.AsQueryable());
-        //  }
-
         public JsonResult Elementos(int Pagina, string Tipo)
         {        
             var els = db.Elemento.Where(ele => ele.GetType().Name == Tipo && ele.Pagina_ == Pagina);

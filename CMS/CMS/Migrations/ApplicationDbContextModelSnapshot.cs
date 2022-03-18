@@ -296,6 +296,8 @@ namespace CMS.Migrations
 
                     b.Property<int>("Ordem");
 
+                    b.Property<int?>("PaginaEscolhida");
+
                     b.Property<int>("Pagina_");
 
                     b.Property<int?>("TableId");
@@ -356,6 +358,8 @@ namespace CMS.Migrations
                     b.Property<string>("ArquivoMusic");
 
                     b.Property<bool>("Exibicao");
+
+                    b.Property<bool>("Layout");
 
                     b.Property<bool>("Margem");
 
@@ -684,9 +688,7 @@ namespace CMS.Migrations
 
                     b.Property<decimal>("PrecoUnitario");
 
-                    b.Property<int?>("ProdutoComumId");
-
-                    b.Property<int?>("ProdutoDependenteId");
+                    b.Property<int?>("ProdutoId");
 
                     b.Property<int>("Quantidade");
 
@@ -696,9 +698,7 @@ namespace CMS.Migrations
 
                     b.HasIndex("ElementoId");
 
-                    b.HasIndex("ProdutoComumId");
-
-                    b.HasIndex("ProdutoDependenteId");
+                    b.HasIndex("ProdutoId");
 
                     b.HasIndex("RequisicaoId");
 
@@ -813,40 +813,7 @@ namespace CMS.Migrations
                     b.HasDiscriminator().HasValue("Video");
                 });
 
-            modelBuilder.Entity("business.business.Elementos.imagem.ImagemDependente", b =>
-                {
-                    b.HasBaseType("business.business.Elementos.element.Elemento");
-
-                    b.Property<string>("ArquivoImagem")
-                        .HasColumnName("ImagemDependente_ArquivoImagem");
-
-                    b.Property<int?>("PastaImagemId")
-                        .HasColumnName("ImagemDependente_PastaImagemId");
-
-                    b.Property<int>("Width")
-                        .HasColumnName("ImagemDependente_Width");
-
-                    b.HasIndex("PastaImagemId");
-
-                    b.ToTable("ImagemDependente");
-
-                    b.HasDiscriminator().HasValue("ImagemDependente");
-                });
-
-            modelBuilder.Entity("business.business.Elementos.link.LinkDependente", b =>
-                {
-                    b.HasBaseType("business.business.Elementos.element.Elemento");
-
-                    b.Property<int?>("PaginaId");
-
-                    b.HasIndex("PaginaId");
-
-                    b.ToTable("LinkDependente");
-
-                    b.HasDiscriminator().HasValue("LinkDependente");
-                });
-
-            modelBuilder.Entity("business.business.Elementos.produto.ProdutoComum", b =>
+            modelBuilder.Entity("business.business.Elementos.produto.Produto", b =>
                 {
                     b.HasBaseType("business.business.Elementos.element.Elemento");
 
@@ -861,34 +828,9 @@ namespace CMS.Migrations
 
                     b.Property<long?>("estoque");
 
-                    b.ToTable("ProdutoComum");
+                    b.ToTable("Produto");
 
-                    b.HasDiscriminator().HasValue("ProdutoComum");
-                });
-
-            modelBuilder.Entity("business.business.Elementos.produto.ProdutoDependente", b =>
-                {
-                    b.HasBaseType("business.business.Elementos.element.Elemento");
-
-                    b.Property<string>("Codigo")
-                        .IsRequired()
-                        .HasColumnName("ProdutoDependente_Codigo");
-
-                    b.Property<string>("Descricao")
-                        .HasColumnName("ProdutoDependente_Descricao");
-
-                    b.Property<decimal>("Preco")
-                        .HasColumnName("ProdutoDependente_Preco");
-
-                    b.Property<string>("Segmento")
-                        .HasColumnName("ProdutoDependente_Segmento");
-
-                    b.Property<long?>("estoque")
-                        .HasColumnName("ProdutoDependente_estoque");
-
-                    b.ToTable("ProdutoDependente");
-
-                    b.HasDiscriminator().HasValue("ProdutoDependente");
+                    b.HasDiscriminator().HasValue("Produto");
                 });
 
             modelBuilder.Entity("business.business.Elementos.texto.Texto", b =>
@@ -902,23 +844,22 @@ namespace CMS.Migrations
                     b.HasDiscriminator().HasValue("Texto");
                 });
 
-            modelBuilder.Entity("business.business.Elementos.texto.TextoDependente", b =>
+            modelBuilder.Entity("business.business.carousel.CarouselImg", b =>
                 {
                     b.HasBaseType("business.business.Elementos.element.Elemento");
 
-                    b.Property<string>("PalavrasTexto")
-                        .HasColumnName("TextoDependente_PalavrasTexto");
+                    b.ToTable("CarouselImg");
 
-                    b.HasDiscriminator().HasValue("TextoDependente");
+                    b.HasDiscriminator().HasValue("CarouselImg");
                 });
 
-            modelBuilder.Entity("business.business.carousel.Carousel", b =>
+            modelBuilder.Entity("business.business.carousel.CarouselPagina", b =>
                 {
                     b.HasBaseType("business.business.Elementos.element.Elemento");
 
-                    b.ToTable("Carousel");
+                    b.ToTable("CarouselPagina");
 
-                    b.HasDiscriminator().HasValue("Carousel");
+                    b.HasDiscriminator().HasValue("CarouselPagina");
                 });
 
             modelBuilder.Entity("business.business.element.ElementoDependente", b =>
@@ -930,13 +871,15 @@ namespace CMS.Migrations
                     b.HasDiscriminator().HasValue("ElementoDependente");
                 });
 
-            modelBuilder.Entity("business.business.link.Link", b =>
+            modelBuilder.Entity("business.business.link.LinkBody", b =>
                 {
                     b.HasBaseType("business.business.Elementos.element.Elemento");
 
-                    b.ToTable("Link");
+                    b.Property<string>("TextoLink");
 
-                    b.HasDiscriminator().HasValue("Link");
+                    b.ToTable("LinkBody");
+
+                    b.HasDiscriminator().HasValue("LinkBody");
                 });
 
             modelBuilder.Entity("business.div.DivComum", b =>
@@ -967,27 +910,9 @@ namespace CMS.Migrations
                     b.HasDiscriminator().HasValue("DivFixo");
                 });
 
-            modelBuilder.Entity("business.business.link.LinkMenu", b =>
-                {
-                    b.HasBaseType("business.business.Elementos.link.LinkDependente");
-
-                    b.ToTable("LinkMenu");
-
-                    b.HasDiscriminator().HasValue("LinkMenu");
-                });
-
-            modelBuilder.Entity("business.business.Elementos.produto.Show", b =>
-                {
-                    b.HasBaseType("business.business.Elementos.produto.ProdutoComum");
-
-                    b.ToTable("Show");
-
-                    b.HasDiscriminator().HasValue("Show");
-                });
-
             modelBuilder.Entity("business.business.Elementos.produto.Acessorio", b =>
                 {
-                    b.HasBaseType("business.business.Elementos.produto.ProdutoDependente");
+                    b.HasBaseType("business.business.Elementos.produto.Produto");
 
                     b.ToTable("Acessorio");
 
@@ -996,7 +921,7 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.business.Elementos.produto.Alimenticio", b =>
                 {
-                    b.HasBaseType("business.business.Elementos.produto.ProdutoDependente");
+                    b.HasBaseType("business.business.Elementos.produto.Produto");
 
                     b.ToTable("Alimenticio");
 
@@ -1005,7 +930,7 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.business.Elementos.produto.Calcado", b =>
                 {
-                    b.HasBaseType("business.business.Elementos.produto.ProdutoDependente");
+                    b.HasBaseType("business.business.Elementos.produto.Produto");
 
                     b.ToTable("Calcado");
 
@@ -1014,29 +939,20 @@ namespace CMS.Migrations
 
             modelBuilder.Entity("business.business.Elementos.produto.Roupa", b =>
                 {
-                    b.HasBaseType("business.business.Elementos.produto.ProdutoDependente");
+                    b.HasBaseType("business.business.Elementos.produto.Produto");
 
                     b.ToTable("Roupa");
 
                     b.HasDiscriminator().HasValue("Roupa");
                 });
 
-            modelBuilder.Entity("business.business.carousel.CarouselImg", b =>
+            modelBuilder.Entity("business.business.Elementos.produto.Show", b =>
                 {
-                    b.HasBaseType("business.business.carousel.Carousel");
+                    b.HasBaseType("business.business.Elementos.produto.Produto");
 
-                    b.ToTable("CarouselImg");
+                    b.ToTable("Show");
 
-                    b.HasDiscriminator().HasValue("CarouselImg");
-                });
-
-            modelBuilder.Entity("business.business.carousel.CarouselPagina", b =>
-                {
-                    b.HasBaseType("business.business.carousel.Carousel");
-
-                    b.ToTable("CarouselPagina");
-
-                    b.HasDiscriminator().HasValue("CarouselPagina");
+                    b.HasDiscriminator().HasValue("Show");
                 });
 
             modelBuilder.Entity("business.business.Elementos.imagem.Imagem", b =>
@@ -1054,17 +970,6 @@ namespace CMS.Migrations
                     b.ToTable("Imagem");
 
                     b.HasDiscriminator().HasValue("Imagem");
-                });
-
-            modelBuilder.Entity("business.business.link.LinkBody", b =>
-                {
-                    b.HasBaseType("business.business.link.Link");
-
-                    b.Property<string>("TextoLink");
-
-                    b.ToTable("LinkBody");
-
-                    b.HasDiscriminator().HasValue("LinkBody");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -1239,13 +1144,9 @@ namespace CMS.Migrations
                         .HasForeignKey("ElementoId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("business.business.Elementos.produto.ProdutoComum")
+                    b.HasOne("business.business.Elementos.produto.Produto")
                         .WithMany("Itens")
-                        .HasForeignKey("ProdutoComumId");
-
-                    b.HasOne("business.business.Elementos.produto.ProdutoDependente")
-                        .WithMany("Itens")
-                        .HasForeignKey("ProdutoDependenteId");
+                        .HasForeignKey("ProdutoId");
 
                     b.HasOne("business.ecommerce.Requisicao", "Requisicao")
                         .WithMany("ItemRequisicao")
@@ -1259,20 +1160,6 @@ namespace CMS.Migrations
                         .WithOne("Requisicao")
                         .HasForeignKey("business.ecommerce.Requisicao", "IdRequisicao")
                         .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("business.business.Elementos.imagem.ImagemDependente", b =>
-                {
-                    b.HasOne("business.business.PastaImagem", "PastaImagem")
-                        .WithMany()
-                        .HasForeignKey("PastaImagemId");
-                });
-
-            modelBuilder.Entity("business.business.Elementos.link.LinkDependente", b =>
-                {
-                    b.HasOne("business.business.Pagina", "Pagina")
-                        .WithMany()
-                        .HasForeignKey("PaginaId");
                 });
 
             modelBuilder.Entity("business.business.Elementos.imagem.Imagem", b =>

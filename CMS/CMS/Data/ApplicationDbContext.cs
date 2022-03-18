@@ -5,7 +5,6 @@ using business.business.element;
 using business.business.Elementos;
 using business.business.Elementos.element;
 using business.business.Elementos.imagem;
-using business.business.Elementos.link;
 using business.business.Elementos.produto;
 using business.business.Elementos.texto;
 using business.business.link;
@@ -42,20 +41,16 @@ namespace CMS.Data
         public DbSet<InfoVenda> InfoVenda { get; set; }
         public DbSet<Telefone> Telefone { get; set; }
         public DbSet<Servico> Servico { get; set; }
-        public DbSet<Carousel> Carousel { get; set; }
         public DbSet<Imagem> Imagem { get; set; }
-        public DbSet<ImagemDependente> ImagemDependente { get; set; }
         public DbSet<Pedido> Pedido { get; set; }
         public DbSet<Pagina> Pagina { get; set; }
         public DbSet<Div> Div { get; set; }
         public DbSet<Texto> Texto { get; set; }
-        public DbSet<TextoDependente> TextoDependente { get; set; }
         public DbSet<Background> Background { get; set; }
         public DbSet<Video> Video { get; set; }
         public DbSet<Elemento> Elemento { get; set; }
         public DbSet<ElementoDependente> ElementoDependente { get; set; }
         public DbSet<Campo> Campo { get; set; }
-        public DbSet<Link> Link { get; set; }
         public DbSet<Formulario> Form { get; set; }
         public DbSet<ItemRequisicao> ItemRequisicao { get; set; }
         public DbSet<Requisicao> Requisicao { get; set; }
@@ -72,30 +67,21 @@ namespace CMS.Data
             base.OnModelCreating(builder);
             builder.Entity<ElementoDependenteElemento>()
             .HasKey(p => new { p.ElementoDependenteId, p.ElementoId });
-
-            base.OnModelCreating(builder);
+            
             builder.Entity<PaginaCarouselPagina>()
             .HasKey(p => new { p.ElementoId, p.PaginaId });
-
-            base.OnModelCreating(builder);
+            
             builder.Entity<DivPagina>()
             .HasKey(p => new { p.DivId, p.PaginaId });
-
-            base.OnModelCreating(builder);
+            
             builder.Entity<DivElemento>()
             .HasKey(p => new { p.DivId, p.ElementoId });
-
-
-
-            builder.Entity<Carousel>().ToTable("Carousel");
+            
             builder.Entity<Elemento>().ToTable("Elemento");
             builder.Entity<ElementoDependente>().ToTable("ElementoDependente");
             builder.Entity<Div>().ToTable("Div");
-            builder.Entity<Link>().ToTable("Link");
-            builder.Entity<LinkDependente>().ToTable("LinkDependente");
             
-            builder.Entity<ProdutoComum>().ToTable("ProdutoComum");
-            builder.Entity<ProdutoDependente>().ToTable("ProdutoDependente");
+            builder.Entity<Produto>().ToTable("Produto");
 
             builder.Entity<Background>().ToTable("Background");
             builder.Entity<BackgroundCor>().ToTable("BackgroundCor");
@@ -112,15 +98,12 @@ namespace CMS.Data
             builder.Entity<Show>().ToTable("Show");
 
             builder.Entity<LinkBody>().ToTable("LinkBody");
-            builder.Entity<LinkMenu>().ToTable("LinkMenu");
 
             builder.Entity<DivFixo>().ToTable("DivFixo");
             builder.Entity<DivComum>().ToTable("DivComum");
             
 
             builder.Entity<Imagem>().ToTable("Imagem");
-            builder.Entity<ImagemDependente>().ToTable("ImagemDependente");
-
 
             builder.Entity<Texto>().ToTable("Texto");
             builder.Entity<Formulario>().ToTable("Formulario");
@@ -135,7 +118,7 @@ namespace CMS.Data
 
         }
 
-        public DbSet<business.business.Elementos.produto.Acessorio> Acessorio { get; set; }
+        public DbSet<Acessorio> Acessorio { get; set; }
 
         public DbSet<Alimenticio> Alimenticio { get; set; }
                      
@@ -144,8 +127,6 @@ namespace CMS.Data
         public DbSet<Roupa> Roupa { get; set; }
                      
         public DbSet<LinkBody> LinkBody { get; set; }
-                     
-        public DbSet<LinkMenu> LinkMenu { get; set; }
                      
         public DbSet<CarouselImg> CarouselImg { get; set; }
                      

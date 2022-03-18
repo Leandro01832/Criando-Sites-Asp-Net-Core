@@ -1,4 +1,5 @@
 ﻿using business.business;
+using business.Join;
 using CMS.Data;
 using CMS.Models.Repository;
 using Microsoft.AspNetCore.Authorization;
@@ -268,7 +269,7 @@ namespace MeuProjetoAgora.Controllers
         {
             var lista = await BuscarPaginas();
             RepositoryPagina.paginas.Clear();
-            RepositoryPagina.paginas.AddRange(lista);
+            RepositoryPagina.paginas.AddRange(lista.Where(l => ! l.Layout).ToList());
             Pagina pag = lista.FirstOrDefault(p => p.Id == id);
 
             epositoryPagina.criandoArquivoHtml(pag);
@@ -280,26 +281,6 @@ namespace MeuProjetoAgora.Controllers
         public async Task<List<Pagina>> BuscarPaginas()
         {
             var lista = await epositoryPagina.MostrarPageModels();
-
-
-            //foreach (var pag in lista.ToList())
-            //{
-            //    foreach (var div in pag.Div)
-            //    {
-            //        div.Div.Elemento = div.Div.Elemento.OrderBy(e => e.Elemento.Ordem).ToList();
-
-            //        foreach (var elemento in div.Div.Elemento)
-            //        {
-            //            elemento.Elemento.Tipo = elemento.Elemento.GetType().Name;
-
-            //            foreach (var dependente in elemento.Elemento.Despendentes)
-            //            {
-            //                dependente.Elemento.tipo = dependente.Elemento.GetType().Name;
-            //            }
-            //        }
-            //    }
-            //}
-
             return lista.ToList();
         }
 
@@ -390,6 +371,70 @@ namespace MeuProjetoAgora.Controllers
                 return "";
             }
             return "Erro!!!";
+        }
+
+        [Authorize(Roles = "Pagina")]
+        [Route("Pagina/GaleriaLayout/{Id}/{pagina?}")]
+        public async Task<IActionResult> GaleriaLayout(int Id, int? pagina)
+        {
+            int numeroPagina = (pagina ?? 1);
+            const int TAMANHO_PAGINA = 3;
+
+            var page = await db.Pagina.FirstAsync(p => p.Id == Id);
+
+            ViewBag.pagina = numeroPagina;
+            ViewBag.site = Id;
+            var applicationDbContext = await db.Pagina
+                .Where(l => l.PedidoId == page.PedidoId && l.Layout)
+                .Skip((numeroPagina - 1) * TAMANHO_PAGINA)
+                .Take(TAMANHO_PAGINA).ToListAsync();
+
+            return PartialView(applicationDbContext);
+        }
+
+        [Authorize(Roles = "Pagina")]
+        public async Task<IActionResult> CreatePaginaComLayout(int Id)
+        {
+            var page = await db.Pagina.FirstAsync(p => p.Id == Id);
+            ViewBag.condicao = page.Layout;
+            ViewBag.pagina = Id;
+            return PartialView();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Pagina")]
+        public async Task<IActionResult> CreatePaginaComLayout(int IdPagina, int Loop)
+        {
+            var pag2 = await epositoryPagina.includes().FirstAsync(p => p.Id == IdPagina);
+
+            for (int i = 1; i <= Loop; i++)
+            {
+                var pag = new Pagina();
+
+                foreach (var item in pag.GetType().GetProperties().Where(p => p.Name != "NomeComId" && p.Name != "Tipo"))
+                    item.SetValue(pag, item.GetValue(pag2));
+                pag.Id = 0;
+                pag.CarouselPagina = new List<PaginaCarouselPagina>();
+                pag.Div = new List<DivPagina>();
+                pag.Pedido = null;
+                pag.Story = null;
+                pag.Layout = false;
+
+                await db.Pagina.AddAsync(pag);
+
+                await db.SaveChangesAsync();
+
+                pag.Div = new List<DivPagina>();
+                foreach (var item in pag2.Div)
+                {
+                    pag.Div.Add(new DivPagina { DivId = item.DivId, PaginaId = pag.Id });
+                }
+                await db.SaveChangesAsync(); 
+            }
+            ViewBag.condicao = true;
+            ViewBag.pagina = IdPagina;
+            return PartialView();
         }
 
         public IActionResult NoPermission()

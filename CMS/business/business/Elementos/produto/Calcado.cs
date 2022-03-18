@@ -2,7 +2,7 @@
 
 namespace business.business.Elementos.produto
 {
-    public class Calcado : ProdutoDependente
+    public class Calcado : Produto
     {
     }
 }

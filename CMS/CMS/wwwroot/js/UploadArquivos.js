@@ -15,6 +15,7 @@
         formData.append("files", Arquivos[i]);
         formData.append("Nome", $("#NomeVideo").val());
         formData.append("Id", $(".bloco")[0].baseURI.replace(/[^0-9]/g, '').replace('44311', ''));
+        formData.append("PaginaEscolhida", $("#PaginaEscolhida").val());
     }
 
     $.ajax({
@@ -48,6 +49,7 @@ function uploadFilesImagem(inputId) {
         formData.append("files", Arquivos[i]);
         formData.append("Id", $(".bloco")[0].baseURI.replace(/[^0-9]/g, '').replace('44311', ''));
         formData.append("pasta", $("#PastaImagemId").val());
+        formData.append("PaginaEscolhida", $("#PaginaEscolhida").val());
     }
 
     $.ajax({

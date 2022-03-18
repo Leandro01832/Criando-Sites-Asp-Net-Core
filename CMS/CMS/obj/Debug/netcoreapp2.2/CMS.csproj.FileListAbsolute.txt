@@ -316,15 +316,12 @@ C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Dropdown.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Formulario.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Imagem.g.cshtml.cs
-C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_ImagemDependente.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_LinkBody.g.cshtml.cs
-C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_LinkMenu.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Musica.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Roupa.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Show.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Table.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Texto.g.cshtml.cs
-C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_TextoDependente.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Elemento\_Video.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Erros\Error.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Erros\Error500.g.cshtml.cs
@@ -415,3 +412,5 @@ C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Story\Details.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Story\Edit.g.cshtml.cs
 C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Story\Index.g.cshtml.cs
+C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Pagina\CreatePaginaComLayout.g.cshtml.cs
+C:\Users\leand\Documents\cms-aspnetcore\copia\CMS\obj\Debug\netcoreapp2.2\Razor\Views\Pagina\GaleriaLayout.g.cshtml.cs

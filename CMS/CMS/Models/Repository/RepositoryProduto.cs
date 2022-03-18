@@ -20,7 +20,7 @@ namespace CMS.Models.Repository
 
 
 
-    public class RepositoryProduto : BaseRepository<ProdutoDependente>, IRepositoryProduto
+    public class RepositoryProduto : BaseRepository<Produto>, IRepositoryProduto
     {
 
         public RepositoryProduto(IConfiguration configuration, ApplicationDbContext contexto) : base(configuration, contexto)
@@ -30,7 +30,7 @@ namespace CMS.Models.Repository
 
         public async Task<BuscaProdutosViewModel> GetProdutosAsync(string pesquisa)
         {
-            IQueryable<ProdutoDependente> query = dbSet;
+            IQueryable<Produto> query = dbSet;
 
             if (!string.IsNullOrEmpty(pesquisa))
             {
@@ -42,11 +42,11 @@ namespace CMS.Models.Repository
 
         public async Task<Elemento> TestarProduto(string id)
         {
-            ProdutoDependente produto;
+            Produto produto;
             try
             {
                 produto = await contexto.Elemento.
-               OfType<ProdutoDependente>().FirstOrDefaultAsync(e => e.Id == int.Parse(id));
+               OfType<Produto>().FirstOrDefaultAsync(e => e.Id == int.Parse(id));
             }
             catch (Exception)
             {

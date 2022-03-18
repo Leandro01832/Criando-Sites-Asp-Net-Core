@@ -24,7 +24,7 @@ namespace MeuProjetoAgora.Controllers
         private readonly ApplicationDbContext Context;
 
         public IRepositoryPedido RepositoryPedido { get; }
-        public IRepositoryPagina RepositoryPagina { get; }
+        public IRepositoryPagina epositoryPagina { get; }
         public IHttpHelper HttpHelper { get; }
         public IHttpContextAccessor ContextAccessor { get; }
         public IUserHelper UserHelper { get; }
@@ -40,7 +40,7 @@ namespace MeuProjetoAgora.Controllers
             HostingEnvironment = hostingEnvironment;
             Context = context;
             RepositoryPedido = repositoryPedido;
-            RepositoryPagina = repositoryPagina;
+            epositoryPagina = repositoryPagina;
             HttpHelper = httpHelper;
             ContextAccessor = contextAccessor;
             UserHelper = userHelper;
@@ -56,11 +56,11 @@ namespace MeuProjetoAgora.Controllers
                 Set("automatico", "0", 12);
             if (option2 == null)
                 Set("story", "0", 12);
-            IList<Pagina> pages = await RepositoryPagina.MostrarPageModels();
+            IList<Pagina> pages = await epositoryPagina.MostrarPageModels();
             List<Pagina> pages2 = new List<Pagina>();
             foreach (var p in pages.Where(p => p.Exibicao == true))
             {
-                p.Html = await RepositoryPagina.renderizarPagina(p);
+                p.Html = await epositoryPagina.renderizarPagina(p);
                 pages2.Add(p);
             }
 
@@ -219,16 +219,26 @@ namespace MeuProjetoAgora.Controllers
             return View(pedido);
         }
 
-        [Route("Galeria/{id?}")]
-        [Route("Pedido/Galeria/{id?}")]
-        [Route("Paginas-de-um-site/{id?}")]
-        [Route("Paginas-do-site/{id?}")]
-        [Route("Paginas/{id?}")]
-        public async Task<ActionResult> Galeria(int? id)
+        [Route("Galeria/{id}")]
+        [Route("Galeria/{id}/{pagina?}")]
+        [Route("Pedido/Galeria/{id}")]
+        [Route("Paginas-de-um-site/{id}")]
+        [Route("Paginas-do-site/{id}")]
+        [Route("Paginas/{id}")]
+        public async Task<ActionResult> Galeria(int id, int? pagina)
         {
-            if (id == null) return View("Index");
-            var paginas = await Context.Pagina.Where(p => p.PedidoId == id).ToListAsync();
-            return View(paginas);
+            int numeroPagina = (pagina ?? 1);
+            const int TAMANHO_PAGINA = 5;
+
+            ViewBag.pagina = numeroPagina;
+            ViewBag.site = id;
+            var applicationDbContext = await Context.Pagina
+                .Where(l => l.PedidoId == id)
+                .Skip((numeroPagina - 1) * TAMANHO_PAGINA)
+                .Take(TAMANHO_PAGINA).ToListAsync();
+
+            
+            return View(applicationDbContext);
         }
 
         [Route("Sites/{email}")]
@@ -247,7 +257,7 @@ namespace MeuProjetoAgora.Controllers
         {
             var site = await Context.Pedido.Include(p => p.Paginas).FirstAsync(p => p.Id == id);
 
-            var finalResult = RepositoryPagina.FazerDownload(site);
+            var finalResult = epositoryPagina.FazerDownload(site);
 
             return File(finalResult, "application/zip", site.DominioTemporario);
 
@@ -287,7 +297,6 @@ namespace MeuProjetoAgora.Controllers
                 HttpHelper.SetPedidoId(pagina.PedidoId);
                 await Context.Pagina.AddAsync(pagina);
                 await Context.SaveChangesAsync();
-                
 
                 for (int i = 0; i <= 5; i++)
                 {
@@ -313,6 +322,10 @@ namespace MeuProjetoAgora.Controllers
                     Context.DivPagina.Add(new DivPagina { DivId = div.Id, PaginaId = pagina.Id });
                     await Context.SaveChangesAsync();
                 }
+
+                RepositoryPagina.paginas.Clear();
+                var lista = await epositoryPagina.MostrarPageModels();
+                RepositoryPagina.paginas.AddRange(lista.Where(l => ! l.Layout).ToList());
 
                 return RedirectToAction("Galeria", new { id = pagina.PedidoId });
             }

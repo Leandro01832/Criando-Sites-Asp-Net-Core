@@ -73,21 +73,20 @@ namespace CMS.Controllers
         [Authorize(Roles = "Background")]
         public async Task<IActionResult> CreateCor(int? id)
         {
-            List<Cor> lista = new List<Cor>();
+            List<Background> lista = new List<Background>();
 
             var pagina = await _context.Pagina
                 .Include(p => p.Div)
                 .ThenInclude(p => p.Div)
                 .ThenInclude(p => p.Background)
+                .ThenInclude(p => p.Cores)
                 .FirstAsync(p => p.Id == id);
 
             foreach (var item in pagina.Div)
             {
                 if (item.Div.Background is BackgroundGradiente)
                 {
-                    var backcolor = await _context.BackgroundGradiente.Include(b => b.Cores)
-                    .FirstAsync(b => b.Id == item.Div.Background.Id);
-                    lista.AddRange(backcolor.Cores);
+                    lista.Add(item.Div.Background);
                 }
             }
 
@@ -119,7 +118,7 @@ namespace CMS.Controllers
             {
                 return NotFound();
             }
-            List<Cor> lista = new List<Cor>();
+            List<Background> lista = new List<Background>();
             var black = _context.Background.Include(b => b.Div).First(b => b.Id == cor.BackgroundId);
             var pagina = await _context.Pagina
                 .Include(p => p.Div)
@@ -131,9 +130,7 @@ namespace CMS.Controllers
             {
                 if (item.Div.Background is BackgroundGradiente)
                 {
-                    var backcolor = await _context.BackgroundGradiente.Include(b => b.Cores)
-                    .FirstAsync(b => b.Id == item.Div.Background.Id);
-                    lista.AddRange(backcolor.Cores);
+                    lista.Add(item.Div.Background);
                 }
             }
 

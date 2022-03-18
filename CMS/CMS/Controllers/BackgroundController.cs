@@ -109,8 +109,17 @@ namespace CMS.Controllers
             }
             else
             {
-                _context.Remove(teste); await _context.SaveChangesAsync();
-                _context.Add(background); await _context.SaveChangesAsync();
+                if (!(teste is BackgroundGradiente))
+                {
+                    _context.Remove(teste); await _context.SaveChangesAsync();
+                    _context.Add(background); await _context.SaveChangesAsync();
+                }
+                else
+                {
+                    var back = (BackgroundGradiente)teste;
+                    back.Grau = background.Grau;
+                    _context.Update(back); await _context.SaveChangesAsync();
+                }
                 return "";
             }
         }

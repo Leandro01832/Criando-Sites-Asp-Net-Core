@@ -1,7 +1,6 @@
 ﻿using business.Back;
 using business.business;
 using business.business.carousel;
-using business.business.element;
 using business.business.Elementos;
 using business.business.Elementos.element;
 using business.business.Elementos.imagem;
@@ -67,6 +66,7 @@ namespace CMS.Controllers
 
             Pagina pagina = new Pagina();
             pagina.Margem = false;
+            pagina.MostrarDados = 1;
             pagina.Div = new List<DivPagina>();
 
             pagina.Div.AddRange(new List<DivPagina> {
@@ -146,31 +146,38 @@ namespace CMS.Controllers
             if (!permissao) return PartialView("NoPermission");
 
             Elemento ele = null;
-
-            if (elemento == "TextoDependente")  ele =  new TextoDependente ();
-            if (elemento == "Imagem")           ele =  new Imagem          ();
-            if (elemento == "ImagemDependente") ele =  new ImagemDependente();
-            if (elemento == "Show")             ele =  new Show            ();
-            if (elemento == "Video")            ele =  new Video           ();
-            if (elemento == "Texto")            ele =  new Texto           ();
-            if (elemento == "Table")            ele =  new Table           ();
-            if (elemento == "Roupa")            ele =  new Roupa           ();
-            if (elemento == "Calcado")          ele =  new Calcado         ();
-            if (elemento == "Alimenticio")      ele =  new Alimenticio     ();
-            if (elemento == "Acessorio")        ele =  new Acessorio       ();
-            if (elemento == "LinkMenu")         ele =  new LinkMenu        ();
-            if (elemento == "LinkBody")         ele =  new LinkBody        ();
-            if (elemento == "Formulario")       ele =  new Formulario      ();
-            if (elemento == "Dropdown")         ele =  new Dropdown        ();
-            if (elemento == "CarouselPagina")   ele =  new CarouselPagina  ();
-            if (elemento == "CarouselImg")      ele =  new CarouselImg     ();
-            if (elemento == "Campo")            ele =  new Campo           ();
+            
+            if (elemento == "Imagem")            ele =  new Imagem         ();
+            if (elemento == "Show")              ele =  new Show           ();
+            if (elemento == "Video")             ele =  new Video          ();
+            if (elemento == "Texto")             ele =  new Texto          ();
+            if (elemento == "Table")             ele =  new Table          ();
+            if (elemento == "Roupa")             ele =  new Roupa          ();
+            if (elemento == "Calcado")           ele =  new Calcado        ();
+            if (elemento == "Alimenticio")       ele =  new Alimenticio    ();
+            if (elemento == "Acessorio")         ele =  new Acessorio      ();
+            if (elemento == "LinkBody")          ele =  new LinkBody       ();
+            if (elemento == "Formulario")        ele =  new Formulario     ();
+            if (elemento == "Dropdown")          ele =  new Dropdown       ();
+            if (elemento == "CarouselPagina")    ele =  new CarouselPagina ();
+            if (elemento == "CarouselImg")       ele =  new CarouselImg    ();
+            if (elemento == "Campo")             ele =  new Campo          ();
 
             var pedido = await _context.Pedido.Include(p => p.Paginas).Include(p => p.Pastas).FirstAsync(p => p.Id == site);
             var elementos = new List<Elemento>();
             var els = await _context.Elemento.Where(elem => elem.Pagina_ == pagina).ToListAsync();
+
+            List<Pagina> lista = new List<Pagina>();
+            lista.Add(new Pagina { Id = 0, Titulo = "[[ Escolha uma pagina ]]" });
+            var page = await _context.Pagina.Include(p => p.Story)
+            .ThenInclude(p => p.Pagina).FirstAsync(p => p.Id == pagina);
+            lista.AddRange(page.Story.Pagina);
+            ViewBag.PaginaEscolhida = new SelectList(lista, "Id", "Titulo");
+
             elementos.AddRange(els);
             
+            ViewBag.condicao = ! page.Layout;
+
             PreencherCombo(ele, pedido, elementos);
 
             return PartialView(ele);
@@ -228,6 +235,16 @@ namespace CMS.Controllers
 
             if (!permissao) return PartialView("NoPermission");
 
+            List<Pagina> lista = new List<Pagina>();
+            lista.Add(new Pagina { Id = 0, Titulo = "[[ Escolha uma pagina ]]" });
+            var page = await _context.Pagina.Include(p => p.Story)
+            .ThenInclude(p => p.Pagina).FirstAsync(p => p.Id == elemento.Pagina_);
+            lista.AddRange(page.Story.Pagina);
+            if (elemento.PaginaEscolhida == null) elemento.PaginaEscolhida = 0;
+            ViewBag.PaginaEscolhida = new SelectList(lista, "Id", "Titulo", elemento.PaginaEscolhida);
+
+            ViewBag.condicao = ! page.Layout;
+
             PreencherCombo(elemento, pedido, elementos);
 
             return PartialView(elemento);
@@ -247,20 +264,7 @@ namespace CMS.Controllers
             }
             catch(Exception ex) { return ex.Message; }
         }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<string> _ImagemDependente([FromBody] ImagemDependente elemento)
-        {
-            try
-            {
-                if (elemento.Id == 0)
-                    return await RepositoryElemento.salvar(elemento);
-                else
-                    return await RepositoryElemento.Editar(elemento);
-            }
-            catch(Exception ex) { return ex.Message; }
-        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -374,19 +378,7 @@ namespace CMS.Controllers
             catch (Exception ex) { return ex.Message; }
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<string> _LinkMenu([FromBody] LinkMenu elemento)
-        {
-            try
-            {
-                if (elemento.Id == 0)
-                    return await RepositoryElemento.salvar(elemento);
-                else
-                    return await RepositoryElemento.Editar(elemento);
-            }
-            catch (Exception ex) { return ex.Message; }
-        }
+        
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -555,16 +547,13 @@ namespace CMS.Controllers
         {
             if (elemento is LinkBody)
             {
+                var els = new List<Elemento>();
+                els.Add(new Imagem { Id = 0, Nome = "[[ Escolha uma imagem ]]" });
+                els.AddRange(elementos.OfType<Imagem>().ToList());
                 var link = (LinkBody)elemento;
-                ViewBag.ImagemId = new SelectList(elementos.OfType<Imagem>().ToList(), "Id", "NomeComId", link.ImagemId);
+                ViewBag.ImagemId = new SelectList(els, "Id", "NomeComId", link.ImagemId);
                 ViewBag.TextoId = new SelectList(elementos.OfType<Texto>().ToList(), "Id", "NomeComId", link.TextoId);
-            }
-            else if (elemento is LinkMenu)
-            {
-                var link = (LinkMenu)elemento;
-                ViewBag.PaginaId = new SelectList(pedido.Paginas, "Id", "NomeComId", link.PaginaId);
-                ViewBag.TextoId = new SelectList(elementos.OfType<Texto>().ToList(), "Id", "NomeComId", link.TextoId);
-            }            
+            }           
 
             if (elemento is Campo)
             {
@@ -572,9 +561,9 @@ namespace CMS.Controllers
                 ViewBag.FormularioId = new SelectList(elementos.OfType<Formulario>().ToList(), "Id", "NomeComId", c.FormularioId);
             }
 
-            if (elemento is ProdutoDependente)
+            if (elemento is Produto)
             {
-                var c = (ProdutoDependente)elemento;
+                var c = (Produto)elemento;
                 ViewBag.FormularioId = new SelectList(elementos.OfType<Table>().ToList(), "Id", "NomeComId", c.TableId);
             }
         }

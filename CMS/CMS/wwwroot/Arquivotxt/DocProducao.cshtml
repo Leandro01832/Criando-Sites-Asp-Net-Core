@@ -42,7 +42,7 @@
 
             #if ($condicao == 0 && $bloco.Div.Desenhado == 0)
 
-                #if ($model.pagina.Id == 0 && $bloco.Div.Id != 0)
+                #if ($model.Pagina.Id == 0 && $bloco.Div.Id != 0)
                 <p>Identificação do bloco: $bloco.Div.Id </p>
                 #end
             <div id='DIV${bloco.Div.Id}Pagina${model.Pagina.Id}' class='ClassDiv $bloco.Div.Divisao grid-container' data-value='$bloco.Div.Id'>
@@ -50,11 +50,13 @@
 
 
                 #foreach($element in $bloco.Div.Elemento)
+
+                #if ($element.Elemento.VerificarPagina == 0)
                              
                 <div id='elemento${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento grid-item' data-value='$element.Elemento.Id'>
                     <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
 
-                        #if($model.Pagina.Id == 0 && $bloco.Div.Id == 0)
+                        #if($model.Pagina.MostrarDados == 1)
                         <p>Identificação do elemento: $element.Elemento.Id</p>
                         #end
 
@@ -249,9 +251,9 @@
                             <a href='$element.Elemento.TextoLink'>
 
                                 ${element.Elemento.Texto.PalavrasTexto}
-                                
+                                #if($element.Elemento.VerificarNuloImagem == 1)
                                 <img class='img-responsive' src='$site$element.Elemento.Imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
-                               
+                               #end
 
                             </a>
                         
@@ -331,7 +333,292 @@
                     </div>
 
                 </div>
-                                    
+                   
+                #elseif($element.PaginaEscolhida == $model.Pagina.Id)
+
+                <div id='elemento${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento grid-item' data-value='$element.Elemento.Id'>
+                    <div id='element${element.Elemento.Id}Pagina${model.Pagina.Id}' class='Elemento$element.Elemento.Id grid-item' data-value='$element.Elemento.Id' data-id='$element.Elemento.Id'>
+
+                        #if($model.Pagina.MostrarDados == 1)
+                        <p>Identificação do elemento: $element.Elemento.Id</p>
+                        #end
+
+                        #if ($element.Elemento.Tipo == 'CarouselImg')
+                            <div id='carouselsite$element.Elemento.Id' class='carousel' data-ride='carousel'>
+                                <div class='carousel-inner' role='listbox'>
+                                    #foreach($dependente in $element.Elemento.Dependentes)
+                                    <div class='item'>
+                                        <img class='img-responsive minhaimg' src='$site$dependente.ElementoDependente.ArquivoImagem' alt='imagem' style='width:${dependente.ElementoDependente.Dependente.Width}%;' />
+                                        <!-- <div class='carousel-caption'>
+                                        </div>   -->
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        #end
+
+                        #if($element.Elemento.Tipo == 'CarouselPagina')
+                            <div id='carouselsiteCarouselPagina$element.Elemento.Id' class='carousel' data-ride='carousel'>
+                                <div class='carousel-inner' role='listbox'>
+                                    #foreach($Page in $element.Elemento.Paginas)
+                                    <div id='Page$Page.Pagina.Id' class='item'>
+                                        #foreach($bl in $Page.Pagina.Div)
+                                        <div id='BlocoCarouselPagina$bl.Div.Id' class='BlocoCarouselPagina $bl.Div.Divisao'>
+
+                                            #foreach($el in $bl.Div.Elemento)
+
+                                            <div id='ElementoCarouselPagina$el.Elemento.Id'>
+
+                                                #if ($el.Elemento.Tipo == 'Video')
+
+                                                <div id='VideoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <video style='width:100%; height:100%' controls>
+                                                        <source src='$site$el.Elemento.ArquivoVideo' type='video/mp4' />
+                                                    </video>
+
+                                                </div>
+
+                                                #end
+
+                                                #if ($el.Elemento.Tipo == 'Texto')
+
+                                                <div id='textoCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <p>$el.Elemento.PalavrasTexto</p>
+                                                </div>
+
+                                                #end
+
+                                                #if($el.Elemento.Tipo == 'Link')
+
+                                                <a href='$element.Elemento.TextoLink'>
+
+                                                 ${element.Elemento.Texto.PalavrasTexto}
+                                
+                                                <img class='img-responsive' src='$site$element.Elemento.Imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+                               
+
+                                                </a>                                             
+
+                                                #end
+
+                                                #if ($el.Elemento.Tipo == 'Imagem')
+
+                                                <div id='ImagemCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+                                                    <img class='img-responsive' src='$site$el.Elemento.ArquivoImagem' alt='imagem' style='width:${el.Elemento.Width}%;' />
+                                                </div>
+
+                                                #end
+
+                                                #if($el.Elemento.Tipo == 'Formulario')
+
+                                                <div id='FormCarouselPagina${el.Elemento.Id}Pagina${model.Pagina.Id}' class='grid-item'>
+
+                                                    <form>
+                                                        #foreach($el in $el.Elemento.Dependentes)
+
+                                                        <label>$el.ElementoDependente.Dependente.Nome</label>
+                                                        <input class='CampoFormulario$el.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' value='$el.ElementoDependente.Dependente.ValorCampo' />
+                                                        <br />
+
+                                                        #end
+                                                        <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+                                                    </form>
+
+                                                </div>
+
+                                                <script type='text/javascript'>
+
+                                                    $(document).ready(function () {
+
+                                                        $('#SalvarDadosFormulario').click(function () {
+
+                                                            var Arquivos = $('.CampoFormulario');
+                                                            var formData = new FormData();
+
+                                                            let token = $('[name=__RequestVerificationToken]').val();
+                                                            let headers = {};
+                                                            headers['RequestVerificationToken'] = token;
+
+                                                            for (var i = 0; i !== Arquivos.length; i++) {
+                                                                formData.append('valores', document.getElementsByClassName('CampoFormulario$el.Elemento.Id')[i].value);
+                                                                formData.append('Formulario', $el.Elemento.Id);
+                                                            }
+
+                                                            jQuery.ajax({
+                                                                url: '/Formulario/SalvarDados',
+                                                                data: formData,
+                                                                processData: !1,
+                                                                contentType: !1,
+                                                                type: 'POST',
+                                                                headers: headers,
+                                                                success: function (data) {
+                                                                    alert('dados salvos com sucesso!' + data);
+                                                                }
+                                                            });
+
+
+                                                        });
+                                                    });
+                                                </script>
+                                                #end
+                                            </div>
+                                            #end
+                                        </div>
+                                        #end
+                                    </div>
+                                    #end
+                                </div>
+                            </div>
+                        #end
+
+                        #if($element.Elemento.Tipo == 'Formulario')
+                            <form>
+                                #foreach($el in $element.Elemento.Dependentes)
+
+                                <label>$el.ElementoDependente.Dependente.Nome</label>
+                                <input class='CampoFormulario$element.Elemento.Id' id='Campo$el.ElementoDependente.Dependente.Id' name='Campo$el.ElementoDependente.Dependente.Id' type='$el.ElementoDependente.Dependente.TipoCampo' placeholder='$el.ElementoDependente.Dependente.Placeholder' />
+                                <br />
+
+                                #end
+                                <a href='#' id='SalvarDadosFormulario'>Salvar</a>
+                            </form>
+
+                        <script type='text/javascript'>
+
+                            $(document).ready(function () {
+
+                                $('#SalvarDadosFormulario').click(function () {
+
+                                    var Arquivos = $('.CampoFormulario');
+                                    var formData = new FormData();
+
+                                    let token = $('[name=__RequestVerificationToken]').val();
+                                    let headers = {};
+                                    headers['RequestVerificationToken'] = token;
+
+                                    for (var i = 0; i !== Arquivos.length; i++) {
+                                        formData.append('valores', document.getElementsByClassName('CampoFormulario$element.Elemento.Id')[i].value);
+                                        formData.append('Formulario', $element.Elemento.Id);
+                                    }
+
+                                    jQuery.ajax({
+                                        url: '/Formulario/SalvarDados',
+                                        data: formData,
+                                        processData: !1,
+                                        contentType: !1,
+                                        type: 'POST',
+                                        headers: headers,
+                                        success: function (data) {
+                                            alert('dados salvos com sucesso!' + data);
+                                        }
+                                    });
+
+
+                                });
+
+                            });
+
+                        </script>
+
+                        #end
+
+                        #if ($element.Elemento.Tipo == 'Imagem')
+                        <img class='img-responsive' src='$site$element.Elemento.ArquivoImagem' alt='imagem' style='width:${element.Elemento.Width}%;' />
+                        #end
+
+                        #if($element.Elemento.Tipo == 'LinkBody')
+
+                        
+                            <a href='$element.Elemento.TextoLink'>
+
+                                ${element.Elemento.Texto.PalavrasTexto}
+                                #if($element.Elemento.VerificarNuloImagem == 1)
+                                <img class='img-responsive' src='$site$element.Elemento.Imagem.ArquivoImagem' alt='imagem' style='width:100%;' />
+                               #end
+
+                            </a>
+                        
+                        #end
+
+                        #if($element.Elemento.Tipo == 'Table')
+                            <table class='$element.Elemento.EstiloTabela'>
+
+                                <tr>
+                                    <th>
+                                        <label>Nome</label>
+                                    </th>
+                                    <th>
+                                        <label>Imagem</label>
+                                    </th>
+                                    <th></th>
+
+                                </tr>
+
+                                #foreach($prod in $element.Elemento.Dependentes)
+                                <tr class='linhaProduto' id='Produto$prod.ElementoDependente.Dependente.Id' data-value='$prod.ElementoDependente.Dependente.Id'>
+                                    <th>
+                                        <label>$prod.ElementoDependente.Dependente.Nome</label>
+                                    </th>
+                                    <th>
+                                        #set($imgIndice = 0)
+                                        #foreach($img in $prod.ElementoDependente.Dependente.Dependentes)
+
+
+                                        #if($imgIndice == 0)
+                                        <img src='$site$img.ElementoDependente.Dependente.ArquivoImagem' width='100' />
+                                        #end
+
+                                        #set($imgIndice = $imgIndice + 1)
+
+                                        #end
+                                    </th>
+
+
+                                    <th>
+                                        <div id='LinksTabela'>
+                                            <a href='#' data-value='$prod.ElementoDependente.Dependente.Id' class='btn btn-danger botaoDetalhesProduto'>  Detalhes </a>
+                                        </div>
+
+                                        <div>
+                                            <script type='text/javascript'>
+
+                                                jQuery(function () {
+
+                                                    if ($('.bloco')[0].baseURI.includes('https')) {
+                                                        document.getElementById('LinksTabela').innerHTML += '<button href=# ' +
+                                                            'data-value=$prod.ElementoDependente.Dependente.Id class=botaoAdicionarCarrinho ' +
+                                                            '> Adicionar ao carrinho </button> ';
+                                                    }
+
+                                                });
+
+                                            </script>
+
+                                        </div>
+                                    </th>
+                                </tr>
+                                #end
+                            </table>
+                        #end
+
+                        #if ($element.Elemento.Tipo == 'Texto')
+                            <p>$element.Elemento.PalavrasTexto</p>
+                        #end
+
+                        #if ($element.Elemento.Tipo == 'Video')
+                            <video style='width:100%; height:100%' controls>
+                                <source src='$site$element.Elemento.ArquivoVideo' type='video/mp4' />
+                            </video>
+                        #end
+
+                    </div>
+
+                </div>
+
+                #end
+
                 #end
             </div>
             <!--<br />-->

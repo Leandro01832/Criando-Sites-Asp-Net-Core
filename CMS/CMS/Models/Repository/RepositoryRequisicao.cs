@@ -46,7 +46,7 @@ namespace CMS.Models.Repository
         public async Task AddItemAsync(string codigo)
         {
             var produto = await
-                            contexto.Set<Elemento>().OfType<ProdutoComum>()
+                            contexto.Set<Elemento>().OfType<Produto>()
                             .Where(p => p.Codigo == codigo)
                             .SingleOrDefaultAsync();
 
@@ -58,7 +58,7 @@ namespace CMS.Models.Repository
             var pedido = await GetRequisicao();
 
             var itemPedido = await
-                                contexto.Set<Elemento>().OfType<ProdutoComum>()
+                                contexto.Set<Elemento>().OfType<Produto>()
                                 .Where(i => i.Codigo == codigo)
                                 .SingleOrDefaultAsync();
 

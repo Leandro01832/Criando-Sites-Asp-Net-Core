@@ -1,0 +1,66 @@
+﻿@model IEnumerable<business.business.Pagina>
+@{
+    ViewBag.Title = "Galeria";
+    Layout = "~/Views/Shared/_Render.cshtml";
+    var proximo = ViewBag.pagina + 1;
+    var anterior = ViewBag.pagina - 1;
+}
+
+<h2>Galeria</h2>
+<h4>Lista @ViewBag.pagina</h4>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Titulo)
+        </th>
+        <th>
+            @Html.DisplayName("Preview dinâmico")
+        </th>
+
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Titulo)
+            </td>
+
+            <td>
+
+                <a href="/Editar/@item.Id" target="_blank" class="btn btn-warning">Mostrar layout</a>
+            </td>
+
+
+        </tr>
+    }
+
+</table>
+<label>Lista:</label>
+@ViewBag.pagina
+
+<a href="/Pagina/GaleriaLayout/@ViewBag.site/@anterior"  class="btn btn-primary" ><<</a>
+<a href="/Pagina/GaleriaLayout/@ViewBag.site/@proximo"  class="btn btn-primary" >>></a>
+
+@section scripts{
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $("#numeroAcesso").change(function () {
+                var numero = $(".bloco")[0].baseURI.replace(/[^0-9]/g, '');
+                numero = numero.replace('44311', '');
+                window.location.href = "/Pagina/GaleriaLayout/" + numero + "/" + $(this).val();
+            });
+
+        });
+    </script>
+
+}
+
+
